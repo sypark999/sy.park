@@ -198,14 +198,42 @@ class SNSWorkflow:
                 restaurant_data = self.restaurant_info.get(selected_restaurant, {})
 
                 if restaurant_data:
+                    # 사용 가능한 언어 버전 확인
+                    available_names = {}
+                    if 'name' in restaurant_data:
+                        available_names['한글'] = restaurant_data['name']
+                    if 'name_en' in restaurant_data:
+                        available_names['영문'] = restaurant_data['name_en']
+                    if 'name_cn_s' in restaurant_data:
+                        available_names['중문(간체)'] = restaurant_data['name_cn_s']
+
                     print(f"\n💡 저장된 정보:")
-                    print(f"   식당명: {restaurant_data.get('name', '')}")
+                    for lang, name in available_names.items():
+                        print(f"   식당명({lang}): {name}")
                     print(f"   주소: {restaurant_data.get('address', '')}")
 
                     use_saved = input("\n저장된 정보를 사용하시겠습니까? (y/n): ").strip().lower()
 
                     if use_saved == 'y':
-                        restaurant_name = restaurant_data.get('name', '')
+                        # 언어 선택
+                        if len(available_names) > 1:
+                            print(f"\n언어를 선택하세요:")
+                            lang_list = list(available_names.keys())
+                            for i, lang in enumerate(lang_list, 1):
+                                print(f"{i}. {lang} - {available_names[lang]}")
+
+                            lang_choice = input(f"\n선택 (1-{len(lang_list)}): ").strip()
+                            try:
+                                lang_idx = int(lang_choice) - 1
+                                if 0 <= lang_idx < len(lang_list):
+                                    restaurant_name = available_names[lang_list[lang_idx]]
+                                else:
+                                    restaurant_name = list(available_names.values())[0]
+                            except:
+                                restaurant_name = list(available_names.values())[0]
+                        else:
+                            restaurant_name = list(available_names.values())[0]
+
                         address = restaurant_data.get('address', '')
                     else:
                         restaurant_name = self.get_text_input("식당명을 입력하세요", required=True)
