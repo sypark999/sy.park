@@ -59,9 +59,6 @@ def generate_all_examples():
             continue
 
         address = info.get('address', '')
-        # 주소 앞에 📍 이모지 추가
-        if address:
-            address = f"📍 {address}"
 
         print(f"식당명: {name_cn}")
         print(f"주소: {address}")

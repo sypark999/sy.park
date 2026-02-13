@@ -50,7 +50,7 @@
     {
       "type": "text",
       "name": "subtitle",
-      "position": [540, 800],
+      "position": [540, 770],
       "align": "center",
       "font_size": 45,
       "color": "#FFFFFF",

@@ -44,7 +44,7 @@
     {
       "type": "text",
       "name": "address",
-      "position": [540, 760],
+      "position": [540, 730],
       "align": "center",
       "font_size": 35,
       "color": "#FFFFFF",
