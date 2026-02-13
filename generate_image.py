@@ -309,6 +309,49 @@ class ImageGenerator:
         canvas_size = tuple(template['size'])
         canvas = None
 
+        # 텍스트 레이어 사전 계산 (중앙 정렬을 위해)
+        text_layers = [l for l in template['layers'] if l['type'] == 'text']
+        if text_layers and texts:
+            # 폰트 로드 및 전체 텍스트 높이 계산
+            try:
+                font_path = self.config['fonts']['default']
+                total_text_height = 0
+                text_heights = []
+
+                for layer in text_layers:
+                    text_name = layer['name']
+                    text_content = texts.get(text_name, '')
+                    if text_content:
+                        font = ImageFont.truetype(font_path, layer['font_size'])
+                        lines = TextFormatter.wrap_text(text_content, font, layer.get('max_width', 950))
+                        line_height = TextFormatter.get_text_height(font, 'Ay')
+                        line_spacing = layer.get('line_spacing', 10)
+                        text_height = line_height * len(lines) + (len(lines) - 1) * line_spacing
+                        text_heights.append(text_height)
+                        total_text_height += text_height
+
+                # 텍스트 간 간격 추가
+                if len(text_heights) > 1:
+                    # 첫 번째 텍스트(식당명)와 두 번째 텍스트(주소) 사이 간격
+                    text_gap = text_layers[1]['position'][1] - text_layers[0]['position'][1]
+                    total_text_height += text_gap - text_heights[0] // 2 - text_heights[1] // 2
+
+                # 중앙 위치 계산 (1350 / 2 = 675)
+                center_y = canvas_size[1] // 2
+                start_y = center_y - total_text_height // 2
+
+                # 첫 번째 텍스트 위치 조정
+                if len(text_layers) > 0:
+                    text_layers[0]['position'] = [text_layers[0]['position'][0], start_y + text_heights[0] // 2]
+
+                # 두 번째 텍스트 위치 조정
+                if len(text_layers) > 1:
+                    second_y = start_y + text_heights[0] + (text_gap - text_heights[0] // 2 - text_heights[1] // 2) + text_heights[1] // 2
+                    text_layers[1]['position'] = [text_layers[1]['position'][0], second_y]
+
+            except Exception as e:
+                print(f"텍스트 중앙 정렬 계산 실패 (기본 위치 사용): {e}")
+
         # 레이어별 렌더링
         for layer in template['layers']:
             layer_type = layer['type']

@@ -30,7 +30,7 @@
     {
       "type": "text",
       "name": "restaurant_name",
-      "position": [540, 610],
+      "position": [540, 675],
       "align": "center",
       "font_size": 90,
       "color": "#FFFFFF",
@@ -44,13 +44,13 @@
     {
       "type": "text",
       "name": "address",
-      "position": [540, 710],
+      "position": [540, 775],
       "align": "center",
-      "font_size": 35,
+      "font_size": 45,
       "color": "#FFFFFF",
       "stroke_color": "#000000",
       "stroke_width": 6,
-      "max_width": 950,
+      "max_width": 600,
       "weight": "normal",
       "line_spacing": 3,
       "letter_spacing": 0
