@@ -4,6 +4,7 @@ SNS 콘텐츠 제작 워크플로우
 대화형 인터페이스로 인스타그램 마케팅 이미지를 생성합니다.
 """
 
+import json
 import os
 import sys
 from datetime import datetime
@@ -27,8 +28,23 @@ class SNSWorkflow:
         if not self.shop_image_path.exists():
             raise Exception(f"shop_image 폴더를 찾을 수 없습니다: {self.shop_image_path}")
 
+        # 레스토랑 정보 로드
+        self.restaurant_info = self.load_restaurant_info()
+
         # 이미지 생성기 초기화
         self.generator = ImageGenerator(str(self.base_path / 'config.json'))
+
+    def load_restaurant_info(self) -> Dict:
+        """레스토랑 정보 JSON 파일 로드"""
+        info_path = self.base_path / 'restaurant_info.json'
+        if info_path.exists():
+            try:
+                with open(info_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return data.get('restaurants', {})
+            except Exception as e:
+                print(f"레스토랑 정보 로드 실패: {e}")
+        return {}
 
     def get_restaurants(self) -> List[str]:
         """음식점 목록 가져오기"""
@@ -178,8 +194,25 @@ class SNSWorkflow:
             print("="*50)
 
             if is_restaurant_template:
-                restaurant_name = self.get_text_input("식당명을 입력하세요", required=True)
-                address = self.get_text_input("주소를 입력하세요", required=False)
+                # 레스토랑 정보 자동 제안
+                restaurant_data = self.restaurant_info.get(selected_restaurant, {})
+
+                if restaurant_data:
+                    print(f"\n💡 저장된 정보:")
+                    print(f"   식당명: {restaurant_data.get('name', '')}")
+                    print(f"   주소: {restaurant_data.get('address', '')}")
+
+                    use_saved = input("\n저장된 정보를 사용하시겠습니까? (y/n): ").strip().lower()
+
+                    if use_saved == 'y':
+                        restaurant_name = restaurant_data.get('name', '')
+                        address = restaurant_data.get('address', '')
+                    else:
+                        restaurant_name = self.get_text_input("식당명을 입력하세요", required=True)
+                        address = self.get_text_input("주소를 입력하세요", required=False)
+                else:
+                    restaurant_name = self.get_text_input("식당명을 입력하세요", required=True)
+                    address = self.get_text_input("주소를 입력하세요", required=False)
 
                 texts = {
                     'restaurant_name': restaurant_name,

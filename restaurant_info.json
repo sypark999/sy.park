@@ -1,0 +1,40 @@
+{
+  "restaurants": {
+    "OKDONGSIK": {
+      "name": "옥동식",
+      "name_en": "OKDONGSIK",
+      "address": "서울 마포구 홍대입구",
+      "address_detail": "와우산로 21길 19",
+      "phone": "02-1234-5678",
+      "description": "한정식 전문점",
+      "tags": ["한식", "한정식", "홍대맛집"]
+    },
+    "Ilpyeon_Sirloin_Hongik_University": {
+      "name": "일편 소고기 홍대점",
+      "name_en": "Ilpyeon Sirloin",
+      "address": "서울 마포구 홍익대학교 인근",
+      "address_detail": "와우산로 94",
+      "phone": "02-2345-6789",
+      "description": "프리미엄 한우 전문점",
+      "tags": ["한우", "고기", "홍대맛집"]
+    },
+    "Woomoolzip_Hongdae": {
+      "name": "우물집 홍대",
+      "name_en": "Woomoolzip",
+      "address": "서울 마포구 홍대입구역",
+      "address_detail": "양화로 160",
+      "phone": "02-3456-7890",
+      "description": "분위기 좋은 한식당",
+      "tags": ["한식", "분위기", "홍대맛집"]
+    },
+    "ilpyeon_eel_hongdae": {
+      "name": "일편 장어 홍대",
+      "name_en": "Ilpyeon Eel",
+      "address": "서울 마포구 홍대",
+      "address_detail": "와우산로21길 8",
+      "phone": "02-4567-8901",
+      "description": "장어구이 전문점",
+      "tags": ["장어", "구이", "홍대맛집"]
+    }
+  }
+}
