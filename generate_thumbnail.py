@@ -73,7 +73,7 @@ def generate_thumbnail():
             },
             texts={
                 'title': 'CATCHTABLE 精选',
-                'subtitle': '首尔韩餐厅 TOP 10! - 弘大'
+                'subtitle': '📍 首尔韩餐厅 TOP 10! - 弘大'
             },
             output_path=str(output_path)
         )
