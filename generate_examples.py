@@ -52,8 +52,12 @@ def generate_all_examples():
             while len(images) < 3:
                 images.append(images[0])
 
-        # 중국어 정보 가져오기
-        name_cn = info.get('name_cn_s', info.get('name', ''))
+        # 중국어 정보 가져오기 (무조건 name_cn_s 사용)
+        name_cn = info.get('name_cn_s', '')
+        if not name_cn:
+            print(f"⚠️  name_cn_s 없음 - 건너뜀")
+            continue
+
         address = info.get('address', '')
 
         print(f"식당명: {name_cn}")
