@@ -175,16 +175,12 @@ class LayerRenderer:
         current_y = y - total_height // 2
 
         for line in lines:
-            # 자간 적용 (문자 간 간격)
-            if letter_spacing != 0:
-                # 자간이 있으면 각 문자를 개별적으로 그림
-                char_x = 0
-                temp_line = ''
-                for char in line:
-                    temp_line += char
-                    bbox = font.getbbox(temp_line)
-                    char_x = bbox[2] - bbox[0] + letter_spacing
+            # 자간이 음수이고 이모지가 포함된 경우 자간 적용 안함
+            has_emoji = any(ord(char) > 0x1F300 for char in line)
+            apply_letter_spacing = letter_spacing != 0 and not has_emoji
 
+            if apply_letter_spacing:
+                # 자간 적용 (이모지 없는 경우만)
                 # 전체 너비 계산 (자간 포함)
                 total_width = 0
                 for i, char in enumerate(line):
@@ -218,7 +214,7 @@ class LayerRenderer:
                     text_x += char_width + letter_spacing
 
             else:
-                # 자간이 없으면 기존 방식
+                # 이모지 있거나 자간이 0인 경우 기본 방식
                 bbox = font.getbbox(line)
                 text_width = bbox[2] - bbox[0]
 

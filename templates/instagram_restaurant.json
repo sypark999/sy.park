@@ -30,7 +30,7 @@
     {
       "type": "text",
       "name": "restaurant_name",
-      "position": [540, 600],
+      "position": [540, 630],
       "align": "center",
       "font_size": 90,
       "color": "#FFFFFF",
@@ -44,7 +44,7 @@
     {
       "type": "text",
       "name": "address",
-      "position": [540, 720],
+      "position": [540, 760],
       "align": "center",
       "font_size": 35,
       "color": "#FFFFFF",

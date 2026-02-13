@@ -36,7 +36,7 @@
     {
       "type": "text",
       "name": "title",
-      "position": [540, 650],
+      "position": [540, 680],
       "align": "center",
       "font_size": 80,
       "color": "#FFFFFF",
@@ -50,7 +50,7 @@
     {
       "type": "text",
       "name": "subtitle",
-      "position": [540, 760],
+      "position": [540, 800],
       "align": "center",
       "font_size": 45,
       "color": "#FFFFFF",
