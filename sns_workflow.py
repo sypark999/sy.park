@@ -116,17 +116,7 @@ class SNSWorkflow:
         restaurant_idx = self.display_menu("음식점을 선택하세요", restaurants)
         selected_restaurant = restaurants[restaurant_idx]
 
-        # 2. 이미지 선택
-        images = self.get_images(selected_restaurant)
-        if not images:
-            print(f"{selected_restaurant}에 이미지가 없습니다.")
-            return
-
-        image_idx = self.display_menu("이미지를 선택하세요", images)
-        selected_image = images[image_idx]
-        image_path = self.shop_image_path / selected_restaurant / selected_image
-
-        # 3. 템플릿 선택
+        # 2. 템플릿 선택 (먼저)
         templates = self.get_templates()
         template_names = list(templates.keys())
         template_idx = self.display_menu("템플릿을 선택하세요", template_names)
@@ -134,10 +124,52 @@ class SNSWorkflow:
         selected_template = templates[selected_template_name]
 
         # 템플릿 설명
-        if 'square' in selected_template_name.lower():
+        is_restaurant_template = 'restaurant' in selected_template_name.lower()
+
+        if is_restaurant_template:
+            print("\n선택됨: 레스토랑 템플릿 (1080x1350) - 3개 이미지 합성")
+        elif 'square' in selected_template_name.lower():
             print("\n선택됨: 정사각형 (1080x1080) - 피드용")
         else:
             print("\n선택됨: 세로형 (1080x1350) - 스토리/릴스용")
+
+        # 3. 이미지 선택
+        images = self.get_images(selected_restaurant)
+        if not images:
+            print(f"{selected_restaurant}에 이미지가 없습니다.")
+            return
+
+        selected_images = {}
+
+        if is_restaurant_template:
+            # 3개 이미지 선택
+            print("\n" + "="*50)
+            print("3개의 이미지를 선택하세요")
+            print("="*50)
+
+            # 메인 이미지
+            print("\n[1/3] 메인 이미지 (상단 전체)")
+            main_idx = self.display_menu("메인 이미지를 선택하세요", images)
+            main_image = images[main_idx]
+            selected_images['main_image'] = self.shop_image_path / selected_restaurant / main_image
+
+            # 서브 이미지 1
+            print("\n[2/3] 서브 이미지 1 (하단 좌측)")
+            sub1_idx = self.display_menu("서브 이미지 1을 선택하세요", images)
+            sub1_image = images[sub1_idx]
+            selected_images['sub_image_1'] = self.shop_image_path / selected_restaurant / sub1_image
+
+            # 서브 이미지 2
+            print("\n[3/3] 서브 이미지 2 (하단 우측)")
+            sub2_idx = self.display_menu("서브 이미지 2를 선택하세요", images)
+            sub2_image = images[sub2_idx]
+            selected_images['sub_image_2'] = self.shop_image_path / selected_restaurant / sub2_image
+
+        else:
+            # 단일 이미지 선택
+            image_idx = self.display_menu("이미지를 선택하세요", images)
+            selected_image = images[image_idx]
+            image_path = self.shop_image_path / selected_restaurant / selected_image
 
         # 4. 텍스트 입력 루프
         while True:
@@ -145,13 +177,22 @@ class SNSWorkflow:
             print("텍스트 입력")
             print("="*50)
 
-            title = self.get_text_input("제목을 입력하세요", required=True)
-            subtitle = self.get_text_input("부제목을 입력하세요", required=False)
+            if is_restaurant_template:
+                restaurant_name = self.get_text_input("식당명을 입력하세요", required=True)
+                address = self.get_text_input("주소를 입력하세요", required=False)
 
-            texts = {
-                'title': title,
-                'subtitle': subtitle
-            }
+                texts = {
+                    'restaurant_name': restaurant_name,
+                    'address': address
+                }
+            else:
+                title = self.get_text_input("제목을 입력하세요", required=True)
+                subtitle = self.get_text_input("부제목을 입력하세요", required=False)
+
+                texts = {
+                    'title': title,
+                    'subtitle': subtitle
+                }
 
             # 5. 미리보기 생성
             print("\n[미리보기 생성 중...]")
@@ -159,12 +200,22 @@ class SNSWorkflow:
             preview_output = self.preview_path / preview_filename
 
             try:
-                self.generator.generate(
-                    template_path=selected_template,
-                    source_image_path=str(image_path),
-                    texts=texts,
-                    output_path=str(preview_output)
-                )
+                if is_restaurant_template:
+                    # 다중 이미지 모드
+                    self.generator.generate(
+                        template_path=selected_template,
+                        images={k: str(v) for k, v in selected_images.items()},
+                        texts=texts,
+                        output_path=str(preview_output)
+                    )
+                else:
+                    # 단일 이미지 모드
+                    self.generator.generate(
+                        template_path=selected_template,
+                        source_image_path=str(image_path),
+                        texts=texts,
+                        output_path=str(preview_output)
+                    )
                 print(f"\n✓ 미리보기 저장 완료: {preview_output}")
                 print(f"\n이미지를 확인해주세요:")
                 print(f"  {preview_output}")
@@ -188,12 +239,22 @@ class SNSWorkflow:
                     final_output = self.output_path / final_filename
 
                     try:
-                        self.generator.generate(
-                            template_path=selected_template,
-                            source_image_path=str(image_path),
-                            texts=texts,
-                            output_path=str(final_output)
-                        )
+                        if is_restaurant_template:
+                            # 다중 이미지 모드
+                            self.generator.generate(
+                                template_path=selected_template,
+                                images={k: str(v) for k, v in selected_images.items()},
+                                texts=texts,
+                                output_path=str(final_output)
+                            )
+                        else:
+                            # 단일 이미지 모드
+                            self.generator.generate(
+                                template_path=selected_template,
+                                source_image_path=str(image_path),
+                                texts=texts,
+                                output_path=str(final_output)
+                            )
                         print(f"\n✓ 최종 이미지 저장 완료: {final_output}")
 
                         # 계속할지 물어보기

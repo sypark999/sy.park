@@ -51,12 +51,16 @@ class LayerRenderer:
     def __init__(self, config: Dict):
         self.config = config
 
-    def render_background_image(self, layer: Dict, source_image: Image.Image,
-                                canvas_size: Tuple[int, int]) -> Image.Image:
-        """배경 이미지를 렌더링"""
-        canvas = Image.new('RGB', canvas_size, (255, 255, 255))
+    def render_background_color(self, canvas: Image.Image, layer: Dict) -> Image.Image:
+        """단색 배경 렌더링"""
+        if canvas is None:
+            canvas_size = tuple(layer['size'])
+            canvas = Image.new('RGB', canvas_size, layer['color'])
+        return canvas
 
-        # 이미지를 캔버스 크기에 맞게 조정
+    def render_image_to_canvas(self, canvas: Image.Image, layer: Dict,
+                              source_image: Image.Image) -> Image.Image:
+        """이미지를 캔버스의 특정 위치에 렌더링"""
         img = source_image.copy()
         target_width, target_height = layer['size']
 
@@ -80,8 +84,18 @@ class LayerRenderer:
         top = (new_height - target_height) // 2
         img = img.crop((left, top, left + target_width, top + target_height))
 
+        # 캔버스에 합성
+        if canvas is None:
+            canvas = Image.new('RGB', (1080, 1350), (255, 255, 255))
+
         canvas.paste(img, tuple(layer['position']))
         return canvas
+
+    def render_background_image(self, layer: Dict, source_image: Image.Image,
+                                canvas_size: Tuple[int, int]) -> Image.Image:
+        """배경 이미지를 렌더링 (하위 호환성)"""
+        canvas = Image.new('RGB', canvas_size, (255, 255, 255))
+        return self.render_image_to_canvas(canvas, layer, source_image)
 
     def render_gradient_overlay(self, canvas: Image.Image, layer: Dict) -> Image.Image:
         """그라디언트 오버레이 렌더링"""
@@ -121,7 +135,7 @@ class LayerRenderer:
 
     def render_text(self, canvas: Image.Image, layer: Dict,
                    text: str, font_path: str) -> Image.Image:
-        """텍스트 렌더링"""
+        """텍스트 렌더링 (테두리 지원)"""
         canvas = canvas.convert('RGBA')
         txt_layer = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(txt_layer)
@@ -141,6 +155,15 @@ class LayerRenderer:
         if color.startswith('#'):
             color = tuple(int(color[i:i+2], 16) for i in (1, 3, 5))
 
+        # 테두리 색상 및 두께
+        stroke_color = None
+        stroke_width = 0
+        if 'stroke_color' in layer:
+            stroke_color = layer['stroke_color']
+            if stroke_color.startswith('#'):
+                stroke_color = tuple(int(stroke_color[i:i+2], 16) for i in (1, 3, 5))
+            stroke_width = layer.get('stroke_width', 0)
+
         # 텍스트 그리기
         x, y = layer['position']
         line_height = TextFormatter.get_text_height(font, 'Ay')
@@ -158,6 +181,12 @@ class LayerRenderer:
             else:
                 text_x = x
 
+            # 테두리가 있으면 먼저 그리기
+            if stroke_color and stroke_width > 0:
+                draw.text((text_x, current_y), line, font=font, fill=stroke_color,
+                         stroke_width=stroke_width, stroke_fill=stroke_color)
+
+            # 메인 텍스트 그리기
             draw.text((text_x, current_y), line, font=font, fill=color)
             current_y += line_height + 10
 
@@ -180,37 +209,56 @@ class ImageGenerator:
         with open(template_path, 'r', encoding='utf-8') as f:
             return json.load(f)
 
-    def generate(self, template_path: str, source_image_path: str,
-                texts: Dict[str, str], output_path: str) -> str:
-        """이미지 생성
-
-        Args:
-            template_path: 템플릿 JSON 파일 경로
-            source_image_path: 원본 이미지 경로
-            texts: 텍스트 딕셔너리 (예: {'title': '제목', 'subtitle': '부제목'})
-            output_path: 출력 파일 경로
-
-        Returns:
-            생성된 이미지 파일 경로
-        """
-        # 템플릿 로드
-        template = self.load_template(template_path)
-
-        # 원본 이미지 로드
+    def load_image(self, image_path: str) -> Image.Image:
+        """이미지 로드 (HEIC 지원)"""
         try:
-            source_img = Image.open(source_image_path)
-            # HEIC 지원
-            if source_image_path.lower().endswith('.heic'):
+            if image_path.lower().endswith('.heic'):
                 import pillow_heif
-                heif_file = pillow_heif.read_heif(source_image_path)
-                source_img = Image.frombytes(
+                heif_file = pillow_heif.read_heif(image_path)
+                return Image.frombytes(
                     heif_file.mode,
                     heif_file.size,
                     heif_file.data,
                     "raw",
                 )
+            else:
+                return Image.open(image_path)
         except Exception as e:
-            raise Exception(f"이미지 로드 실패: {e}")
+            raise Exception(f"이미지 로드 실패 ({image_path}): {e}")
+
+    def generate(self, template_path: str, source_image_path: str = None,
+                texts: Dict[str, str] = None, output_path: str = None,
+                images: Dict[str, str] = None) -> str:
+        """이미지 생성
+
+        Args:
+            template_path: 템플릿 JSON 파일 경로
+            source_image_path: 원본 이미지 경로 (단일 이미지용, 하위 호환성)
+            texts: 텍스트 딕셔너리 (예: {'restaurant_name': '식당명', 'address': '주소'})
+            output_path: 출력 파일 경로
+            images: 다중 이미지 딕셔너리 (예: {'main_image': 'path1.jpg', 'sub_image_1': 'path2.jpg'})
+
+        Returns:
+            생성된 이미지 파일 경로
+        """
+        # 텍스트 기본값 설정
+        if texts is None:
+            texts = {}
+
+        # 템플릿 로드
+        template = self.load_template(template_path)
+
+        # 이미지 로드
+        loaded_images = {}
+
+        # 단일 이미지 모드 (하위 호환성)
+        if source_image_path:
+            loaded_images['background_image'] = self.load_image(source_image_path)
+
+        # 다중 이미지 모드
+        if images:
+            for key, path in images.items():
+                loaded_images[key] = self.load_image(path)
 
         # 캔버스 초기화
         canvas_size = tuple(template['size'])
@@ -220,10 +268,20 @@ class ImageGenerator:
         for layer in template['layers']:
             layer_type = layer['type']
 
-            if layer_type == 'background_image':
-                canvas = self.renderer.render_background_image(
-                    layer, source_img, canvas_size
-                )
+            if layer_type == 'background_color':
+                canvas = self.renderer.render_background_color(canvas, layer)
+
+            elif layer_type == 'background_image':
+                if 'background_image' in loaded_images:
+                    canvas = self.renderer.render_background_image(
+                        layer, loaded_images['background_image'], canvas_size
+                    )
+
+            elif layer_type in ['main_image', 'sub_image_1', 'sub_image_2']:
+                if layer_type in loaded_images:
+                    canvas = self.renderer.render_image_to_canvas(
+                        canvas, layer, loaded_images[layer_type]
+                    )
 
             elif layer_type == 'gradient_overlay':
                 if canvas:

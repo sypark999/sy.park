@@ -1,0 +1,55 @@
+{
+  "name": "Instagram Restaurant (3 Images)",
+  "size": [1080, 1350],
+  "description": "3개 이미지 합성 레이아웃 - 상단 1개, 하단 2개",
+  "layers": [
+    {
+      "type": "background_color",
+      "color": "#F5F5DC",
+      "position": [0, 0],
+      "size": [1080, 1350]
+    },
+    {
+      "type": "main_image",
+      "position": [0, 0],
+      "size": [1080, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "sub_image_1",
+      "position": [0, 675],
+      "size": [540, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "sub_image_2",
+      "position": [540, 675],
+      "size": [540, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "text",
+      "name": "restaurant_name",
+      "position": [540, 450],
+      "align": "center",
+      "font_size": 80,
+      "color": "#FFFFFF",
+      "stroke_color": "#000000",
+      "stroke_width": 8,
+      "max_width": 950,
+      "weight": "bold"
+    },
+    {
+      "type": "text",
+      "name": "address",
+      "position": [540, 560],
+      "align": "center",
+      "font_size": 40,
+      "color": "#FFFFFF",
+      "stroke_color": "#000000",
+      "stroke_width": 6,
+      "max_width": 950,
+      "weight": "normal"
+    }
+  ]
+}
