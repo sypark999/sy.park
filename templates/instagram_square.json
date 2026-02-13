@@ -1,0 +1,39 @@
+{
+  "name": "Instagram Square",
+  "size": [1080, 1080],
+  "layers": [
+    {
+      "type": "background_image",
+      "position": [0, 0],
+      "size": [1080, 1080],
+      "fit": "cover"
+    },
+    {
+      "type": "gradient_overlay",
+      "position": [0, 750],
+      "size": [1080, 330],
+      "colors": ["rgba(0,0,0,0)", "rgba(0,0,0,0.85)"],
+      "direction": "vertical"
+    },
+    {
+      "type": "text",
+      "name": "title",
+      "position": [540, 850],
+      "align": "center",
+      "font_size": 60,
+      "color": "#FFFFFF",
+      "max_width": 950,
+      "weight": "bold"
+    },
+    {
+      "type": "text",
+      "name": "subtitle",
+      "position": [540, 940],
+      "align": "center",
+      "font_size": 35,
+      "color": "#FFD700",
+      "max_width": 950,
+      "weight": "normal"
+    }
+  ]
+}

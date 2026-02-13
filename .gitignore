@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Output files
+output/*.jpg
+output/*.jpeg
+output/*.png
+output/preview/*.jpg
+output/preview/*.jpeg
+output/preview/*.png
+
+# Keep output directories
+!output/.gitkeep
+!output/preview/.gitkeep
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude
+.claude/
+
+# Fonts (large files - user should download)
+fonts/*.ttf
+fonts/*.otf
+!fonts/.gitkeep
+
+# Environment
+.env
+.env.local
+
+# Test files
+test_*.jpg
+test_*.png
