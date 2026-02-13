@@ -36,26 +36,30 @@
     {
       "type": "text",
       "name": "title",
-      "position": [540, 625],
+      "position": [540, 650],
       "align": "center",
       "font_size": 70,
       "color": "#FFFFFF",
       "stroke_color": "#000000",
       "stroke_width": 10,
       "max_width": 950,
-      "weight": "bold"
+      "weight": "bold",
+      "line_spacing": 5,
+      "letter_spacing": -2
     },
     {
       "type": "text",
       "name": "subtitle",
-      "position": [540, 730],
+      "position": [540, 750],
       "align": "center",
       "font_size": 50,
       "color": "#FFFFFF",
       "stroke_color": "#000000",
       "stroke_width": 8,
       "max_width": 950,
-      "weight": "normal"
+      "weight": "normal",
+      "line_spacing": 3,
+      "letter_spacing": -1
     }
   ]
 }

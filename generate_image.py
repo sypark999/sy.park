@@ -164,31 +164,80 @@ class LayerRenderer:
                 stroke_color = tuple(int(stroke_color[i:i+2], 16) for i in (1, 3, 5))
             stroke_width = layer.get('stroke_width', 0)
 
+        # 행간, 자간 설정
+        line_spacing = layer.get('line_spacing', 10)
+        letter_spacing = layer.get('letter_spacing', 0)
+
         # 텍스트 그리기
         x, y = layer['position']
         line_height = TextFormatter.get_text_height(font, 'Ay')
-        total_height = line_height * len(lines) + (len(lines) - 1) * 10
+        total_height = line_height * len(lines) + (len(lines) - 1) * line_spacing
         current_y = y - total_height // 2
 
         for line in lines:
-            bbox = font.getbbox(line)
-            text_width = bbox[2] - bbox[0]
+            # 자간 적용 (문자 간 간격)
+            if letter_spacing != 0:
+                # 자간이 있으면 각 문자를 개별적으로 그림
+                char_x = 0
+                temp_line = ''
+                for char in line:
+                    temp_line += char
+                    bbox = font.getbbox(temp_line)
+                    char_x = bbox[2] - bbox[0] + letter_spacing
 
-            if layer['align'] == 'center':
-                text_x = x - text_width // 2
-            elif layer['align'] == 'right':
-                text_x = x - text_width
+                # 전체 너비 계산 (자간 포함)
+                total_width = 0
+                for i, char in enumerate(line):
+                    bbox = font.getbbox(char)
+                    char_width = bbox[2] - bbox[0]
+                    total_width += char_width
+                    if i < len(line) - 1:
+                        total_width += letter_spacing
+
+                # 정렬에 따른 시작 위치
+                if layer['align'] == 'center':
+                    text_x = x - total_width // 2
+                elif layer['align'] == 'right':
+                    text_x = x - total_width
+                else:
+                    text_x = x
+
+                # 각 문자 그리기
+                for char in line:
+                    bbox = font.getbbox(char)
+                    char_width = bbox[2] - bbox[0]
+
+                    # 테두리
+                    if stroke_color and stroke_width > 0:
+                        draw.text((text_x, current_y), char, font=font, fill=stroke_color,
+                                 stroke_width=stroke_width, stroke_fill=stroke_color)
+
+                    # 메인 텍스트
+                    draw.text((text_x, current_y), char, font=font, fill=color)
+
+                    text_x += char_width + letter_spacing
+
             else:
-                text_x = x
+                # 자간이 없으면 기존 방식
+                bbox = font.getbbox(line)
+                text_width = bbox[2] - bbox[0]
 
-            # 테두리가 있으면 먼저 그리기
-            if stroke_color and stroke_width > 0:
-                draw.text((text_x, current_y), line, font=font, fill=stroke_color,
-                         stroke_width=stroke_width, stroke_fill=stroke_color)
+                if layer['align'] == 'center':
+                    text_x = x - text_width // 2
+                elif layer['align'] == 'right':
+                    text_x = x - text_width
+                else:
+                    text_x = x
 
-            # 메인 텍스트 그리기
-            draw.text((text_x, current_y), line, font=font, fill=color)
-            current_y += line_height + 10
+                # 테두리가 있으면 먼저 그리기
+                if stroke_color and stroke_width > 0:
+                    draw.text((text_x, current_y), line, font=font, fill=stroke_color,
+                             stroke_width=stroke_width, stroke_fill=stroke_color)
+
+                # 메인 텍스트 그리기
+                draw.text((text_x, current_y), line, font=font, fill=color)
+
+            current_y += line_height + line_spacing
 
         canvas = Image.alpha_composite(canvas, txt_layer)
         return canvas.convert('RGB')
@@ -277,7 +326,8 @@ class ImageGenerator:
                         layer, loaded_images['background_image'], canvas_size
                     )
 
-            elif layer_type in ['main_image', 'sub_image_1', 'sub_image_2']:
+            elif layer_type in ['main_image', 'sub_image_1', 'sub_image_2',
+                              'grid_image_1', 'grid_image_2', 'grid_image_3', 'grid_image_4']:
                 if layer_type in loaded_images:
                     canvas = self.renderer.render_image_to_canvas(
                         canvas, layer, loaded_images[layer_type]
