@@ -36,7 +36,7 @@
     {
       "type": "text",
       "name": "title",
-      "position": [540, 680],
+      "position": [540, 660],
       "align": "center",
       "font_size": 80,
       "color": "#FFFFFF",
@@ -45,12 +45,12 @@
       "max_width": 950,
       "weight": "bold",
       "line_spacing": 5,
-      "letter_spacing": -2
+      "letter_spacing": 0
     },
     {
       "type": "text",
       "name": "subtitle",
-      "position": [540, 770],
+      "position": [540, 750],
       "align": "center",
       "font_size": 45,
       "color": "#FFFFFF",
@@ -59,7 +59,7 @@
       "max_width": 950,
       "weight": "normal",
       "line_spacing": 3,
-      "letter_spacing": -1
+      "letter_spacing": 0
     }
   ]
 }

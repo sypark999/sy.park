@@ -30,7 +30,7 @@
     {
       "type": "text",
       "name": "restaurant_name",
-      "position": [540, 630],
+      "position": [540, 610],
       "align": "center",
       "font_size": 90,
       "color": "#FFFFFF",
@@ -39,12 +39,12 @@
       "max_width": 950,
       "weight": "bold",
       "line_spacing": 5,
-      "letter_spacing": -2
+      "letter_spacing": 0
     },
     {
       "type": "text",
       "name": "address",
-      "position": [540, 730],
+      "position": [540, 710],
       "align": "center",
       "font_size": 35,
       "color": "#FFFFFF",
@@ -53,7 +53,7 @@
       "max_width": 950,
       "weight": "normal",
       "line_spacing": 3,
-      "letter_spacing": -1
+      "letter_spacing": 0
     }
   ]
 }
