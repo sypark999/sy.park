@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>캐치테이블 글로벌 X 올리브영 — 제휴 제안서</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --brand: #FF3D00;
+    --brand-light: #FF6D3A;
+    --brand-dark: #E03500;
+    --brand-bg: #FFF5F2;
+    --dark: #1A1A1A;
+    --gray-900: #262626;
+    --gray-700: #555;
+    --gray-500: #888;
+    --gray-300: #CCC;
+    --gray-100: #F5F5F5;
+    --white: #FFFFFF;
+    --font: 'Noto Sans KR', -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font); }
+
+  body {
+    font-family: var(--font);
+    background: #E8E8E8;
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Slide Container ── */
+  .slide {
+    width: 1280px;
+    height: 720px;
+    margin: 40px auto;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+    page-break-after: always;
+  }
+
+  /* ── Slide 1: Cover ── */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 100px;
+    color: var(--white);
+  }
+  .slide-cover .label {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 40px;
+  }
+  .slide-cover h1 {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .slide-cover h1 span {
+    display: block;
+    font-weight: 400;
+    font-size: 36px;
+    opacity: 0.9;
+    margin-top: 8px;
+  }
+  .slide-cover .tagline {
+    font-size: 20px;
+    font-weight: 300;
+    opacity: 0.85;
+    margin-bottom: 60px;
+  }
+  .slide-cover .date {
+    font-size: 15px;
+    opacity: 0.6;
+  }
+
+  /* ── Slide 2: Agenda ── */
+  .slide-agenda {
+    background: var(--dark);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 100px;
+  }
+  .slide-agenda h2 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 48px;
+  }
+  .slide-agenda .agenda-list {
+    list-style: none;
+    counter-reset: agenda;
+  }
+  .slide-agenda .agenda-list li {
+    counter-increment: agenda;
+    font-size: 28px;
+    font-weight: 600;
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .slide-agenda .agenda-list li::before {
+    content: counter(agenda, decimal-leading-zero);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brand);
+    min-width: 32px;
+  }
+
+  /* ── Slide 3: Intro ── */
+  .slide-intro {
+    padding: 60px 80px;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 12px;
+  }
+  .slide-intro h2 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+  .slide-intro .subtitle {
+    font-size: 16px;
+    color: var(--gray-500);
+    margin-bottom: 40px;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .metric-card {
+    background: var(--gray-100);
+    border-radius: 12px;
+    padding: 28px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: var(--brand);
+    border-radius: 0 0 2px 2px;
+  }
+  .metric-card .value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--brand);
+    margin-bottom: 8px;
+  }
+  .metric-card .label {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 500;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .feature-item {
+    background: var(--brand-bg);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .feature-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .feature-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+  .feature-desc {
+    font-size: 11px;
+    color: var(--gray-500);
+    line-height: 1.4;
+  }
+  .slide-intro .note {
+    font-size: 13px;
+    color: var(--gray-500);
+    text-align: center;
+  }
+
+  /* ── Slide 4: Strategy ── */
+  .slide-strategy {
+    padding: 60px 80px;
+  }
+  .slide-strategy h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--gray-900);
+    text-align: center;
+    margin-bottom: 48px;
+    line-height: 1.4;
+  }
+  .benefit-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  .benefit-col {
+    flex: 1;
+    padding: 32px;
+  }
+  .benefit-col h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .benefit-col h3 .badge {
+    display: inline-block;
+    background: var(--brand);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .benefit-col ul {
+    list-style: none;
+  }
+  .benefit-col ul li {
+    font-size: 15px;
+    color: var(--gray-700);
+    padding: 10px 0;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .benefit-col ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 17px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+  .benefit-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .arrow-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .benefit-col:first-child {
+    background: var(--gray-100);
+    border-radius: 16px 0 0 16px;
+  }
+  .benefit-col:last-child {
+    background: var(--brand-bg);
+    border-radius: 0 16px 16px 0;
+  }
+
+  /* ── Slides 5-7: Process slides ── */
+  .slide-process {
+    padding: 60px 80px;
+  }
+  .slide-process h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 40px;
+    line-height: 1.4;
+  }
+  .process-section {
+    margin-bottom: 28px;
+  }
+  .process-section .badge {
+    display: inline-block;
+    background: var(--brand);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .process-section .badge.outline {
+    background: transparent;
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
+  }
+  .steps {
+    display: flex;
+    gap: 16px;
+  }
+  .step {
+    flex: 1;
+    background: var(--gray-100);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+  .step .num {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--brand);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .step p {
+    font-size: 14px;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+  .effects-grid {
+    display: flex;
+    gap: 16px;
+  }
+  .effect-item {
+    flex: 1;
+    background: var(--brand-bg);
+    border-radius: 12px;
+    padding: 20px 24px;
+    border-left: 3px solid var(--brand);
+  }
+  .effect-item p {
+    font-size: 14px;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  /* ── Slide 7: Two-column ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .col-block h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .col-block h3 .badge {
+    display: inline-block;
+    background: var(--brand);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .col-block .steps-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .col-block .step {
+    padding: 16px 20px;
+  }
+  .col-block .effect-item {
+    margin-bottom: 8px;
+  }
+
+  /* ── Slide 8: Closing ── */
+  .slide-closing {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    text-align: center;
+  }
+  .slide-closing h2 {
+    font-size: 54px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+  .slide-closing p {
+    font-size: 16px;
+    opacity: 0.7;
+    font-weight: 400;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; }
+    .slide {
+      margin: 0;
+      box-shadow: none;
+      border-radius: 0;
+      page-break-after: always;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: Cover -->
+<!-- ============================================================ -->
+<div class="slide slide-cover">
+  <div class="label">Partnership Proposal</div>
+  <h1>
+    캐치테이블 글로벌
+    <span>X 올리브영 명동점</span>
+  </h1>
+  <div class="tagline">K-Beauty x K-Food &mdash; 뷰티 쇼핑과 미식을 하나의 여정으로</div>
+  <div class="date">2026.03</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: Agenda -->
+<!-- ============================================================ -->
+<div class="slide slide-agenda">
+  <h2>Agenda</h2>
+  <ol class="agenda-list">
+    <li>캐치테이블 글로벌 소개</li>
+    <li>캐치테이블 글로벌 × 올리브영 캠페인 전략</li>
+    <li>협업 방안 &mdash; 오프라인 연계 / 앱 내 노출</li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: Intro -->
+<!-- ============================================================ -->
+<div class="slide slide-intro">
+  <div class="section-label">캐치테이블 글로벌 소개</div>
+  <h2>외국인 관광객을 위한 No.1 맛집 예약 플랫폼</h2>
+  <div class="subtitle">한국을 방문하는 외국인 관광객에게 최고의 미식 경험을 연결합니다</div>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="value">120만+</div>
+      <div class="label">글로벌 앱 다운로드</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">180만+</div>
+      <div class="label">토탈 회원</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">1.6만+</div>
+      <div class="label">제휴 레스토랑</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">50만+</div>
+      <div class="label">월간 외국인 유저</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">20개</div>
+      <div class="label">지원 언어</div>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-icon">🌐</div>
+      <div class="feature-title">20개국 다국어 지원</div>
+      <div class="feature-desc">영어, 일본어, 중국어 등 20개 언어로 예약 서비스 제공</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📍</div>
+      <div class="feature-title">Google Maps 연계</div>
+      <div class="feature-desc">구글 맵에서 캐치테이블 예약 링크로 바로 연결</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">간편 예약 &amp; 웨이팅</div>
+      <div class="feature-desc">실시간 예약 확인, 해외 카드 결제, 원격 웨이팅 등록</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🗺️</div>
+      <div class="feature-title">맞춤형 큐레이션</div>
+      <div class="feature-desc">지역·메뉴별 검색, 테마 기획전, 트렌디한 맛집 추천</div>
+    </div>
+  </div>
+
+  <div class="note">한국 연락처 없이 해외 카드 · 이메일만으로 예약 가능한 가장 외국인 친화적인 레스토랑 예약 서비스</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: Strategy -->
+<!-- ============================================================ -->
+<div class="slide slide-strategy">
+  <div class="section-label" style="text-align:center;">캠페인 전략</div>
+  <h2>올리브영 고객에게 근처 맛집 혜택을,<br>캐치테이블 유저에게 올리브영 정보를</h2>
+
+  <div class="benefit-row">
+    <div class="benefit-col">
+      <h3><span class="badge">올리브영이 받는 혜택</span></h3>
+      <ul>
+        <li>캐치테이블 앱 배너에 올리브영 홍보 노출</li>
+        <li>탐색 지도에 올리브영 매장 위치 표기</li>
+        <li>캐치테이블 SNS 채널을 통한 공동 홍보</li>
+        <li>월 50만+ 외국인 유저에게 도달</li>
+      </ul>
+    </div>
+    <div class="benefit-arrow">
+      <div class="arrow-circle">&#8596;</div>
+    </div>
+    <div class="benefit-col">
+      <h3><span class="badge">캐치테이블이 받는 혜택</span></h3>
+      <ul>
+        <li>올리브영 매장 내 캐치테이블 안내물 비치</li>
+        <li>명동 방문 고객의 맛집 예약 유도</li>
+        <li>올리브영 고객 전용 할인 쿠폰 배포</li>
+        <li>오프라인 접점을 통한 앱 신규 유입</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: Offline -->
+<!-- ============================================================ -->
+<div class="slide slide-process">
+  <div class="section-label">협업 방안 &mdash; 오프라인 연계</div>
+  <h2>올리브영 매장 내 안내물 비치로<br>고객에게 주변 맛집 할인 혜택 제공</h2>
+
+  <div class="process-section">
+    <span class="badge">프로세스</span>
+    <div class="steps">
+      <div class="step">
+        <div class="num">STEP 01</div>
+        <p>올리브영 매장 내 캐치테이블 안내물 비치<br>(포스터 / 테이블 스탠드 / 리플렛)</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 02</div>
+        <p>고객이 QR 코드를 스캔 → 명동 주변 인기 맛집 리스트 + 전용 할인 쿠폰 자동 발급</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 03</div>
+        <p>캐치테이블 앱에서 바로 예약 또는 웨이팅 등록</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-section">
+    <span class="badge outline">기대효과</span>
+    <div class="effects-grid">
+      <div class="effect-item">
+        <p>올리브영 고객에게 부가 혜택(맛집 할인)을 제공하여 매장 방문 만족도 향상</p>
+      </div>
+      <div class="effect-item">
+        <p>명동 인근 맛집으로의 자연스러운 동선 형성 → 지역 내 체류 시간 증가</p>
+      </div>
+      <div class="effect-item">
+        <p>오프라인 접점에서 캐치테이블 앱 신규 유입 확보</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: Banner -->
+<!-- ============================================================ -->
+<div class="slide slide-process">
+  <div class="section-label">협업 방안 &mdash; 앱 내 노출</div>
+  <h2>캐치테이블 앱 배너를 통한<br>올리브영 홍보 콘텐츠 노출</h2>
+
+  <div class="process-section">
+    <span class="badge">프로세스</span>
+    <div class="steps">
+      <div class="step">
+        <div class="num">STEP 01</div>
+        <p>캐치테이블 앱 메인 배너 또는 인트로 팝업에 올리브영 홍보 콘텐츠 게재</p>
+      </div>
+      <div class="step">
+        <div class="num">STEP 02</div>
+        <p>배너 클릭 시 올리브영이 원하는 프로모션 · 이벤트 · 매장 정보 페이지로 랜딩</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-section">
+    <span class="badge outline">기대효과</span>
+    <div class="effects-grid">
+      <div class="effect-item">
+        <p>캐치테이블 월간 외국인 유저 50만+에게 올리브영 직접 노출</p>
+      </div>
+      <div class="effect-item">
+        <p>맛집을 탐색 중인 관광객에게 자연스러운 올리브영 방문 동기 부여</p>
+      </div>
+      <div class="effect-item">
+        <p>앱 내 가장 주목도 높은 지면(메인 배너)을 활용한 효율적 홍보</p>
+      </div>
+      <div class="effect-item">
+        <p>올리브영이 원하는 시기 · 내용에 맞춰 유연하게 운영 가능</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: Map & SNS -->
+<!-- ============================================================ -->
+<div class="slide slide-process">
+  <div class="section-label">협업 방안 &mdash; 앱 내 노출</div>
+  <h2>탐색 지도 내 올리브영 표기 + SNS 공동 홍보</h2>
+
+  <div class="two-col" style="margin-top: 32px;">
+    <div class="col-block">
+      <h3><span class="badge">탐색 지도</span></h3>
+      <div class="steps-vertical">
+        <div class="step">
+          <div class="num">STEP 01</div>
+          <p>캐치테이블 앱 탐색 지도에 올리브영 매장 위치를 아이콘으로 표기</p>
+        </div>
+        <div class="step">
+          <div class="num">STEP 02</div>
+          <p>클릭 시 올리브영 매장 정보 표시</p>
+        </div>
+      </div>
+      <div class="effect-item" style="margin-bottom: 8px;">
+        <p>맛집 검색 중 올리브영을 자연스럽게 인지</p>
+      </div>
+      <div class="effect-item" style="margin-bottom: 8px;">
+        <p>식사 전후 올리브영 방문 동선 형성</p>
+      </div>
+      <div class="effect-item">
+        <p>특히 명동 등 관광 핫스팟 내 방문객 증대</p>
+      </div>
+    </div>
+
+    <div class="col-block">
+      <h3><span class="badge">SNS 공동 홍보</span></h3>
+      <div class="steps-vertical">
+        <div class="step">
+          <div class="num">STEP 01</div>
+          <p>캐치테이블 글로벌 SNS 채널에서 올리브영 관련 콘텐츠 공동 제작</p>
+        </div>
+        <div class="step">
+          <div class="num">STEP 02</div>
+          <p>Instagram · TikTok 등 다국어 게시</p>
+        </div>
+      </div>
+      <div class="effect-item" style="margin-bottom: 8px;">
+        <p>양사 계정 태그를 통한 크로스 프로모션</p>
+      </div>
+      <div class="effect-item" style="margin-bottom: 8px;">
+        <p>올리브영 관련 맛집 큐레이션 콘텐츠</p>
+      </div>
+      <div class="effect-item">
+        <p>외국인 타겟 다국어 콘텐츠로 글로벌 도달</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: Closing -->
+<!-- ============================================================ -->
+<div class="slide slide-closing">
+  <h2>END OF DOCUMENT</h2>
+  <p>캐치테이블 글로벌팀 &nbsp;|&nbsp; catchtable.global</p>
+</div>
+
+</body>
+</html>
