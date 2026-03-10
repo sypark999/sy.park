@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CatchTable Global Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f6fa;
+    color: #2d3436;
+    line-height: 1.6;
+  }
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #e9ecef;
+    padding: 28px 40px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+  .header p { font-size: 13px; color: #868e96; margin-top: 4px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+
+  .section {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .section-title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+  .section-desc { font-size: 12px; color: #868e96; margin-bottom: 20px; }
+  .chart-wrapper { position: relative; width: 100%; }
+  .note {
+    background: #f8f9fa;
+    border-left: 3px solid #dee2e6;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #868e96;
+    margin-bottom: 24px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* Tables */
+  .table-scroll { overflow-x: auto; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .data-table thead th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    padding: 8px 10px;
+    text-align: right;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+  }
+  .data-table thead th:first-child { text-align: left; }
+  .data-table thead th.q-group {
+    text-align: center;
+    background: #e9ecef;
+    font-size: 11px;
+    font-weight: 700;
+    color: #495057;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .data-table tbody td {
+    padding: 7px 10px;
+    text-align: right;
+    border-bottom: 1px solid #f1f3f5;
+    white-space: nowrap;
+  }
+  .data-table tbody td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #1a1a2e;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 1;
+  }
+  .data-table tbody tr:hover td { background: #f8f9fa; }
+  .data-table tbody tr:hover td:first-child { background: #f8f9fa; }
+  .data-table tfoot td {
+    padding: 9px 10px;
+    text-align: right;
+    border-top: 2px solid #dee2e6;
+    font-weight: 700;
+    color: #1a1a2e;
+    white-space: nowrap;
+  }
+  .data-table tfoot td:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 1;
+  }
+  .data-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    background: #f8f9fa;
+    z-index: 2;
+  }
+
+  .change-up { color: #20c997; font-size: 11px; font-weight: 600; }
+  .change-down { color: #ff6b6b; font-size: 11px; font-weight: 600; }
+  .change-zero { color: #adb5bd; font-size: 11px; }
+  .mom-row td {
+    background: #fafbfc !important;
+    font-size: 11px;
+    color: #868e96;
+    padding: 4px 10px;
+    border-bottom: 2px solid #e9ecef;
+  }
+  .mom-row td:first-child {
+    font-weight: 500;
+    color: #adb5bd;
+    background: #fafbfc !important;
+  }
+  .mom-row:hover td { background: #f4f5f7 !important; }
+  .mom-row:hover td:first-child { background: #f4f5f7 !important; }
+  .insight-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: #495057;
+  }
+  .insight-box span.tag {
+    display: inline-block;
+    background: #e9ecef;
+    color: #495057;
+    font-weight: 600;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+  .insight-box span.up { color: #20c997; font-weight: 600; }
+  .insight-box span.down { color: #ff6b6b; font-weight: 600; }
+  .col-change { background: #fefcf3; font-size: 11px; }
+  thead .col-change { background: #fdf6e3; font-size: 11px; color: #868e96; }
+  .q-start { border-left: 2px solid #ced4da !important; }
+
+  /* Stacked sub-tables */
+  .sub-table-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin: 24px 0 10px;
+    padding-left: 2px;
+  }
+  .sub-table-label:first-child { margin-top: 0; }
+
+  /* Separator between stacked tables */
+  .table-separator {
+    border-top: 3px solid #e9ecef;
+    margin-top: 8px;
+    padding-top: 4px;
+  }
+
+  /* Country filter chips */
+  .chip-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid #dee2e6;
+    background: #fff;
+    color: #868e96;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .chip:hover { border-color: #adb5bd; }
+  .chip.active {
+    color: #fff;
+    border-color: transparent;
+  }
+  .chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    .header { padding: 20px 16px; }
+    .container { padding: 16px 12px; }
+    .section { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 style="color:#FF3D00">CATCHTABLE Global — Monthly Trend Dashboard</h1>
+  <p>월간 예약/대기 건수 vs. 실제 한국 입국 관광객 비교 · 2025년 3월 – 2026년 2월</p>
+</div>
+
+<div class="container">
+
+  <div class="note">
+    *캐치테이블 내 예약 건수 100건 미만 / 유입 관광객 수 10위권 밖은 미표기 · 관광객 데이터는 26년 1월까지 반영
+  </div>
+
+  <!-- Section 1: 요약 -->
+  <div class="section">
+    <div class="section-title">월별 요약</div>
+    <div class="section-desc">전체 합산 기준 · 분기별 그룹핑 · 각 지표 아래 MoM(전월 대비 증감률) 표시</div>
+    <div class="insight-box">
+      <span class="tag">예약</span> Q4(10–12월)가 연중 최고 구간이며, 10월 단일 최대(약 35,500건). 1월 <span class="down">▼31%</span> 급감 후 2월 <span class="up">▲26%</span> 반등.<br>
+      <span class="tag">대기</span> 9월 대기 건수가 연중 최고(약 106,000건)로, 예약 대비 변동폭이 더 큼. 1월 대기도 <span class="down">▼34%</span> 급감.<br>
+      <span class="tag">관광객</span> 주요 10개국 합산 관광객은 7–8월(약 137만)에 피크를 찍고 1월(약 108만)에 저점. 예약+대기 합산 추이와 유사하나, Q4에서 관광객 대비 서비스 이용률이 상대적으로 더 높게 나타남.<br>
+      <span class="tag">종합</span> 성수기(Q3–Q4) 대비 비수기(1월) 낙폭이 30% 이상으로, 계절 변동 관리가 핵심 과제.
+    </div>
+    <div class="table-scroll">
+      <table class="data-table" id="summaryTable"></table>
+    </div>
+  </div>
+
+  <!-- Section 2: 관광객 -->
+  <div class="section">
+    <div class="section-title">관광객 입국자 수 월별 추이</div>
+    <div class="section-desc">한국관광공사 기준 · Top 5 · 25년 3월 – 26년 1월</div>
+    <div class="insight-box">
+      <span class="tag">중국</span> 월 40–60만 명으로 압도적 1위. 7–8월 방학 시즌(60만+) 피크, 11월 이후 하락세.<br>
+      <span class="tag">일본</span> 월 22–38만 명. 3월 벚꽃/9–11월 단풍 시즌에 강세, 1월(22.5만) 연중 최저.<br>
+      <span class="tag">대만</span> 월 14–20만 명으로 비교적 안정적. 7월(19.9만) 최고, 계절 편차가 상대적으로 작음.<br>
+      <span class="tag">미국</span> 4위, 6월 여름 휴가(16.6만) 피크 후 겨울(1월 7.6만)에 절반 이하로 급감.<br>
+      <span class="tag">동남아</span> 싱가포르·태국·말레이시아는 7–8월 급감(자국 비수기) → 10–12월 급등 패턴이 뚜렷.
+    </div>
+    <div class="chip-bar" id="touristChips"></div>
+    <div class="chart-wrapper">
+      <canvas id="touristChart" height="110"></canvas>
+    </div>
+  </div>
+
+  <!-- Section 3: 비율 (차트 + 테이블) -->
+  <div class="section">
+    <div class="section-title">(예약+대기) / 방문자수 비율</div>
+    <div class="section-desc">관광객 대비 캐치테이블 전환율 · 비율이 높을수록 침투율 우수 · 25년 3월 – 26년 1월 · 방문자수 기준 정렬 (26년 1월)</div>
+    <div class="insight-box">
+      <span class="tag">싱가포르</span> 침투율 최상위(12월 약 32%). 단, 7–8월 관광객 급감 시기에 비율 급등하는 착시 효과 있어 절대 건수와 함께 해석 필요.<br>
+      <span class="tag">홍콩</span> 2위권(25–28%) 유지, 12월 최고(29.4%). 관광객 규모 대비 예약+대기 전환이 안정적으로 높은 시장.<br>
+      <span class="tag">대만</span> 15–18%대로 꾸준한 우상향. 관광객 수(14–20만)와 침투율이 동시에 성장해 가장 건강한 성장세.<br>
+      <span class="tag">일본</span> 관광객 2위(22–38만)이나 침투율은 8–11% 수준. 대기 비중이 높아(예약의 5–10배) 예약 전환 개선 여지가 큼.<br>
+      <span class="tag">중국</span> 최대 관광국(40–60만)이지만 침투율 2–3%로 최하위권. 관광객 규모 대비 캐치테이블 인지도/접근성 개선 시 성장 잠재력이 가장 큰 시장.
+    </div>
+    <div class="chip-bar" id="ratioChips"></div>
+    <div class="chart-wrapper" style="margin-bottom: 24px;">
+      <canvas id="ratioChart" height="90"></canvas>
+    </div>
+    <div class="table-scroll">
+      <table class="data-table" id="ratioTable"></table>
+    </div>
+  </div>
+
+  <!-- Section 4: 예약 + 대기 (세로 스택) -->
+  <div class="section">
+    <div class="section-title">예약 · 대기 건수 월별 상세</div>
+    <div class="section-desc">국가별 · 25년 3월 – 26년 2월</div>
+    <div class="sub-table-label">월간 예약 건수</div>
+    <div class="table-scroll">
+      <table class="data-table" id="reserveTable"></table>
+    </div>
+    <div class="sub-table-label table-separator">월간 대기 건수</div>
+    <div class="table-scroll">
+      <table class="data-table" id="waitTable"></table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Config ─────────────────────────────────────────────
+const allMonths = ['3월','4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월'];
+const DATA_END = 11;
+const TOURIST_END = 10;
+
+const quarters = [
+  { label: "Q2 '25", months: [0,1,2] },
+  { label: "Q3 '25", months: [3,4,5] },
+  { label: "Q4 '25", months: [6,7,8] },
+  { label: "Q1 '26", months: [9,10,11] },
+];
+
+// ─── 예약 건수 ──────────────────────────────────────────
+const reservations = {
+  JP: [2425,2730,2826,2787, 2781,3873,3332,3658,3806,3187,2675,3483],
+  US: [5651,5652,5105,4511, 3324,4145,5594,7110,6101,5880,3626,4587],
+  HK: [4731,6193,4861,4702, 4643,4796,4543,5482,5410,6096,3712,4723],
+  TW: [3680,3955,3970,3799, 3609,4528,4387,5069,4939,5358,4667,6296],
+  SG: [3302,3330,2791,1917, 1209,1728,2728,3862,3114,3222,1534,2052],
+  CN: [2086,3010,2674,2883, 3608,3241,3204,2985,3055,5146,3488,4375],
+  AU: [853,1183,727,530, 452,644,962,1175,1038,1220,930,704],
+  CA: [621,786,682,472, 492,563,986,1075,663,614,442,594],
+  KR: [615,789,821,770, 621,819,823,1078,938,1562,1116,1104],
+  GB: [521,756,616,372, 293,508,522,690,546,494,354,486],
+  PH: [452,547,427,443, 246,356,369,582,549,616,314,399],
+  TH: [414,602,374,269, 283,218,372,690,489,575,219,392],
+  ID: [454,386,282,206, 129,149,213,387,350,470,228,275],
+  MY: [453,459,402,251, 204,353,457,655,554,571,328,358],
+};
+
+// ─── 대기 건수 ──────────────────────────────────────────
+const waitings = {
+  JP: [37389,20208,22828,24764, 23644,32122,41346,29659,39825,28278,15693,18223],
+  TW: [16881,18937,20047,21850, 20571,24484,29514,26995,28182,31638,21674,22624],
+  HK: [6617,10423,8891,9666, 8965,9624,9159,8986,10990,13908,6740,6040],
+  CN: [4720,7405,7827,7099, 9886,11282,8062,10156,6393,10287,8312,10053],
+  SG: [4084,5880,6596,5472, 2942,2573,5324,8356,9744,10022,3920,2349],
+  US: [3151,4287,4115,5279, 4112,3570,5005,7221,8195,5777,2796,2374],
+  MY: [1320,2070,1695,1229, 788,905,2326,2859,3749,2926,1306,993],
+  TH: [1254,2728,1815,1265, 1088,811,1236,3300,2560,3150,1162,1032],
+  ID: [1119,1585,1180,990, 677,479,979,1583,2004,2049,1013,552],
+  AU: [760,1711,1160,1052, 857,651,1510,2128,2349,2386,1521,901],
+  KR: [715,784,863,803, 821,1093,1045,1405,1471,1914,1059,958],
+  PH: [692,1074,795,1293, 583,521,907,1400,1831,1377,641,761],
+  CA: [549,769,1026,788, 630,741,1253,1990,1268,841,460,435],
+  GB: [356,663,659,504, 382,524,751,999,981,570,313,365],
+};
+
+// ─── 관광객 수 (25년 3월–26년 1월) ─────────────────────
+const tourists = {
+  '중국':   [416849,443230,484390,477052,602147,604618,503186,472477,377866,393834,418703],
+  '일본':   [383312,257903,291626,287140,299782,378852,370709,316776,362879,304959,225351],
+  '대만':   [140017,151613,150272,164885,199280,191565,154992,161049,158374,163918,166779],
+  '미국':   [132117,153381,132324,166242,131832,111754,121682,148951,132651,105599,76212],
+  '필리핀': [50973,69393,60559,53128,41692,40847,47625,62811,60068,53616,40126],
+  '홍콩':   [44030,64591,51363,56109,64224,64860,40879,44671,49635,68239,37710],
+  '싱가포르':[36370,37953,37734,40211,16008,15894,29816,39995,48541,64053,16815],
+  '인도네시아':[32325,36580,34665,32029,28651,24800,26703,33323,30357,34073,26415],
+  '태국':   [27942,40689,29480,21179,20856,18844,21535,40937,32303,39120,20438],
+  '말레이시아':[24780,30811,27416,19945,13840,15516,31359,34016,36250,43865,27437],
+  '베트남': [52874,52792,41565,45408,47692,51664,46001,50483,44013,34378,22960],
+};
+
+const codeToKr = {
+  CN:'중국', JP:'일본', TW:'대만', US:'미국', PH:'필리핀',
+  HK:'홍콩', SG:'싱가포르', ID:'인도네시아', TH:'태국', MY:'말레이시아',
+};
+
+// ─── Helpers ────────────────────────────────────────────
+const palette = ['#4263eb','#f76707','#20c997','#e64980','#7950f2','#fab005','#15aabf','#82c91e','#fd7e14','#868e96','#d6336c'];
+function getColor(i,a){const c=palette[i%palette.length];if(!a)return c;const r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;}
+function fmt(n){return n==null?'-':n.toLocaleString('ko-KR');}
+function pct(a,b){if(!a||a===0)return null;return((b-a)/a*100);}
+function changeHtml(v){
+  if(v==null)return'<span class="change-zero">-</span>';
+  const abs=Math.abs(v).toFixed(1);
+  if(v>0)return`<span class="change-up">▲${abs}%</span>`;
+  if(v<0)return`<span class="change-down">▼${abs}%</span>`;
+  return`<span class="change-zero">0.0%</span>`;
+}
+function activeQuarters(end){
+  return quarters.map(q=>({...q,months:q.months.filter(m=>m<=end)})).filter(q=>q.months.length>0);
+}
+
+// 비율 데이터 계산 (공용)
+function calcRatios() {
+  const ratioData = {};
+  Object.entries(codeToKr).forEach(([code,kr])=>{
+    if(!tourists[kr]) return;
+    const res=reservations[code]||[], wait=waitings[code]||[], tour=tourists[kr];
+    ratioData[kr] = tour.map((t,i) => t>0 ? ((res[i]||0)+(wait[i]||0))/t : null);
+  });
+  return ratioData;
+}
+
+// 방문자수 기준 정렬 (최근 월 = TOURIST_END)
+function sortByVisitors(ratioData) {
+  return Object.entries(ratioData)
+    .sort((a,b) => (tourists[b[0]][TOURIST_END]||0) - (tourists[a[0]][TOURIST_END]||0));
+}
+
+// ─── Chart plugins ──────────────────────────────────────
+const endLabelPlugin = {
+  id:'endLabels',
+  afterDraw(chart){
+    const ctx=chart.ctx;
+    const labelH=14; // 라벨 높이 (겹침 방지 간격)
+    const positions=[];
+    // 먼저 원래 y좌표 수집
+    const items=[];
+    chart.data.datasets.forEach((ds,i)=>{
+      const meta=chart.getDatasetMeta(i);
+      if(!meta.visible)return;
+      const last=meta.data[meta.data.length-1];
+      if(!last)return;
+      items.push({label:ds.label, color:ds.borderColor, x:last.x+10, y:last.y});
+    });
+    // y좌표 기준 정렬 후 겹침 해소
+    items.sort((a,b)=>a.y-b.y);
+    for(let i=0;i<items.length;i++){
+      if(i>0 && items[i].y - items[i-1].y < labelH){
+        items[i].y = items[i-1].y + labelH;
+      }
+    }
+    // 그리기
+    items.forEach(it=>{
+      ctx.save();
+      ctx.font='bold 12px -apple-system,sans-serif';
+      ctx.fillStyle=it.color;
+      ctx.textBaseline='middle';
+      ctx.fillText(it.label,it.x,it.y);
+      ctx.restore();
+    });
+  }
+};
+
+const dataLabelPlugin = {
+  id:'dataLabels',
+  afterDraw(chart){
+    const ctx=chart.ctx;
+    chart.data.datasets.forEach((ds,i)=>{
+      const meta=chart.getDatasetMeta(i);
+      if(!meta.visible)return;
+      meta.data.forEach((pt,j)=>{
+        const val=ds.data[j];
+        if(val==null)return;
+        ctx.save();
+        ctx.font='9px -apple-system,sans-serif';
+        ctx.fillStyle='#868e96';
+        ctx.textAlign='center';
+        ctx.fillText(ds._unit==='pct'?(val).toFixed(1)+'%':(val/10000).toFixed(1)+'만', pt.x, pt.y-12);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+// ─── Section 1: 요약 테이블 ─────────────────────────────
+function renderSummaryTable() {
+  const aq=activeQuarters(TOURIST_END);
+  const totalRes=allMonths.map((_,mi)=>mi<=DATA_END?Object.values(reservations).reduce((s,a)=>s+(a[mi]||0),0):null);
+  const totalWait=allMonths.map((_,mi)=>mi<=DATA_END?Object.values(waitings).reduce((s,a)=>s+(a[mi]||0),0):null);
+  const totalCombined=allMonths.map((_,mi)=>totalRes[mi]!=null&&totalWait[mi]!=null?totalRes[mi]+totalWait[mi]:null);
+  const totalTourist=allMonths.map((_,mi)=>mi<=TOURIST_END?Object.values(tourists).reduce((s,a)=>s+(a[mi]||0),0):null);
+
+  const rows=[
+    {label:'총 예약 건수',data:totalRes},
+    {label:'총 대기 건수',data:totalWait},
+    {label:'예약+대기 합계',data:totalCombined},
+    {label:'주요 국가 관광객 수',data:totalTourist},
+  ];
+
+  let h1='<tr><th rowspan="2" style="min-width:140px;vertical-align:bottom">지표</th>';
+  aq.forEach(q=>{h1+=`<th class="q-group" colspan="${q.months.length}">${q.label}</th>`;});
+  h1+='</tr>';
+
+  let h2='<tr>';
+  aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+    h2+=`<th${i===0&&qi>0?' class="q-start"':''}>${allMonths[mi]}</th>`;
+  });});
+  h2+='</tr>';
+
+  let body='';
+  rows.forEach(r=>{
+    // 데이터 행
+    body+='<tr><td>'+r.label+'</td>';
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      body+=`<td${i===0&&qi>0?' class="q-start"':''}>${r.data[mi]!=null?fmt(r.data[mi]):'-'}</td>`;
+    });});
+    body+='</tr>';
+    // MoM 행
+    body+='<tr class="mom-row"><td>↳ MoM</td>';
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      const mom = mi>0 && r.data[mi]!=null && r.data[mi-1]!=null ? pct(r.data[mi-1],r.data[mi]) : null;
+      body+=`<td${i===0&&qi>0?' class="q-start"':''}>${changeHtml(mom)}</td>`;
+    });});
+    body+='</tr>';
+  });
+
+  document.getElementById('summaryTable').innerHTML=`<thead>${h1}${h2}</thead><tbody>${body}</tbody>`;
+}
+
+// ─── Chip filter helper ─────────────────────────────────
+function renderChips(containerId, chart, entries, defaultCount) {
+  const container = document.getElementById(containerId);
+  entries.forEach(([k,,],i) => {
+    const color = getColor(i);
+    const chip = document.createElement('span');
+    chip.className = 'chip' + (i < defaultCount ? ' active' : '');
+    chip.innerHTML = `<span class="dot" style="background:${color}"></span>${k}`;
+    if (i < defaultCount) {
+      chip.style.background = color;
+      chip.style.borderColor = 'transparent';
+      chip.style.color = '#fff';
+      chip.querySelector('.dot').style.background = '#fff';
+    }
+    chip.addEventListener('click', () => {
+      const visible = chart.isDatasetVisible(i);
+      if (visible) {
+        chart.hide(i);
+        chip.classList.remove('active');
+        chip.style.background = '#fff';
+        chip.style.borderColor = '#dee2e6';
+        chip.style.color = '#868e96';
+        chip.querySelector('.dot').style.background = color;
+      } else {
+        chart.show(i);
+        chip.classList.add('active');
+        chip.style.background = color;
+        chip.style.borderColor = 'transparent';
+        chip.style.color = '#fff';
+        chip.querySelector('.dot').style.background = '#fff';
+      }
+    });
+    container.appendChild(chip);
+  });
+}
+
+// ─── Section 2: Tourist Chart (All countries, Top 5 active) ──
+function renderTouristChart() {
+  const labels=allMonths.slice(0,TOURIST_END+1);
+  const allEntries=Object.entries(tourists)
+    .sort((a,b)=>b[1].reduce((s,v)=>s+v,0)-a[1].reduce((s,v)=>s+v,0));
+  const defaultCount = 5;
+
+  const chart = new Chart(document.getElementById('touristChart').getContext('2d'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:allEntries.map(([k,v],i)=>({
+        label:k,data:v,_unit:'man',
+        borderColor:getColor(i),backgroundColor:getColor(i,0.05),
+        borderWidth:2.5,pointRadius:4,
+        pointBackgroundColor:'#fff',pointBorderColor:getColor(i),pointBorderWidth:2,
+        tension:0.3,fill:false,
+        hidden: i >= defaultCount,
+      }))
+    },
+    options:{
+      responsive:true,
+      layout:{padding:{right:80,top:20}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}명`}}
+      },
+      scales:{
+        y:{beginAtZero:false,ticks:{callback:v=>(v/10000).toFixed(0)+'만',font:{size:11}},grid:{color:'#f1f3f5'}},
+        x:{grid:{display:false},ticks:{font:{size:11}}}
+      }
+    },
+    plugins:[endLabelPlugin,dataLabelPlugin]
+  });
+
+  renderChips('touristChips', chart, allEntries, defaultCount);
+}
+
+// ─── Section 3: Ratio Chart (Top 5) + Table ─────────────
+function renderRatioSection() {
+  const ratioData=calcRatios();
+  const sorted=sortByVisitors(ratioData); // 방문자수 기준 정렬
+  const labels=allMonths.slice(0,TOURIST_END+1);
+  const aq=activeQuarters(TOURIST_END);
+
+  // ── Chart ──
+  const defaultCount = 5;
+  const ratioChart = new Chart(document.getElementById('ratioChart').getContext('2d'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:sorted.map(([k,v],i)=>({
+        label:k,data:v.map(x=>x!=null?x*100:null),_unit:'pct',
+        borderColor:getColor(i),backgroundColor:getColor(i,0.05),
+        borderWidth:2.5,pointRadius:4,
+        pointBackgroundColor:'#fff',pointBorderColor:getColor(i),pointBorderWidth:2,
+        tension:0.3,fill:false,
+        hidden: i >= defaultCount,
+      }))
+    },
+    options:{
+      responsive:true,
+      layout:{padding:{right:80,top:20}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`}}
+      },
+      scales:{
+        y:{beginAtZero:true,ticks:{callback:v=>v.toFixed(0)+'%',font:{size:11}},grid:{color:'#f1f3f5'}},
+        x:{grid:{display:false},ticks:{font:{size:11}}}
+      }
+    },
+    plugins:[endLabelPlugin,dataLabelPlugin]
+  });
+
+  renderChips('ratioChips', ratioChart, sorted, defaultCount);
+
+  // ── Table ──
+  let h1='<tr><th rowspan="2" style="min-width:80px;vertical-align:bottom">국가</th><th rowspan="2" style="vertical-align:bottom">방문자수<br><span style="font-weight:400;color:#adb5bd;font-size:10px">26년 1월</span></th>';
+  aq.forEach(q=>{h1+=`<th class="q-group" colspan="${q.months.length}">${q.label}</th>`;});
+  h1+='</tr>';
+
+  let h2='<tr>';
+  aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+    h2+=`<th${i===0&&qi>0?' class="q-start"':''}>${allMonths[mi]}</th>`;
+  });});
+  h2+='</tr>';
+
+  let body='';
+  sorted.forEach(([k,v])=>{
+    const visitorCount = tourists[k]?tourists[k][TOURIST_END]:0;
+    // 비율 행
+    body+=`<tr><td>${k}</td><td>${fmt(visitorCount)}</td>`;
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      const val=v[mi];
+      body+=`<td${i===0&&qi>0?' class="q-start"':''}>${val!=null?(val*100).toFixed(2)+'%':'-'}</td>`;
+    });});
+    body+='</tr>';
+    // MoM 행
+    body+='<tr class="mom-row"><td>↳ MoM</td><td></td>';
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      const mom = mi>0 && v[mi]!=null && v[mi-1]!=null ? pct(v[mi-1],v[mi]) : null;
+      body+=`<td${i===0&&qi>0?' class="q-start"':''}>${changeHtml(mom)}</td>`;
+    });});
+    body+='</tr>';
+  });
+
+  document.getElementById('ratioTable').innerHTML=`<thead>${h1}${h2}</thead><tbody>${body}</tbody>`;
+}
+
+// ─── Section 4: Reserve + Wait Tables (세로 스택) ───────
+function renderDetailTables() {
+  function makeTable(tableId, dataObj) {
+    const aq=activeQuarters(DATA_END);
+    const sorted=Object.entries(dataObj)
+      .map(([k,v])=>[k,v.reduce((a,b)=>a+b,0),v])
+      .sort((a,b)=>b[1]-a[1]);
+    const totals=allMonths.map((_,mi)=>mi<=DATA_END?sorted.reduce((s,e)=>s+(e[2][mi]||0),0):null);
+
+    let h1='<tr><th rowspan="2" style="min-width:45px;vertical-align:bottom">국가</th>';
+    aq.forEach(q=>{h1+=`<th class="q-group" colspan="${q.months.length}">${q.label}</th>`;});
+    h1+='</tr>';
+
+    let h2='<tr>';
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      h2+=`<th${i===0&&qi>0?' class="q-start"':''}>${allMonths[mi]}</th>`;
+    });});
+    h2+='</tr>';
+
+    let body='';
+    sorted.forEach(([k,,v])=>{
+      body+=`<tr><td>${k}</td>`;
+      aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+        body+=`<td${i===0&&qi>0?' class="q-start"':''}>${fmt(v[mi]||0)}</td>`;
+      });});
+      body+='</tr>';
+    });
+
+    let foot=`<tr><td>합계</td>`;
+    aq.forEach((q,qi)=>{q.months.forEach((mi,i)=>{
+      foot+=`<td${i===0&&qi>0?' class="q-start"':''}>${fmt(totals[mi])}</td>`;
+    });});
+    foot+='</tr>';
+
+    document.getElementById(tableId).innerHTML=`<thead>${h1}${h2}</thead><tbody>${body}</tbody><tfoot>${foot}</tfoot>`;
+  }
+
+  makeTable('reserveTable', reservations);
+  makeTable('waitTable', waitings);
+}
+
+// ─── Init ───────────────────────────────────────────────
+renderSummaryTable();
+renderTouristChart();
+renderRatioSection();
+renderDetailTables();
+</script>
+
+</body>
+</html>
