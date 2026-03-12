@@ -160,6 +160,25 @@
   }
   .sub-table-label:first-child { margin-top: 0; }
 
+  /* Loading overlay */
+  .loading-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.92); z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .loading-overlay.hidden { display: none; }
+  .loading-spinner {
+    width: 36px; height: 36px; border: 3px solid #e9ecef;
+    border-top-color: #4263eb; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { margin-top: 12px; font-size: 13px; color: #868e96; }
+  .error-banner {
+    background: #fff5f5; border: 1px solid #ffc9c9; border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 24px; color: #c92a2a; font-size: 13px;
+  }
+
   /* Separator between stacked tables */
   .table-separator {
     border-top: 3px solid #e9ecef;
@@ -213,6 +232,11 @@
 <div class="header">
   <h1 style="color:#FF3D00">CATCHTABLE Global — Monthly Trend Dashboard</h1>
   <p>월간 예약/대기 건수 vs. 실제 한국 입국 관광객 비교 · 2025년 3월 – 2026년 2월</p>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Google Sheets에서 데이터를 불러오는 중...</div>
 </div>
 
 <div class="container">
@@ -290,73 +314,84 @@
 </div>
 
 <script>
-// ─── Config ─────────────────────────────────────────────
-const allMonths = ['3월','4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월'];
-const DATA_END = 11;
-const TOURIST_END = 10;
+// ─── Google Sheets Config ────────────────────────────────
+// 1. Google Cloud Console에서 프로젝트 생성 후 Sheets API 활성화
+// 2. API 키 생성 (제한: Sheets API만 + 도메인 제한 권장)
+// 3. 스프레드시트를 "링크가 있는 모든 사용자에게 공개 (뷰어)" 로 설정
+const SPREADSHEET_ID = '여기에_스프레드시트_ID_입력';
+const API_KEY = '여기에_API_키_입력';
+const SHEET_NAMES = { reservations: '예약', waitings: '대기', tourists: '관광객' };
 
-const quarters = [
-  { label: "Q2 '25", months: [0,1,2] },
-  { label: "Q3 '25", months: [3,4,5] },
-  { label: "Q4 '25", months: [6,7,8] },
-  { label: "Q1 '26", months: [9,10,11] },
-];
-
-// ─── 예약 건수 ──────────────────────────────────────────
-const reservations = {
-  JP: [2425,2730,2826,2787, 2781,3873,3332,3658,3806,3187,2675,3483],
-  US: [5651,5652,5105,4511, 3324,4145,5594,7110,6101,5880,3626,4587],
-  HK: [4731,6193,4861,4702, 4643,4796,4543,5482,5410,6096,3712,4723],
-  TW: [3680,3955,3970,3799, 3609,4528,4387,5069,4939,5358,4667,6296],
-  SG: [3302,3330,2791,1917, 1209,1728,2728,3862,3114,3222,1534,2052],
-  CN: [2086,3010,2674,2883, 3608,3241,3204,2985,3055,5146,3488,4375],
-  AU: [853,1183,727,530, 452,644,962,1175,1038,1220,930,704],
-  CA: [621,786,682,472, 492,563,986,1075,663,614,442,594],
-  KR: [615,789,821,770, 621,819,823,1078,938,1562,1116,1104],
-  GB: [521,756,616,372, 293,508,522,690,546,494,354,486],
-  PH: [452,547,427,443, 246,356,369,582,549,616,314,399],
-  TH: [414,602,374,269, 283,218,372,690,489,575,219,392],
-  ID: [454,386,282,206, 129,149,213,387,350,470,228,275],
-  MY: [453,459,402,251, 204,353,457,655,554,571,328,358],
-};
-
-// ─── 대기 건수 ──────────────────────────────────────────
-const waitings = {
-  JP: [37389,20208,22828,24764, 23644,32122,41346,29659,39825,28278,15693,18223],
-  TW: [16881,18937,20047,21850, 20571,24484,29514,26995,28182,31638,21674,22624],
-  HK: [6617,10423,8891,9666, 8965,9624,9159,8986,10990,13908,6740,6040],
-  CN: [4720,7405,7827,7099, 9886,11282,8062,10156,6393,10287,8312,10053],
-  SG: [4084,5880,6596,5472, 2942,2573,5324,8356,9744,10022,3920,2349],
-  US: [3151,4287,4115,5279, 4112,3570,5005,7221,8195,5777,2796,2374],
-  MY: [1320,2070,1695,1229, 788,905,2326,2859,3749,2926,1306,993],
-  TH: [1254,2728,1815,1265, 1088,811,1236,3300,2560,3150,1162,1032],
-  ID: [1119,1585,1180,990, 677,479,979,1583,2004,2049,1013,552],
-  AU: [760,1711,1160,1052, 857,651,1510,2128,2349,2386,1521,901],
-  KR: [715,784,863,803, 821,1093,1045,1405,1471,1914,1059,958],
-  PH: [692,1074,795,1293, 583,521,907,1400,1831,1377,641,761],
-  CA: [549,769,1026,788, 630,741,1253,1990,1268,841,460,435],
-  GB: [356,663,659,504, 382,524,751,999,981,570,313,365],
-};
-
-// ─── 관광객 수 (25년 3월–26년 1월) ─────────────────────
-const tourists = {
-  '중국':   [416849,443230,484390,477052,602147,604618,503186,472477,377866,393834,418703],
-  '일본':   [383312,257903,291626,287140,299782,378852,370709,316776,362879,304959,225351],
-  '대만':   [140017,151613,150272,164885,199280,191565,154992,161049,158374,163918,166779],
-  '미국':   [132117,153381,132324,166242,131832,111754,121682,148951,132651,105599,76212],
-  '필리핀': [50973,69393,60559,53128,41692,40847,47625,62811,60068,53616,40126],
-  '홍콩':   [44030,64591,51363,56109,64224,64860,40879,44671,49635,68239,37710],
-  '싱가포르':[36370,37953,37734,40211,16008,15894,29816,39995,48541,64053,16815],
-  '인도네시아':[32325,36580,34665,32029,28651,24800,26703,33323,30357,34073,26415],
-  '태국':   [27942,40689,29480,21179,20856,18844,21535,40937,32303,39120,20438],
-  '말레이시아':[24780,30811,27416,19945,13840,15516,31359,34016,36250,43865,27437],
-  '베트남': [52874,52792,41565,45408,47692,51664,46001,50483,44013,34378,22960],
-};
+// ─── Data (Google Sheets에서 로드) ──────────────────────
+let allMonths, quarters, DATA_END, TOURIST_END;
+let reservations, waitings, tourists;
 
 const codeToKr = {
   CN:'중국', JP:'일본', TW:'대만', US:'미국', PH:'필리핀',
   HK:'홍콩', SG:'싱가포르', ID:'인도네시아', TH:'태국', MY:'말레이시아',
 };
+
+// ─── Sheets API Fetch ───────────────────────────────────
+async function fetchSheet(sheetName) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(sheetName)}?key=${API_KEY}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${sheetName} 시트 로드 실패 (${res.status})`);
+  return (await res.json()).values;
+}
+
+function parseMonthHeaders(headers) {
+  // 헤더 형식: "2025-03", "2025-04", ...
+  return headers.slice(1).map(h => {
+    const [y, m] = h.split('-').map(Number);
+    return { year: y, month: m };
+  });
+}
+
+function generateMonthLabels(months) {
+  return months.map(m => `${m.month}월`);
+}
+
+function generateQuarters(months) {
+  const groups = [];
+  for (let i = 0; i < months.length; i += 3) {
+    const chunk = months.slice(i, i + 3);
+    const indices = chunk.map((_, j) => i + j);
+    const ref = chunk[Math.min(1, chunk.length - 1)];
+    const q = Math.ceil(ref.month / 3);
+    groups.push({ label: `Q${q} '${String(ref.year).slice(2)}`, months: indices });
+  }
+  return groups;
+}
+
+function parseDataRows(rows) {
+  const data = {};
+  rows.slice(1).forEach(row => {
+    if (!row[0]) return;
+    const key = row[0].trim();
+    data[key] = row.slice(1).map(v => Number(String(v).replace(/,/g, '')) || 0);
+  });
+  return data;
+}
+
+async function loadData() {
+  const [resRows, waitRows, tourRows] = await Promise.all([
+    fetchSheet(SHEET_NAMES.reservations),
+    fetchSheet(SHEET_NAMES.waitings),
+    fetchSheet(SHEET_NAMES.tourists),
+  ]);
+
+  const resMonths = parseMonthHeaders(resRows[0]);
+  const tourMonths = parseMonthHeaders(tourRows[0]);
+
+  allMonths = generateMonthLabels(resMonths);
+  quarters = generateQuarters(resMonths);
+  DATA_END = resMonths.length - 1;
+  TOURIST_END = tourMonths.length - 1;
+
+  reservations = parseDataRows(resRows);
+  waitings = parseDataRows(waitRows);
+  tourists = parseDataRows(tourRows);
+}
 
 // ─── Helpers ────────────────────────────────────────────
 const palette = ['#4263eb','#f76707','#20c997','#e64980','#7950f2','#fab005','#15aabf','#82c91e','#fd7e14','#868e96','#d6336c'];
@@ -682,10 +717,24 @@ function renderDetailTables() {
 }
 
 // ─── Init ───────────────────────────────────────────────
-renderSummaryTable();
-renderTouristChart();
-renderRatioSection();
-renderDetailTables();
+async function init() {
+  try {
+    await loadData();
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    renderSummaryTable();
+    renderTouristChart();
+    renderRatioSection();
+    renderDetailTables();
+  } catch (err) {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    const banner = document.createElement('div');
+    banner.className = 'error-banner';
+    banner.innerHTML = `<strong>데이터 로드 실패</strong><br>${err.message}<br><br>확인사항:<br>• SPREADSHEET_ID와 API_KEY가 올바른지<br>• 스프레드시트가 "링크가 있는 모든 사용자에게 공개"로 설정되었는지<br>• 시트 탭 이름이 "예약", "대기", "관광객"인지<br>• 열 헤더가 "국가 | 2025-03 | 2025-04 | ..." 형식인지`;
+    document.querySelector('.container').prepend(banner);
+    console.error('Dashboard data load failed:', err);
+  }
+}
+init();
 </script>
 
 </body>

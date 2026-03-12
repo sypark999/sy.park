@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2차추천 - 매장 상세 페이지 / 마이다이닝 기획서</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      color: #172b4d;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+    h1 { font-size: 24px; margin-bottom: 24px; }
+    h2 {
+      font-size: 20px;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #0052cc;
+    }
+    h3 { font-size: 16px; margin-top: 28px; margin-bottom: 12px; }
+    h4 { font-size: 14px; margin-top: 20px; margin-bottom: 8px; color: #505f79; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; }
+    th, td { border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; font-size: 13px; }
+    th { background-color: #f4f5f7; font-weight: 600; }
+    .info-table { margin-bottom: 32px; }
+    .info-table th { width: 120px; background-color: #f4f5f7; }
+    .info-table td { color: #505f79; }
+    ul, ol { padding-left: 24px; }
+    li { margin-bottom: 4px; }
+    code {
+      background-color: #f4f5f7;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+    }
+    .placeholder {
+      background-color: #fffae6;
+      border: 1px dashed #ffab00;
+      padding: 2px 8px;
+      border-radius: 3px;
+      color: #ff8b00;
+      font-weight: 600;
+    }
+    .empty-section {
+      color: #97a0af;
+      font-style: italic;
+      padding: 20px;
+      background-color: #fafbfc;
+      border: 1px dashed #dfe1e6;
+      border-radius: 4px;
+    }
+    pre {
+      background-color: #f4f5f7;
+      padding: 16px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    .phase-label {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .phase1 { background-color: #e3fcef; color: #006644; }
+    .phase2 { background-color: #deebff; color: #0747a6; }
+  </style>
+</head>
+<body>
+
+<h1>2차추천 - 매장 상세 페이지 / 마이다이닝</h1>
+
+<table class="info-table">
+  <tr><th>작성자</th><td>박송연 (글로벌셀)</td></tr>
+  <tr><th>티켓</th><td>CTGLOB-3783</td></tr>
+  <tr><th>목표 일정</th><td><span class="placeholder">TBD</span></td></tr>
+  <tr><th>피그마</th><td><span class="placeholder">피그마 링크</span></td></tr>
+  <tr><th>상위 업무</th><td>[마케팅] 홈페이지 업데이트 관리 (CTGLOB-3685)</td></tr>
+  <tr><th>관련 업무</th><td>CTGLOB-3784 (FE), CTGLOB-3785 (BE), CTGLOB-3787 (데이터), CTGLOB-3793 (추천 기준), CTGLOB-3812 (DGN)</td></tr>
+  <tr><th>참고</th><td></td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>1. 배경 및 목적</h2>
+<!-- ============================================ -->
+
+<h3>배경</h3>
+
+<table>
+  <tr><th width="80">AS-IS</th><td>
+    <ul style="margin:4px 0">
+      <li>매장 탐색 전후 타 매장을 자연스럽게 추천할 수 있는 마케팅 구좌가 부족함</li>
+      <li>1차 탐색 이후 체류·탐색 유도 불가 — 풀예약 매장에서 유저가 바로 이탈</li>
+    </ul>
+  </td></tr>
+  <tr><th>TO-BE</th><td>
+    <ul style="margin:4px 0">
+      <li>매장 탐색 시 유사 / 인기 매장 추천 구좌 신설</li>
+      <li>탐색 흐름 내에서 2차 클릭, 추가 예약을 유도</li>
+    </ul>
+  </td></tr>
+</table>
+
+<h3>목적</h3>
+
+<p>매장 상세페이지 및 마이다이닝에 매장 추천 기능을 추가하여 유저의 <strong>탐색 경험을 강화</strong>하고, <strong>전환율 개선</strong> 및 <strong>예약 수 증가</strong>를 유도한다.</p>
+
+<ul>
+  <li><strong>매장 상세</strong>: 풀예약/인기 매장에서 유사 매장을 추천하여 이탈 방지 → 예약 전환</li>
+  <li><strong>마이다이닝</strong>: 개인화 추천으로 재방문 유저의 추가 탐색·예약 유도</li>
+</ul>
+
+<h3>목표</h3>
+
+<table>
+  <tr><th>구분</th><th>지표</th><th>목표</th></tr>
+  <tr><td>산출물</td><td>매장 상세 / 마이다이닝 추천 구좌 출시 (Phase 1)</td><td>출시 완료</td></tr>
+  <tr><td>산출물</td><td>추천 매장 데이터 세팅</td><td>대상 매장 전체</td></tr>
+  <tr><td>성과</td><td>추천 카드 클릭률 (CTR)</td><td>출시 후 측정 → 베이스라인 설정</td></tr>
+  <tr><td>성과</td><td>추천 경유 예약 전환율</td><td>출시 후 측정 → 목표 설정</td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>2. 분석 및 영향 사항</h2>
+<!-- ============================================ -->
+
+<h3>노출 위치 및 조건</h3>
+
+<table>
+  <tr><th>위치</th><th>노출 조건</th><th>추천 타이틀</th><th>비고</th></tr>
+  <tr><td>매장 상세페이지</td><td>풀예약 OR 인기매장</td><td>"If You Like [매장명]"</td><td>예약 섹션 하단, Reserve 버튼 위</td></tr>
+  <tr><td>마이다이닝</td><td>항상 노출</td><td>"Top picks for Name" / "Popular near you"</td><td>예약 카드 하단 (없으면 바로 노출)</td></tr>
+</table>
+
+<h4>매장 상세페이지</h4>
+<ul>
+  <li><strong>풀예약</strong>: 선택 가능한 예약 슬롯이 없는 매장</li>
+  <li><strong>인기매장</strong>: 수동 리스트업 (운영 태깅)</li>
+  <li>두 조건은 <strong>OR</strong> — 둘 중 하나만 해당되면 추천 노출</li>
+  <li>예약 가능한 날짜가 있는 일반 매장에서는 추천 미노출</li>
+  <li>1-1. 모든 날짜에 예약 가능 슬롯이 없는 경우: Find available time 하단 추천 매장 노출</li>
+  <li>1-2. 날짜 선택 후 예약 가능 슬롯이 없는 경우: 해당 날짜의 슬롯이 열려 있는 추천 매장 노출</li>
+</ul>
+
+<h4>마이다이닝</h4>
+<ul>
+  <li>예약 예정이 있는 유저: 예약 카드 아래에 추천 섹션</li>
+  <li>예약 예정이 없는 유저: 빈 상태 + 추천 섹션 바로 노출</li>
+  <li>"near you"의 범위는 한국 전체</li>
+  <li>하단 설명: "From your recent interests including [매장명]" (예약/웨이팅 내역 우선)</li>
+  <li>ref: Spotify "Made for you", Netflix "Top picks for [Name]", Google Maps "Popular nearby", Instagram "Popular near you"</li>
+</ul>
+
+<h3>추천 카드 UI</h3>
+<ul>
+  <li><strong>3개 고정 노출</strong> (가로 스크롤 없음)</li>
+  <li>이미지 (1:1 정사각형 예상, 디자이너 확정 예정) + 매장명 + Cuisine + 평점</li>
+  <li>탭 → 해당 매장 상세페이지로 이동</li>
+  <li>중복 처리: 추천 3개 간 중복 제외, 현재 보고 있는 매장과 동일 매장 제외</li>
+</ul>
+
+<h3><span class="phase1">Phase 1</span> 하드코딩 (현재 기획)</h3>
+
+<h4>데이터 소스</h4>
+<ul>
+  <li>매장 상세페이지: 국내앱 기존 데이터 활용하여 세팅</li>
+  <li>마이다이닝: 수동 큐레이션</li>
+</ul>
+
+<h4>운영</h4>
+<ul>
+  <li>초기 1회 세팅 후 필요 시 수동 변경</li>
+  <li>운영 담당: 기획자 (박송연)</li>
+</ul>
+
+<h4>제약사항</h4>
+<ul>
+  <li>예약 마감 매장도 그냥 노출 (실시간 필터링 불가)</li>
+  <li>모든 유저에게 동일한 추천 노출 (개인화 없음)</li>
+  <li>추천 새로고침 없음 (재방문 시 동일 3개)</li>
+</ul>
+
+<h4>Phase 2 대비 고려사항</h4>
+<ul>
+  <li>API 구조를 Phase 2 추천 로직 전환에 대비하여 설계</li>
+  <li>프론트엔드 카드 컴포넌트는 Phase 1/2 동일하게 사용 가능하도록</li>
+</ul>
+
+<h3><span class="phase2">Phase 2</span> 추천 로직 (추후 개발)</h3>
+
+<h4>케이스 분기</h4>
+<table>
+  <tr><th>우선순위</th><th>조건</th><th>노출 구성</th></tr>
+  <tr><td>1</td><td>예약/웨이팅 내역 + 최근 본 매장 둘 다 있음</td><td>최근 본 매장 1 + 최근 본 기준 유사 1 + 예약 기준 유사 1</td></tr>
+  <tr><td>2</td><td>예약/웨이팅 내역만 있음</td><td>가장 최근 예약/웨이팅 기준 유사 매장 3</td></tr>
+  <tr><td>3</td><td>최근 본 매장만 있음</td><td>최근 본 매장 1 + 유사 매장 2</td></tr>
+  <tr><td>4</td><td>둘 다 없음 (콜드 스타트)</td><td>인기 매장 3</td></tr>
+</table>
+
+<h4>기준 매장 선택</h4>
+<ul>
+  <li><strong>최근 본 매장</strong>: 가장 최근에 본 매장 1개</li>
+  <li><strong>예약/웨이팅 내역</strong>: 가장 최근에 한 예약/웨이팅 1개</li>
+  <li>"최근"의 시간 범위: 데이터 저장 정책 확인 필요 <span class="placeholder">TBD</span></li>
+</ul>
+
+<h4>유사 매장 스코어링</h4>
+
+<p><strong>필수 필터 (사전 조건)</strong>: 예약 가능한 매장만 후보에 포함</p>
+
+<p><strong>가중치 스코어링</strong></p>
+<table>
+  <tr><th>기준</th><th>가중치</th><th>세부</th></tr>
+  <tr><td>음식 종류 (cuisine)</td><td>40%</td><td>카테고리 depth별 차등 점수</td></tr>
+  <tr><td>위치 (location)</td><td>25%</td><td></td></tr>
+  <tr><td>가격대</td><td>20%</td><td></td></tr>
+  <tr><td>평점</td><td>15%</td><td></td></tr>
+</table>
+
+<p><strong>음식 종류 카테고리 매칭 (40점 만점)</strong></p>
+<p>카테고리는 1 → 2 → 3단계로 갈수록 세분화됨.</p>
+<table>
+  <tr><th>일치 레벨</th><th>점수</th><th>비율</th></tr>
+  <tr><td>3단계 일치 (가장 세분화)</td><td>40점</td><td>100%</td></tr>
+  <tr><td>2단계 일치</td><td>28점</td><td>70%</td></tr>
+  <tr><td>1단계 일치</td><td>12점</td><td>30%</td></tr>
+  <tr><td>불일치</td><td>0점</td><td>0%</td></tr>
+</table>
+
+<p><strong>스코어링 예시</strong></p>
+<pre>기준 매장: 이탈리안 / 강남 / 5만원대 / 4.5점
+
+후보 A: 이탈리안 / 강남 / 3만원대 / 4.3점
+→ 음식 40 + 위치 25 + 가격 10 + 평점 12 = 87점
+
+후보 B: 한식 / 강남 / 5만원대 / 4.7점
+→ 음식 0 + 위치 25 + 가격 20 + 평점 15 = 60점
+
+후보 C: 이탈리안 / 홍대 / 5만원대 / 4.0점
+→ 음식 40 + 위치 0 + 가격 20 + 평점 10 = 70점
+
+결과: A(87) > C(70) > B(60) 순 추천</pre>
+
+<h4>예약 마감 매장 처리</h4>
+<ul>
+  <li>Phase 2에서는 예약 가능 매장만 필터</li>
+  <li>하드코딩 3개 중 마감 발생 시 백업 풀에서 자동 대체</li>
+</ul>
+
+<h4>중복 처리</h4>
+<ul>
+  <li>최근 본 매장 = 예약한 매장이 같은 경우 → 슬롯 1개로 합치고 유사 매장으로 채움</li>
+  <li>추천 매장이 이미 본/예약한 매장과 겹치면 제외</li>
+</ul>
+
+<h4>가중치 튜닝</h4>
+<ul>
+  <li>초기 비율로 런칭 후 클릭률/전환율 데이터 기반으로 조정</li>
+  <li>가중치 비율은 config로 분리하여 서버 배포 없이 변경 가능하도록 권장</li>
+</ul>
+
+<h3>시스템 영향 사항</h3>
+<table>
+  <tr><th>영역</th><th>영향</th><th>비고</th></tr>
+  <tr><td>FE</td><td>매장 상세 / 마이다이닝에 추천 카드 컴포넌트 추가, 하단 팝업 형식</td><td>Phase 1/2 동일 컴포넌트</td></tr>
+  <tr><td>BE</td><td>매장 노출 어드민 + 추천 데이터 API</td><td>Phase 1: 하드코딩, Phase 2: 스코어링 로직</td></tr>
+  <tr><td>DGN</td><td>추천 카드 UI, 노출 위치 디자인</td><td></td></tr>
+  <tr><td>데이터</td><td>국내 매장 추천 raw data 추출</td><td>완료 (CTGLOB-3787)</td></tr>
+</table>
+
+<h3>개발팀 확인 필요 사항</h3>
+<table>
+  <tr><th>항목</th><th>내용</th><th>상태</th></tr>
+  <tr><td>"최근"의 시간 범위</td><td>최근 본 매장 / 예약 내역의 데이터 보존 기간</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>가중치 방식 가능 여부</td><td>스코어링 기반 추천 엔진 구현 가능한지</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>위치 매칭 기준</td><td>같은 동/구 단위? 반경 km?</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>가격대 유사도 계산</td><td>같은 구간 만점, 1구간 차이 반점 등</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>API 구조</td><td>Phase 1 하드코딩 → Phase 2 로직 전환 대비 설계</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>음식 카테고리 유사 그룹</td><td>3단계 카테고리 체계 그대로 활용 가능한지</td><td><span class="placeholder">TBD</span></td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>3. 상세 기획</h2>
+<!-- ============================================ -->
+
+<div class="empty-section">
+  화면기획서(스토리보드) — 피그마 링크 첨부 예정
+</div>
+
+<!-- ============================================ -->
+<h2>4. 개발 분석 및 Spec</h2>
+<!-- ============================================ -->
+
+<p>상세 스펙은 <strong>2. 분석 및 영향 사항</strong>에 통합 기재. 개발팀 추가 논의사항은 아래에 기록.</p>
+
+<div class="empty-section">
+  개발팀 협의 후 추가 스펙 기재 예정
+</div>
+
+<!-- ============================================ -->
+<h2>5. 일정 및 담당자</h2>
+<!-- ============================================ -->
+
+<table>
+  <tr><th>역할</th><th>담당자</th></tr>
+  <tr><td>요청</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>기획</td><td>박송연 (글로벌셀)</td></tr>
+  <tr><td>디자인</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>개발</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>QA</td><td><span class="placeholder">TBD</span></td></tr>
+  <tr><td>Release</td><td><span class="placeholder">TBD</span></td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>6. 작업 링크 (JIRA)</h2>
+<!-- ============================================ -->
+
+<table>
+  <tr><th>티켓</th><th>제목</th><th>유형</th><th>상태</th></tr>
+  <tr><td>CTGLOB-3783</td><td>[마케팅] 2차추천 - 매장 상세 페이지 / 마이다이닝</td><td>Story</td><td>TO DO</td></tr>
+  <tr><td>CTGLOB-3784</td><td>[FE] 하단 화면 형식 팝업</td><td>Sub-Task</td><td>BACKLOG</td></tr>
+  <tr><td>CTGLOB-3785</td><td>[BE] 매장 노출 어드민</td><td>Sub-Task</td><td>IN REVIEW</td></tr>
+  <tr><td>CTGLOB-3787</td><td>국내 매장 추천 raw data 추출</td><td>Sub-Task</td><td>DONE</td></tr>
+  <tr><td>CTGLOB-3793</td><td>매장 추천 기준</td><td>Sub-Task</td><td>BACKLOG</td></tr>
+  <tr><td>CTGLOB-3812</td><td>[DGN] 2차추천 - 매장 상세 페이지 / 마이다이닝</td><td>Design Sub-task</td><td>TO DO</td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>7. 회의록 (링크)</h2>
+<!-- ============================================ -->
+
+<div class="empty-section">
+  회의록 링크 추가 예정
+</div>
+
+</body>
+</html>
