@@ -15,8 +15,64 @@ class TextFormatter:
     """텍스트 포맷팅 및 줄바꿈 처리"""
 
     @staticmethod
+    def strip_emoji(text: str) -> str:
+        """이모지 제거 (폰트 미지원 글리프 방지)"""
+        return re.sub(
+            r'[\U0001F300-\U0001F9FF\U00002702-\U000027B0\U0000FE00-\U0000FE0F\U0000200D]+',
+            '', text
+        ).strip()
+
+    @staticmethod
+    def _is_cjk(char: str) -> bool:
+        """CJK(중국어/일본어/한국어) 문자인지 판별"""
+        cp = ord(char)
+        return (
+            (0x4E00 <= cp <= 0x9FFF) or    # CJK Unified
+            (0x3400 <= cp <= 0x4DBF) or    # CJK Extension A
+            (0x3000 <= cp <= 0x303F) or    # CJK Symbols
+            (0xFF00 <= cp <= 0xFFEF) or    # Fullwidth Forms
+            (0x2E80 <= cp <= 0x2EFF) or    # CJK Radicals
+            (0xF900 <= cp <= 0xFAFF)       # CJK Compatibility
+        )
+
+    @staticmethod
     def wrap_text(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> List[str]:
-        """텍스트를 최대 너비에 맞게 줄바꿈"""
+        """텍스트를 최대 너비에 맞게 줄바꿈 (CJK 문자별 줄바꿈 지원)"""
+        # 명시적 줄바꿈 처리
+        if '\n' in text:
+            result = []
+            for part in text.split('\n'):
+                result.extend(TextFormatter.wrap_text(part, font, max_width))
+            return result
+
+        # CJK 문자가 포함되어 있으면 문자별 줄바꿈
+        has_cjk = any(TextFormatter._is_cjk(c) for c in text)
+
+        if has_cjk:
+            return TextFormatter._wrap_cjk(text, font, max_width)
+        else:
+            return TextFormatter._wrap_words(text, font, max_width)
+
+    @staticmethod
+    def _wrap_cjk(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> List[str]:
+        """CJK 텍스트 문자별 줄바꿈"""
+        lines = []
+        current = ""
+        for char in text:
+            test = current + char
+            bbox = font.getbbox(test)
+            if bbox[2] - bbox[0] > max_width and current:
+                lines.append(current)
+                current = char
+            else:
+                current = test
+        if current:
+            lines.append(current)
+        return lines if lines else [text]
+
+    @staticmethod
+    def _wrap_words(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> List[str]:
+        """공백 기반 줄바꿈 (영어/라틴 텍스트용)"""
         words = text.split()
         lines = []
         current_line = []
@@ -136,6 +192,9 @@ class LayerRenderer:
     def render_text(self, canvas: Image.Image, layer: Dict,
                    text: str, font_path: str) -> Image.Image:
         """텍스트 렌더링 (테두리 지원)"""
+        # 이모지 제거
+        text = TextFormatter.strip_emoji(text)
+
         canvas = canvas.convert('RGBA')
         txt_layer = Image.new('RGBA', canvas.size, (0, 0, 0, 0))
         draw = ImageDraw.Draw(txt_layer)
