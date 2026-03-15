@@ -1,0 +1,29 @@
+{
+  "api": {
+    "openai_api_key": "",
+    "serp_api_key": "",
+    "image_model": "gpt-image-1",
+    "chat_model": "gpt-4o"
+  },
+  "brand": {
+    "primary_color": "#FF6B6B",
+    "text_color": "#FFFFFF",
+    "logo_path": "assets/logo.png"
+  },
+  "fonts": {
+    "default": "fonts/AlimamaFangYuanTiVF-Thin-2.ttf"
+  },
+  "output": {
+    "size": [1080, 1350],
+    "format": "JPEG",
+    "quality": 95
+  },
+  "search": {
+    "keywords": ["韩国美食 趋势", "韩国料理 最火", "首尔必吃", "韩国街头小吃", "韩国美食推荐"],
+    "max_results": 20
+  },
+  "topic": {
+    "card_count": 4,
+    "system_prompt": "你是一个专业的韩国美食内容编辑。根据搜索结果，选出一个适合小红书卡片新闻的韩国美食趋势主题。"
+  }
+}
