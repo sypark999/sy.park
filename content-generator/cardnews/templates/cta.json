@@ -1,0 +1,49 @@
+{
+  "name": "Card News CTA",
+  "size": [1080, 1350],
+  "description": "카드뉴스 CTA - 캐치테이블 팔로우 안내",
+  "layers": [
+    {
+      "type": "background_color",
+      "color": "#1A1A1A",
+      "position": [0, 0],
+      "size": [1080, 1350]
+    },
+    {
+      "type": "text",
+      "name": "cta_title",
+      "position": [540, 550],
+      "align": "center",
+      "font_size": 60,
+      "color": "#FFFFFF",
+      "max_width": 900,
+      "weight": "bold",
+      "line_spacing": 15,
+      "letter_spacing": 0
+    },
+    {
+      "type": "text",
+      "name": "cta_handle",
+      "position": [540, 750],
+      "align": "center",
+      "font_size": 38,
+      "color": "#FF6B6B",
+      "max_width": 600,
+      "weight": "normal",
+      "line_spacing": 0,
+      "letter_spacing": 1
+    },
+    {
+      "type": "text",
+      "name": "cta_hashtags",
+      "position": [540, 900],
+      "align": "center",
+      "font_size": 28,
+      "color": "#888888",
+      "max_width": 900,
+      "weight": "normal",
+      "line_spacing": 8,
+      "letter_spacing": 0
+    }
+  ]
+}

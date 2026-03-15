@@ -1,0 +1,51 @@
+{
+  "name": "Card News Content",
+  "size": [1080, 1350],
+  "description": "카드뉴스 본문 - 음식 이미지 + 텍스트",
+  "layers": [
+    {
+      "type": "background_color",
+      "color": "#1A1A1A",
+      "position": [0, 0],
+      "size": [1080, 1350]
+    },
+    {
+      "type": "main_image",
+      "position": [0, 0],
+      "size": [1080, 1350],
+      "fit": "cover"
+    },
+    {
+      "type": "gradient_overlay",
+      "position": [0, 750],
+      "size": [1080, 600],
+      "colors": ["rgba(0,0,0,0)", "rgba(0,0,0,220)"]
+    },
+    {
+      "type": "text",
+      "name": "card_title",
+      "position": [540, 1080],
+      "align": "center",
+      "font_size": 64,
+      "color": "#FFFFFF",
+      "stroke_color": "#000000",
+      "stroke_width": 2,
+      "max_width": 950,
+      "weight": "bold",
+      "line_spacing": 8,
+      "letter_spacing": 0
+    },
+    {
+      "type": "text",
+      "name": "card_description",
+      "position": [540, 1220],
+      "align": "center",
+      "font_size": 34,
+      "color": "#DDDDDD",
+      "max_width": 900,
+      "weight": "normal",
+      "line_spacing": 10,
+      "letter_spacing": 0
+    }
+  ]
+}
