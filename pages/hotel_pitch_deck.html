@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>캐치테이블 호텔 파트너 제안</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #E8E8E8;
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 40px 0 80px;
+    }
+
+    .slide-label {
+      color: #666;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      align-self: flex-start;
+      margin-left: calc(50% - 640px);
+    }
+
+    /* ── Base Slide ── */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 1 — COVER
+    ══════════════════════════════════════ */
+    .s1 {
+      background: #ffffff;
+    }
+
+    .s1 .bg-grid {
+      display: none;
+    }
+
+    .s1 .accent-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, #FF5630, #FF8B00);
+    }
+
+    .s1 .content {
+      position: absolute;
+      left: 96px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .s1 .eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .s1 .logo {
+      font-size: 56px;
+      font-weight: 800;
+      color: #FF5630;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .s1 .logo span { color: #FF5630; }
+
+    .s1 .tagline {
+      font-size: 22px;
+      color: #97A0AF;
+      font-weight: 400;
+      margin-bottom: 48px;
+    }
+
+    .s1 .headline {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0D1B2A;
+      line-height: 1.4;
+    }
+
+    .s1 .headline em {
+      font-style: normal;
+      color: #FF5630;
+    }
+
+    .s1 .bottom-tag {
+      position: absolute;
+      bottom: 48px;
+      left: 96px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .s1 .badge {
+      background: rgba(255,86,48,0.15);
+      border: 1px solid rgba(255,86,48,0.4);
+      color: #FF5630;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .s1 .deco {
+      position: absolute;
+      right: -80px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 560px;
+      height: 560px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,86,48,0.12) 0%, transparent 70%);
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 2 — PROBLEM
+    ══════════════════════════════════════ */
+    .s2 {
+      background: #ffffff;
+    }
+
+    .s2 .top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #FF5630, #FF8B00);
+    }
+
+    .s2 .section-label {
+      position: absolute;
+      top: 48px;
+      left: 80px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+    }
+
+    .s2 .title {
+      position: absolute;
+      top: 88px;
+      left: 80px;
+      font-size: 38px;
+      font-weight: 800;
+      color: #0D1B2A;
+      line-height: 1.2;
+    }
+
+    .s2 .quote-block {
+      position: absolute;
+      top: 210px;
+      left: 80px;
+      right: 80px;
+      background: #FFF5F2;
+      border-left: 5px solid #FF5630;
+      padding: 32px 40px;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .s2 .quote-mark {
+      font-size: 64px;
+      line-height: 0.6;
+      color: #FF5630;
+      opacity: 0.3;
+      font-family: Georgia, serif;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .s2 .quote-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0D1B2A;
+      line-height: 1.4;
+    }
+
+    .s2 .quote-sub {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #6B778C;
+    }
+
+    .s2 .cards {
+      position: absolute;
+      bottom: 60px;
+      left: 80px;
+      right: 80px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .s2 .card {
+      flex: 1;
+      background: #F4F5F7;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .s2 .card .icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .s2 .card .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0D1B2A;
+      margin-bottom: 4px;
+    }
+
+    .s2 .card .card-desc {
+      font-size: 12px;
+      color: #97A0AF;
+      line-height: 1.5;
+    }
+
+    .s2 .card.highlight {
+      background: #FF5630;
+    }
+
+    .s2 .card.highlight .card-title { color: #ffffff; }
+    .s2 .card.highlight .card-desc { color: rgba(255,255,255,0.75); }
+
+    /* ══════════════════════════════════════
+       SLIDE 3 — CATCHTABLE INTRO
+    ══════════════════════════════════════ */
+    .s3 {
+      background: #ffffff;
+    }
+
+    .s3 .content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+    }
+
+    .s3 .left {
+      width: 480px;
+      padding: 72px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .s3 .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .s3 .brand {
+      font-size: 44px;
+      font-weight: 800;
+      color: #FF5630;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .s3 .brand span { color: #FF5630; }
+
+    .s3 .desc {
+      font-size: 17px;
+      color: #5E6C84;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    .s3 .lang-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .s3 .lang-badge {
+      background: #F4F5F7;
+      border: 1px solid #DFE1E6;
+      color: #172B4D;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .s3 .right {
+      flex: 1;
+      padding: 60px 64px 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      border-left: 1px solid #DFE1E6;
+    }
+
+    .s3 .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: #F4F5F7;
+      border: 1px solid #DFE1E6;
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+
+    .s3 .stat-icon {
+      font-size: 32px;
+      width: 56px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .s3 .stat-content {}
+
+    .s3 .stat-number {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0D1B2A;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .s3 .stat-number em {
+      font-style: normal;
+      color: #FF5630;
+    }
+
+    .s3 .stat-label {
+      font-size: 13px;
+      color: #97A0AF;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 4 — VALUE FOR HOTEL
+    ══════════════════════════════════════ */
+    .s4 {
+      background: #ffffff;
+    }
+
+    .s4 .top-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #FF5630, #FF8B00);
+    }
+
+    .s4 .section-label {
+      position: absolute;
+      top: 48px;
+      left: 80px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+    }
+
+    .s4 .title {
+      position: absolute;
+      top: 84px;
+      left: 80px;
+      font-size: 38px;
+      font-weight: 800;
+      color: #0D1B2A;
+    }
+
+    .s4 .benefits {
+      position: absolute;
+      top: 180px;
+      left: 80px;
+      right: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    .s4 .benefit {
+      background: #F8F9FA;
+      border-radius: 16px;
+      padding: 32px 28px;
+      border-bottom: 4px solid #E8EAED;
+    }
+
+    .s4 .benefit.primary { border-bottom-color: #FF5630; background: #FFF5F2; }
+    .s4 .benefit.secondary { border-bottom-color: #0052CC; background: #F0F5FF; }
+    .s4 .benefit.tertiary { border-bottom-color: #00875A; background: #F0FBF5; }
+
+    .s4 .benefit-num {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #97A0AF;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .s4 .benefit.primary .benefit-num { color: #FF5630; }
+    .s4 .benefit.secondary .benefit-num { color: #0052CC; }
+    .s4 .benefit.tertiary .benefit-num { color: #00875A; }
+
+    .s4 .benefit-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0D1B2A;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .s4 .benefit-desc {
+      font-size: 14px;
+      color: #5E6C84;
+      line-height: 1.65;
+    }
+
+    .s4 .bottom-note {
+      position: absolute;
+      bottom: 44px;
+      left: 80px;
+      right: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #FFF5F2;
+      border: 1px solid #FFBDAD;
+      border-radius: 12px;
+      padding: 18px 28px;
+    }
+
+    .s4 .bottom-note .note-icon { font-size: 20px; }
+
+    .s4 .bottom-note .note-text {
+      font-size: 15px;
+      color: #0D1B2A;
+      font-weight: 600;
+    }
+
+    .s4 .bottom-note .note-sub {
+      font-size: 13px;
+      color: #97A0AF;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 5 — THE ASK
+    ══════════════════════════════════════ */
+    .s5 {
+      background: #ffffff;
+    }
+
+    .s5 .bg-grid {
+      display: none;
+    }
+
+    .s5 .section-label {
+      position: absolute;
+      top: 52px;
+      left: 80px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+    }
+
+    .s5 .title {
+      position: absolute;
+      top: 90px;
+      left: 80px;
+      font-size: 42px;
+      font-weight: 800;
+      color: #0D1B2A;
+      line-height: 1.2;
+    }
+
+    .s5 .title em {
+      font-style: normal;
+      color: #FF5630;
+    }
+
+    .s5 .steps {
+      position: absolute;
+      top: 210px;
+      left: 60px;
+      right: 60px;
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .s5 .step {
+      flex: 1;
+      text-align: center;
+      padding: 0 28px;
+    }
+
+    .s5 .step-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255,86,48,0.15);
+      border: 2px solid rgba(255,86,48,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 36px;
+    }
+
+    .s5 .step-num {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #FF5630;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .s5 .step-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0D1B2A;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .s5 .step-desc {
+      font-size: 17px;
+      color: #97A0AF;
+      line-height: 1.6;
+    }
+
+    .s5 .step-connector {
+      flex-shrink: 0;
+      width: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 32px;
+      color: #DFE1E6;
+      font-size: 26px;
+    }
+
+    .s5 .highlight-box {
+      position: absolute;
+      bottom: 52px;
+      left: 80px;
+      right: 80px;
+      background: #FF5630;
+      border-radius: 16px;
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .s5 .highlight-box .hl-text {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .s5 .highlight-box .hl-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 2px;
+    }
+
+    .s5 .highlight-box .hl-tag {
+      background: rgba(255,255,255,0.2);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    /* ══════════════════════════════════════
+       SLIDE 6 — CONTACT / CTA
+    ══════════════════════════════════════ */
+    .s6 {
+      background: #ffffff;
+    }
+
+    .s6 .accent-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, #FF5630, #FF8B00);
+    }
+
+    .s6 .content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .s6 .left {
+      padding: 0 80px;
+      flex: 1;
+    }
+
+    .s6 .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #FF5630;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .s6 .title {
+      font-size: 44px;
+      font-weight: 800;
+      color: #0D1B2A;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .s6 .sub {
+      font-size: 18px;
+      color: #97A0AF;
+      margin-bottom: 48px;
+    }
+
+    .s6 .contact-items {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .s6 .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .s6 .contact-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,86,48,0.12);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .s6 .contact-label {
+      font-size: 12px;
+      color: #97A0AF;
+      margin-bottom: 2px;
+    }
+
+    .s6 .contact-value {
+      font-size: 16px;
+      color: #0D1B2A;
+      font-weight: 600;
+    }
+
+    .s6 .right {
+      width: 360px;
+      padding: 0 80px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .s6 .qr-box {
+      width: 200px;
+      height: 200px;
+      background: #ffffff;
+      border: 1px solid #DFE1E6;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .s6 .qr-placeholder {
+      width: 140px;
+      height: 140px;
+      background: #F4F5F7;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #97A0AF;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .s6 .qr-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+    }
+
+    .s6 .deco {
+      position: absolute;
+      right: 320px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 480px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Print helper */
+    @media print {
+      body { background: white; padding: 0; gap: 0; }
+      .slide-label { display: none; }
+      .slide {
+        width: 297mm;
+        height: 167mm;
+        page-break-after: always;
+        break-after: page;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ──────────────── SLIDE 1: COVER ──────────────── -->
+  <div class="slide-label">Slide 1 / 6 — Cover</div>
+  <div class="slide s1">
+    <div class="bg-grid"></div>
+    <div class="accent-bar"></div>
+
+    <div class="content">
+      <div class="eyebrow">Hotel Partner Proposal · 2026</div>
+      <div class="logo">CATCH<span>TABLE</span></div>
+      <div class="tagline">한국 맛집 예약/웨이팅 앱 · Korea's Restaurant Reservation & Waitlist App</div>
+      <div class="headline">
+        외국인 관광객의 주요 고민,<br>
+        <em>오늘 저녁 어디서 먹지?</em><br>
+        캐치테이블이 제안해드릴게요
+      </div>
+    </div>
+
+    <div class="bottom-tag">
+      <div class="badge">영어, 일본어, 중국어 포함 20개국어 지원</div>
+      <div class="badge">명동 · 강남 · 홍대 · 이태원</div>
+      <div class="badge">예약 / 웨이팅 무료</div>
+    </div>
+
+    <div class="deco"></div>
+  </div>
+
+  <!-- ──────────────── SLIDE 2: PROBLEM ──────────────── -->
+  <div class="slide-label">Slide 2 / 6 — 문제 제기</div>
+  <div class="slide s2">
+    <div class="top-bar"></div>
+    <div class="section-label">The Problem</div>
+
+    <div class="title">
+      투숙객이 이렇게 묻는다면?
+    </div>
+
+    <div class="quote-block">
+      <span class="quote-mark">"</span>
+      <div class="quote-text">
+        근처에 맛있는 식당 추천해줄 수 있어요?<br>
+        <span style="color:#97A0AF; font-size:20px; font-weight:500;">Where should I eat tonight? おすすめのレストランは？</span>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icon">🔍</div>
+        <div class="card-title">구글 검색</div>
+        <div class="card-desc">직원이 직접 찾아서<br>말로 설명해야 함</div>
+      </div>
+      <div class="card">
+        <div class="icon">🤔</div>
+        <div class="card-title">기억에 의존</div>
+        <div class="card-desc">매번 같은 곳만<br>추천하게 됨</div>
+      </div>
+      <div class="card">
+        <div class="icon">🗺️</div>
+        <div class="card-title">지도 앱 안내</div>
+        <div class="card-desc">예약 가능 여부를<br>확인할 수 없음</div>
+      </div>
+      <div class="card highlight">
+        <div class="icon" style="color:#FF5630;">💡</div>
+        <div class="card-title">더 좋은 방법이 있습니다</div>
+        <div class="card-desc" style="color:rgba(255,255,255,0.5);">투숙객에게 명함 한 장,<br>그게 전부입니다</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────── SLIDE 3: CATCHTABLE INTRO ──────────────── -->
+  <div class="slide-label">Slide 3 / 6 — 캐치테이블 소개</div>
+  <div class="slide s3">
+    <div class="content">
+      <div class="left">
+        <div class="eyebrow">WHAT IS CATCHTABLE GLOBAL?</div>
+        <div class="brand">CATCH<span>TABLE</span> GLOBAL</div>
+        <div class="desc">
+          한국 No.1 레스토랑 예약 플랫폼, 캐치테이블의<br>
+          외국인 관광객을 위한 글로벌 버전으로<br>
+          서울 인기 맛집을 바로 예약할 수 있습니다.
+        </div>
+        <div class="lang-badges">
+          <div class="lang-badge">🇺🇸 영어</div>
+          <div class="lang-badge">🇯🇵 日本語</div>
+          <div class="lang-badge">🇨🇳 中文</div>
+          <div class="lang-badge">+17개국어</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="stat-row">
+          <div class="stat-icon">🍽️</div>
+          <div class="stat-content">
+            <div class="stat-number">명동 · 강남 · 홍대 · 이태원</div>
+            <div class="stat-label">서울 주요 관광지 인기 맛집 예약 가능</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-icon">📱</div>
+          <div class="stat-content">
+            <div class="stat-number">QR 스캔 <em>→</em> 즉시 예약</div>
+            <div class="stat-label">앱 설치 없이 모바일 웹에서 바로 사용 가능</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-content">
+            <div class="stat-number">실시간 예약 확인</div>
+            <div class="stat-label">빈 테이블을 미리 확인하고 원하는 시간에 예약</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-icon">🎟️</div>
+          <div class="stat-content">
+            <div class="stat-number">투숙객 <em>전용</em> 혜택 페이지</div>
+            <div class="stat-label">파트너 호텔 투숙객 한정 다이닝 특별 혜택 제공</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────── SLIDE 4: VALUE ──────────────── -->
+  <div class="slide-label">Slide 4 / 6 — 호텔이 얻는 것</div>
+  <div class="slide s4">
+    <div class="top-bar"></div>
+    <div class="section-label">Benefits for Your Hotel</div>
+    <div class="title">호텔이 얻는 것</div>
+
+    <div class="benefits">
+      <div class="benefit primary">
+        <div class="benefit-num">01 · 투숙객 만족</div>
+        <div class="benefit-title">식당 문의,<br>1초 만에 해결</div>
+        <div class="benefit-desc">
+          투숙객이 식당을 물어볼 때<br>
+          명함 한 장만 건네면 됩니다.<br>
+          따로 검색할 필요가 없습니다.
+        </div>
+      </div>
+      <div class="benefit secondary">
+        <div class="benefit-num">02 · 서비스 차별화</div>
+        <div class="benefit-title">투숙객 전용<br>다이닝 혜택 제공</div>
+        <div class="benefit-desc">
+          전용 기획전 페이지를 제공합니다.<br>
+          투숙객 서비스 품질이 높아집니다.
+        </div>
+      </div>
+      <div class="benefit tertiary">
+        <div class="benefit-num">03 · 비용 0원</div>
+        <div class="benefit-title">계약 없음<br>비용 없음</div>
+        <div class="benefit-desc">
+          호텔이 부담하는 비용은<br>
+          단 한 푼도 없습니다.<br>
+          명함을 비치해 주시면 됩니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-note">
+      <div class="note-icon">🏨</div>
+      <div class="note-text">외국인 투숙객이 "식당 어디가 좋아요?"를 물어볼 때, 명함 한 장으로 최고의 답변을 드릴 수 있습니다.</div>
+      <div class="note-sub">호텔 업무 부담 추가 없음</div>
+    </div>
+  </div>
+
+  <!-- ──────────────── SLIDE 5: THE ASK ──────────────── -->
+  <div class="slide-label">Slide 5 / 6 — 제안 내용</div>
+  <div class="slide s5">
+    <div class="bg-grid"></div>
+    <div class="section-label">Our Proposal</div>
+    <div class="title">저희가 요청드리는 것,<br>딱 <em>하나</em>입니다</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle">📇</div>
+        <div class="step-num">Step 01</div>
+        <div class="step-title">명함 / QR카드<br>프론트 비치</div>
+        <div class="step-desc">캐치테이블 QR 명함을<br>프론트 데스크에<br>올려두시면 됩니다</div>
+      </div>
+      <div class="step-connector">→</div>
+      <div class="step">
+        <div class="step-circle">💬</div>
+        <div class="step-num">Step 02</div>
+        <div class="step-title">식당 문의 시<br>명함 안내</div>
+        <div class="step-desc">투숙객이 맛집을<br>물어볼 때 명함을<br>건네주시면 됩니다</div>
+      </div>
+      <div class="step-connector">→</div>
+      <div class="step">
+        <div class="step-circle">📱</div>
+        <div class="step-num">Step 03</div>
+        <div class="step-title">투숙객이<br>직접 예약</div>
+        <div class="step-desc">QR 스캔 후<br>원하는 맛집을<br>바로 예약 완료</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div>
+        <div class="hl-text">호텔 비용 0원 · 계약 없음 · 업무 부담 0</div>
+        <div class="hl-sub">명함 비치만 해주시면, 나머지는 저희가 합니다.</div>
+      </div>
+      <div class="hl-tag">지금 바로 시작 가능</div>
+    </div>
+  </div>
+
+  <!-- ──────────────── SLIDE 6: CONTACT ──────────────── -->
+  <div class="slide-label">Slide 6 / 6 — Contact</div>
+  <div class="slide s6">
+    <div class="accent-bar"></div>
+    <div class="deco"></div>
+
+    <div class="content">
+      <div class="left">
+        <div class="eyebrow">Contact · 문의</div>
+        <div class="title">함께 해주시면<br>감사하겠습니다</div>
+        <div class="sub">궁금한 점이 있으시면 언제든 연락 주세요.</div>
+
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-icon">👤</div>
+            <div>
+              <div class="contact-label">담당자</div>
+              <div class="contact-value">박송연 · 캐치테이블 글로벌셀</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-label">이메일</div>
+              <div class="contact-value">sy.park@catchtable.co.kr</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <div>
+              <div class="contact-label">서비스</div>
+              <div class="contact-value">catchtable.net</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="qr-box">
+          <div class="qr-placeholder">QR 코드<br>(기획전 링크<br>확정 후 삽입)</div>
+        </div>
+        <div class="qr-label">QR 스캔 → 투숙객 전용<br>다이닝 혜택 페이지</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
