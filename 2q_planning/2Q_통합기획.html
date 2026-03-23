@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 2Q 글로벌버전 기획 종합</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #172B4D;
+      background: #fff;
+      padding: 48px 64px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 24px; }
+
+    /* ── Version tabs ── */
+    .ver-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 28px;
+      border-bottom: 2px solid #DFE1E6;
+    }
+    .ver-tab {
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #5E6C84;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .ver-tab.active {
+      color: #0052CC;
+      border-bottom-color: #0052CC;
+    }
+    .ver-panel { display: none; }
+    .ver-panel.active { display: block; }
+
+    /* ── Meta ── */
+    .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+    .meta-table tr { border-bottom: 1px solid #DFE1E6; }
+    .meta-table tr:first-child { border-top: 1px solid #DFE1E6; }
+    .meta-table td { padding: 9px 14px; vertical-align: top; }
+    .meta-table td.label { font-weight: 700; color: #5E6C84; width: 120px; background: #F4F5F7; }
+
+    /* ── Changelog ── */
+    .changelog-wrap { border: 1px solid #DFE1E6; border-radius: 3px; margin-bottom: 28px; font-size: 13px; }
+    .changelog-header { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #F4F5F7; color: #5E6C84; font-size: 12px; font-weight: 600; }
+    .changelog-header .arr { font-size: 9px; color: #97A0AF; }
+    .clt { width: 100%; border-collapse: collapse; }
+    .clt th { text-align: left; padding: 7px 14px; color: #5E6C84; font-size: 12px; font-weight: 600; border-bottom: 1px solid #DFE1E6; }
+    .clt td { padding: 8px 14px; border-bottom: 1px solid #DFE1E6; }
+    .clt tr:last-child td { border-bottom: none; }
+
+    /* ── TOC ── */
+    .toc { margin-bottom: 36px; }
+    .toc a { display: block; font-size: 13px; line-height: 1.9; color: #0052CC; padding-left: 2px; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── Section ── */
+    h2 { font-size: 20px; font-weight: 700; margin: 44px 0 0; padding-bottom: 8px; border-bottom: 1px solid #DFE1E6; }
+    h3 { font-size: 14px; font-weight: 700; margin: 22px 0 8px; }
+    p.note { font-size: 13px; color: #5E6C84; margin: 10px 0 14px; }
+    ul { margin: 6px 0 10px 20px; }
+    ul li { margin-bottom: 3px; font-size: 14px; }
+    a { color: #0052CC; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Data table ── */
+    table.dt { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0 16px; }
+    table.dt th { background: #F4F5F7; font-weight: 700; color: #5E6C84; padding: 8px 12px; border: 1px solid #DFE1E6; text-align: left; }
+    table.dt td { padding: 8px 12px; border: 1px solid #DFE1E6; vertical-align: top; }
+
+    /* ── Status badges ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .b-done    { background: #E3FCEF; color: #006644; }
+    .b-ready   { background: #DEEBFF; color: #0747A6; }
+    .b-dev     { background: #EAE6FF; color: #403294; }
+    .b-wip     { background: #FFF0B3; color: #7A5200; }
+    .b-plan    { background: #F4F5F7; color: #5E6C84; }
+
+    /* ── Type tags ── */
+    .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 3px; }
+    .tag-mkt { background: #FFEBE6; color: #BF2600; }
+    .tag-dev { background: #EAE6FF; color: #403294; }
+    .tag-ops { background: #E3FCEF; color: #006644; }
+
+    /* ── Gantt ── */
+    .gantt-wrap { overflow-x: auto; margin: 12px 0 20px; }
+    .gantt {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 700px;
+    }
+    .gantt th {
+      background: #F4F5F7;
+      padding: 7px 10px;
+      border: 1px solid #DFE1E6;
+      text-align: center;
+      font-weight: 600;
+      color: #5E6C84;
+    }
+    .gantt th.row-header {
+      text-align: left;
+      width: 200px;
+    }
+    .gantt td {
+      border: 1px solid #DFE1E6;
+      padding: 6px 8px;
+      vertical-align: middle;
+    }
+    .gantt td.row-header {
+      font-weight: 600;
+      font-size: 12px;
+      background: #FAFBFC;
+      padding-left: 10px;
+    }
+    .gantt td.row-header .sub {
+      font-weight: 400;
+      color: #5E6C84;
+      font-size: 11px;
+    }
+    .bar {
+      display: block;
+      border-radius: 3px;
+      height: 18px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 18px;
+      padding: 0 6px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .bar-mkt  { background: #FF5630; }
+    .bar-prep { background: #FF8B00; }
+    .bar-dev  { background: #6554C0; }
+    .bar-ops  { background: #00875A; }
+    .bar-tbd  { background: #97A0AF; }
+    .bar-vk   { background: #0052CC; }
+    td.empty  { background: #FAFBFC; }
+
+    /* ── Project cards ── */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 12px 0 20px;
+    }
+    .proj-card {
+      border: 1px solid #DFE1E6;
+      border-radius: 4px;
+      padding: 14px 16px;
+    }
+    .proj-card .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .proj-card .card-title {
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .proj-card .card-meta {
+      font-size: 12px;
+      color: #5E6C84;
+      margin-bottom: 8px;
+    }
+    .proj-card ul { margin: 0 0 10px 14px; }
+    .proj-card ul li { font-size: 12px; margin-bottom: 2px; color: #333; }
+    .proj-card .card-link { font-size: 12px; }
+    .proj-card.mkt { border-top: 3px solid #FF5630; }
+    .proj-card.dev { border-top: 3px solid #6554C0; }
+    .proj-card.ops { border-top: 3px solid #00875A; }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; margin: 8px 0 12px; padding: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 9px; padding: 4px 0; font-size: 14px; border-bottom: 1px solid #F4F5F7; }
+    .checklist li:last-child { border-bottom: none; }
+    .box { width: 15px; height: 15px; border: 2px solid #B3BAC5; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
+
+    .empty-sec { font-size: 13px; color: #B3BAC5; padding: 14px 0 6px; }
+
+    .month-label { font-weight: 700; font-size: 11px; }
+    .week-label  { font-size: 10px; color: #97A0AF; }
+
+    /* ── Monthly card grid ── */
+    .month-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+    .month-col {
+      border: 1px solid #DFE1E6;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .month-head {
+      background: #172B4D;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 14px;
+      text-align: center;
+    }
+    .month-item {
+      padding: 9px 12px;
+      border-bottom: 1px solid #F4F5F7;
+      border-left: 3px solid transparent;
+    }
+    .month-item:last-child { border-bottom: none; }
+    .month-item.online  { border-left-color: #6554C0; }
+    .month-item.offline { border-left-color: #FF5630; }
+    .month-item.highlight { background: #FFFAE6; }
+    .mi-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #172B4D;
+      margin-bottom: 2px;
+    }
+    .mi-action {
+      font-size: 11px;
+      color: #5E6C84;
+    }
+
+    /* ── v2 Channel sections ── */
+    .channel-block {
+      border: 1px solid #DFE1E6;
+      border-radius: 6px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .channel-header {
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .channel-header.online  { background: #EAE6FF; color: #403294; }
+    .channel-header.offline { background: #FFEBE6; color: #BF2600; }
+    .channel-sub {
+      font-size: 12px;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+    .channel-body { padding: 0 16px 16px; }
+
+    /* ── KPI table ── */
+    table.kpi { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0 8px; }
+    table.kpi th { background: #F4F5F7; font-weight: 700; color: #5E6C84; padding: 7px 12px; border: 1px solid #DFE1E6; text-align: left; }
+    table.kpi td { padding: 8px 12px; border: 1px solid #DFE1E6; vertical-align: top; }
+    table.kpi td.kpi-val { font-weight: 700; color: #0052CC; }
+    table.kpi tr.proj-row td { background: #FAFBFC; font-weight: 600; font-size: 12px; padding-top: 10px; }
+
+    /* ── Overall KPI table ── */
+    table.muv { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0 20px; }
+    table.muv th { background: #172B4D; color: #fff; padding: 8px 12px; border: 1px solid #253858; text-align: center; font-weight: 700; }
+    table.muv th.left { text-align: left; }
+    table.muv td { padding: 8px 12px; border: 1px solid #DFE1E6; text-align: center; }
+    table.muv td.label { text-align: left; font-weight: 600; background: #F4F5F7; }
+    table.muv td.gap { color: #00875A; font-weight: 700; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ TITLE ══ -->
+<h1>2026 2Q 글로벌버전 기획 종합</h1>
+
+<!-- ══ META ══ -->
+<table class="meta-table">
+  <tr><td class="label">작성자</td><td>박송연 (글로벌셀)</td></tr>
+  <tr><td class="label">기간</td><td>2026.04.01 ~ 2026.06.30</td></tr>
+  <tr><td class="label">포함 기획</td><td>관공서 제휴 / 오프라인 마케팅 / 인플루언서 콘텐츠 / SEO 개발 / 2차 추천 개발</td></tr>
+</table>
+
+<!-- ══ CHANGELOG ══ -->
+<div class="changelog-wrap">
+  <div class="changelog-header"><span class="arr">▼</span> 변경 이력</div>
+  <table class="clt">
+    <thead><tr><th>버전</th><th>날짜</th><th>내용</th><th>작성</th></tr></thead>
+    <tbody>
+      <tr><td><strong>현재 버전 (v.2)</strong></td><td>2026.03.19</td><td>온라인/오프라인 채널 활성화 목표 재편 + 레버별 KPI 추가</td><td>박송연 (글로벌셀)</td></tr>
+      <tr><td>v.1</td><td>2026.03.19</td><td>2Q 통합 기획 초안</td><td>박송연 (글로벌셀)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ VERSION TABS ══ -->
+<div class="ver-tabs">
+  <button class="ver-tab" onclick="switchVer('1q', this)">1Q — 완료 현황</button>
+  <button class="ver-tab active" onclick="switchVer('v2', this)">v.2 — 채널 활성화 + KPI (현재)</button>
+  <button class="ver-tab" onclick="switchVer('v1', this)">v.1 — 통합 기획 초안</button>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     1Q PANEL
+════════════════════════════════════════ -->
+<div id="1q" class="ver-panel">
+
+  <h2 style="margin-top:28px;">1Q 주요 완료 현황</h2>
+  <p class="note" style="margin-top:8px;">2026.01.01 ~ 2026.03.31 · 2Q 기획 착수 전 완료된 주요 과제</p>
+
+  <table class="dt" style="margin-top:16px;">
+    <thead>
+      <tr>
+        <th style="width:200px;">과제</th>
+        <th>내용</th>
+        <th style="width:160px;">결과 / 수치</th>
+        <th style="width:80px;">상태</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>흑백요리사 기획전</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅</span></td>
+        <td>
+          넷플릭스 '흑백요리사' 출연 셰프 매장을 중심으로 캐치테이블 글로벌 버전 내 기획전 진행. 외국인 관광객 대상 화제 매장 큐레이션으로 앱 유입 및 예약 전환 유도.<br>
+          <span style="font-size:11px;color:#97A0AF;">기획전 운영 기간 및 성과 수치 기입 필요</span>
+        </td>
+        <td>
+          기획전 운영: <span class="kpi-val">완료</span><br>
+          성과 수치: <span class="kpi-val">TBD</span>
+        </td>
+        <td><span class="badge b-done">완료</span></td>
+      </tr>
+      <tr>
+        <td><strong>인플루언서 테스트 플로우</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅/운영</span></td>
+        <td>
+          글로벌 예약 가능 매장 200개 → 후보 10개 → 최종 5개 선정. 매장 섭외 조건(최대 2인 식사권 무상) 및 인플루언서 방문 콘텐츠 제작 플로우 설계 완료. 1차 테스트 매장 컨펌 및 메시징 발송.<br>
+          <span style="font-size:11px;color:#97A0AF;">통의동 국빈관 · 신사꽃게당 압구정로데오점 · 스미스앤월렌스키 · 리파인 명동을지로 확정 / 부르(Vuur) 컨펌 중</span>
+        </td>
+        <td>
+          선정 매장: <span class="kpi-val">5개</span><br>
+          플로우 설계: <span class="kpi-val">완료</span>
+        </td>
+        <td><span class="badge b-done">완료</span></td>
+      </tr>
+      <tr>
+        <td><strong>글로벌 예약 매장 확대</strong><br><span style="font-size:11px;color:#5E6C84;">운영</span></td>
+        <td>
+          글로벌 미오픈 매장을 2회에 걸쳐 정기 배치 오픈. <strong>1차(2월)</strong>: 예약금 없는 매장 403개 오픈 → 130개 매장에서 글로벌 예약 1,412건 발생(전환율 32.3%). 오픈 1주일 만에 83해치 광안리점 예약 151건으로 글로벌 랭킹 11위 진입. <strong>2차(3월)</strong>: 예약금/선결제 있는 인기 매장 443개 추가 오픈, 국내 총 예약 수 177,374건 규모의 고수요 매장군 확보 (예약금 100건↑ 매장 93개 포함).<br>
+          <span style="font-size:11px;color:#97A0AF;">1차 Top5 매장(83해치·월화식당·국보가든·지강한식당 등)이 전체 예약의 58.3% 차지. 2차 예약금 매장 글로벌 전환 데이터는 추적 중.</span>
+        </td>
+        <td>
+          1차 오픈: <span class="kpi-val">403개</span> (2월)<br>
+          2차 오픈: <span class="kpi-val">443개</span> (3월)<br>
+          누적 오픈: <span class="kpi-val">846개</span><br>
+          1차 글로벌 예약: <span class="kpi-val">1,412건</span><br>
+          1차 전환 매장: <span class="kpi-val">130개 (32.3%)</span>
+        </td>
+        <td><span class="badge b-done">완료</span></td>
+      </tr>
+      <tr>
+        <td><strong>알리페이 연동</strong><br><span style="font-size:11px;color:#5E6C84;">개발</span></td>
+        <td>
+          중국어권 유저 결제 편의 개선을 위해 알리페이(Alipay) 결제 수단 연동 완료. 중국 관광객 예약 전환율 개선 기여.<br>
+          <span style="font-size:11px;color:#97A0AF;">연동 완료 일자 및 전환율 변화 수치 기입 필요</span>
+        </td>
+        <td>
+          연동 완료: <span class="kpi-val">TBD</span><br>
+          예약 전환 변화: <span class="kpi-val">TBD</span>
+        </td>
+        <td><span class="badge b-done">완료</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     V2 PANEL
+════════════════════════════════════════ -->
+<div id="v2" class="ver-panel active">
+
+  <!-- TOC v2 -->
+  <div class="toc">
+    <a href="#v2-s1">1. 2Q 채널 활성화 목표</a>
+    <a href="#v2-s2">2. 월별 KPI 목표치</a>
+    <a href="#v2-s3">3. 온라인 채널</a>
+    <a href="#v2-s4">4. 오프라인 채널</a>
+    <a href="#v2-s5">5. 타임라인</a>
+    <a href="#v2-s6">6. 공통 체크리스트</a>
+    <a href="#v2-s7">7. 작업 링크 (JIRA)</a>
+  </div>
+
+
+  <!-- 1. 목표 -->
+  <h2 id="v2-s1">1. 2Q 채널 활성화 목표</h2>
+  <p class="note" style="margin-top:14px;">온라인/오프라인 채널 다변화를 통해 글로벌 앱 신규 유입(MUV)과 예약방문 전환을 의도적으로 확대한다.</p>
+
+  <div style="background:#F4F5F7; border-left:3px solid #0052CC; padding:14px 18px; margin:16px 0 20px; font-size:13px; line-height:1.8; color:#172B4D;">
+    <p><strong>자연 성장선과 의도적 성장선 — gap 채우기 전략</strong></p>
+    <p style="margin-top:10px;">현재 추세가 유지되는 자연 성장선 기준으로 2Q 예상치는 4월 <strong>687,415</strong> · 5월 <strong>725,817</strong> · 6월 <strong>689,940</strong> MUV다. 여기에 마케팅 레버 액션의 직접 기여를 더한 의도적 성장선이 2Q 목표치이며, 매월 <strong>약 4.8만~5.1만의 MUV gap</strong>과 <strong>약 2,900~3,600의 예약방문 gap</strong>을 레버 액션으로 채워야 한다.</p>
+    <p style="margin-top:10px;">단일 채널에 의존하면 한 레버의 성과 미달이 전체 목표를 흔들 수 있다. 이에 <strong>단기 직접 기여 채널</strong>(퍼포먼스 마케팅 · 인플루언서 · 관공서 제휴 · 오프라인 호텔)과 <strong>중장기 오가닉 자산</strong>(SEO · 2차 추천)을 병행 가동해 채널별 리스크를 분산한다. 4~5월은 유입 레버를 총동원해 MUV gap을 직접 공략하고, 6월 이후부터는 SEO 색인과 추천 구좌 전환율로 지속 가능한 성장 기반을 다지는 구조다.</p>
+  </div>
+
+  <h3>온라인 채널</h3>
+  <ul>
+    <li>퍼포먼스 마케팅 → MUV <strong>+7,000</strong>/월 (4월~) — 3월 디벨롭 버전 본격 운영, CPI/ROAS 실측 후 확정</li>
+    <li>인플루언서 SNS 플로우 → 월 MUV <strong>+15,000</strong> 기여 (4~5월) — 1차 테스트 5개 매장 선정 완료, 분기 15건+ 발행 목표</li>
+    <li>관공서 제휴 (환영주간/VisitKorea) → MUV <strong>+500</strong> + 예약방문 <strong>+50</strong> (5월) — 공항 부스 QR + 앱 내 기획전 랜딩 2종</li>
+    <li>SEO 리스트형 추천 개발 착수 → 3월 착수 (진행 중)</li>
+    <li>샤오홍슈 채널 활성화 → AI 자동생성 플로우 구축, 주 3회 업로드 (2Q 본격 운영)</li>
+    <li>2차 추천 낙수구좌 런칭 → 예약방문 <strong>+500</strong>/월 (5월~), CTR 5%+ 목표</li>
+  </ul>
+
+  <h3>오프라인 채널</h3>
+  <ul>
+    <li>명동 호텔 오프라인 채널 테스트 → MUV <strong>+5,000</strong> (4월), 3곳+ 비치 시 Go · 미달 시 Pivot</li>
+  </ul>
+
+
+  <!-- 2. 월별 KPI -->
+  <h2 id="v2-s2">2. 월별 KPI 목표치</h2>
+  <p class="note" style="margin-top:12px;">의도적 성장선 기준 (자연 성장 + 레버 액션 gap 포함). 출처: muv_예약방문 목표 달성 계획.xlsx</p>
+
+  <table class="muv">
+    <thead>
+      <tr>
+        <th class="left">지표</th>
+        <th>4월</th>
+        <th>5월</th>
+        <th>6월</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label">MUV (의도적 성장선)</td>
+        <td>735,534</td>
+        <td>776,625</td>
+        <td>738,235</td>
+      </tr>
+      <tr>
+        <td class="label">　↳ 자연 성장 대비 gap</td>
+        <td class="gap">+48,119</td>
+        <td class="gap">+50,808</td>
+        <td class="gap">+48,295</td>
+      </tr>
+      <tr>
+        <td class="label">예약방문 (의도적 성장선)</td>
+        <td>39,272</td>
+        <td>36,973</td>
+        <td>32,289</td>
+      </tr>
+      <tr>
+        <td class="label">　↳ 자연 성장 대비 gap</td>
+        <td class="gap">+3,570</td>
+        <td class="gap">+3,361</td>
+        <td class="gap">+2,935</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- 3. 온라인 채널 -->
+  <h2 id="v2-s3">3. 온라인 채널</h2>
+
+  <div class="channel-block">
+    <div class="channel-header online">온라인 채널 <span class="channel-sub">— 퍼포먼스 · 인플루언서 · 관공서 · 샤오홍슈 · SEO · 추천</span></div>
+    <div class="channel-body">
+
+      <table class="kpi">
+        <thead>
+          <tr>
+            <th style="width:200px;">프로젝트</th>
+            <th>핵심 내용</th>
+            <th style="width:180px;">KPI</th>
+            <th style="width:80px;">상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 퍼포먼스 마케팅 -->
+          <tr>
+            <td><strong>퍼포먼스 마케팅</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅 · 4월~</span></td>
+            <td>
+              유료 광고 기반 앱 신규 유입 확대. 3월 크리에이티브 디벨롭 결과를 반영해 4월부터 본격 운영에 돌입한다. 매체·소재·타겟 조합 최적화를 지속하며 월별 CPI를 낮추는 방향으로 운영한다.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 3월 운영 결과 실측치 기준 월 +7,000 MUV를 보수적 기여치로 산출. CPI 목표 및 ROAS는 4월 실측 후 확정 예정.</span>
+            </td>
+            <td>
+              신규 MUV 기여: <span class="kpi-val">+7,000/월</span> (4월~)<br>
+              CPI 목표: TBD<br>
+              ROAS: TBD
+            </td>
+            <td><span class="badge b-wip">진행 중</span></td>
+          </tr>
+          <!-- 인플루언서 -->
+          <tr>
+            <td><strong>글로벌 인플루언서<br>콘텐츠 플로우</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅/운영</span></td>
+            <td>
+              <strong>1차 테스트:</strong> 글로벌 예약 가능 매장 200개 중 선별한 5개 매장(4확정·1컨펌중)을 대상으로 인플루언서 방문 콘텐츠 제작 후 2~4주 성과 추적. 매장 부담은 최대 2인 식사권 무상 제공이며, 인플루언서 섭외 비용은 캐치테이블이 부담한다.<br>
+              <strong>2차 상품화 플로우:</strong> 1차 결과 기반으로 매장 → 캐치테이블(광고 계약) → 매체사(지급+수수료 상계) 구조로 정규화. 상품 A(인플루언서 단독) / 상품 B(인플루언서 + Trending Now 배너 패키지) 2종 운영 예정.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 분기 15건 발행 × 인플루언서 평균 팔로워 ~33K 기준 총 도달 500K+. 전환율 3% 가정 시 MUV 기여 +15,000 수준.</span>
+            </td>
+            <td>
+              신규 MUV 기여: <span class="kpi-val">+15,000/월</span> (4~5월)<br>
+              콘텐츠 발행 건수: <span class="kpi-val">분기 15건+</span><br>
+              총 도달(팔로워 합산): <span class="kpi-val">500K+</span><br>
+              매장 재참여 의향률: <span class="kpi-val">TBD</span>
+            </td>
+            <td><span class="badge b-wip">진행 중</span></td>
+          </tr>
+          <!-- 관공서 제휴 -->
+          <tr>
+            <td><strong>환영주간 &<br>VisitKorea 제휴</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅 · 4.24~5.9 / 상시</span></td>
+            <td>
+              방문위(환영주간) 공항·항만 부스에 QR 카드를 비치해 입국 외국인을 직접 앱으로 유입시킨다. VisitKorea는 앱 내 "visitkorea's pick" 메뉴 신설 + 공식 SNS 채널 노출로 상시 유입 채널을 확보한다. 두 기관 공통으로 매장을 모집해 앱 내 기획전 랜딩 2종을 운영하며 예약방문 전환도 함께 유도한다.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 환영주간 QR 스캔 500+ × 앱 설치 전환율 기준 MUV 기여 산출. VK 경유 앱 설치 월 100+ 합산 → 5월 단기 집중 효과로 +500 MUV, 기획전 예약 전환 +50 예상 (보수적 산출).</span>
+            </td>
+            <td>
+              신규 MUV 기여: <span class="kpi-val">+500</span> (5월)<br>
+              예약방문 기여: <span class="kpi-val">+50</span> (기획전 고도화)<br>
+              환영주간 QR 스캔: <span class="kpi-val">500+</span><br>
+              VK 경유 앱 설치: <span class="kpi-val">월 100+</span>
+            </td>
+            <td><span class="badge b-ready">기획 완료</span></td>
+          </tr>
+          <!-- 샤오홍슈 -->
+          <tr>
+            <td><strong>샤오홍슈 채널<br>활성화</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅 · 2Q~</span></td>
+            <td>
+              AI 기반 매장 추천 콘텐츠 자동생성 플로우를 구축해 샤오홍슈(小红书)를 정기 운영 채널로 전환한다. 한국 음식 트렌드·인기 매장을 테마로 주 3회 업로드를 목표로 하며, 콘텐츠 생성·교정·업로드 전 과정을 AI 파이프라인으로 자동화한다.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 콘텐츠 꾸준한 발행을 통해 중국어권 유입 채널 확보. 주 3회 × 분기 36건 업로드. 계정 팔로워 성장 및 앱 유입 추적.</span>
+            </td>
+            <td>
+              업로드 빈도: <span class="kpi-val">주 3회</span><br>
+              분기 발행 목표: <span class="kpi-val">36건+</span><br>
+              자동생성 플로우: <span class="kpi-val">2Q 내 구축</span>
+            </td>
+            <td><span class="badge b-wip">진행 중</span></td>
+          </tr>
+          <!-- SEO -->
+          <tr>
+            <td><strong>SEO 리스트형<br>매장 추천</strong><br><span style="font-size:11px;color:#5E6C84;">개발</span></td>
+            <td>
+              /best/{location}/{cuisine} 구조의 SSR 페이지를 지역 56개 × 음식 20개 조합으로 구축한다. 구조화 데이터(JSON-LD)와 크롤러 대응 렌더링을 적용해 구글 색인을 극대화한다.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 3월 개발 착수 → 유효 조합 페이지 1,000개+ 색인 목표. 2Q KPI는 색인 키워드 50개+를 마일스톤으로 설정.</span>
+            </td>
+            <td>
+              개발 착수: <span class="kpi-val">3월 (진행 중)</span><br>
+              오가닉 신규 세션: <span class="kpi-val">런칭 후 월 1,000+</span><br>
+              색인 키워드: <span class="kpi-val">30일 내 50개+</span>
+            </td>
+            <td><span class="badge b-wip">진행 중</span></td>
+          </tr>
+          <!-- 2차추천 -->
+          <tr>
+            <td><strong>2차 추천 Phase 1</strong><br><span style="font-size:11px;color:#5E6C84;">개발 (하드코딩)</span></td>
+            <td>
+              매장 상세(풀예약·인기매장) 하단과 마이다이닝에 추천 구좌를 신설한다. Phase 1은 기획자 수동 큐레이션(하드코딩)으로 빠르게 런칭해 CTR·예약전환 데이터를 먼저 확보하고, Phase 2에서 예약·웨이팅 이력 기반 개인화 로직으로 고도화한다.<br>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 기존 기획전 구좌 평균 CTR 벤치마크로 5%+ 설정. 5월 런칭 가정 시 구좌 노출량 × CTR × 예약 전환율 기준 +500/월 예약방문 기여 예상.</span>
+            </td>
+            <td>
+              킥오프 일정 확정: <span class="kpi-val">4월 내</span><br>
+              예약방문 기여: <span class="kpi-val">+500/월</span> (5월~)<br>
+              추천 구좌 CTR: <span class="kpi-val">5%+</span>
+            </td>
+            <td><span class="badge b-dev">개발 대기</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 인플루언서 1차 테스트 매장 현황 -->
+      <h3 style="font-size:13px; margin:20px 0 8px; color:#172B4D;">인플루언서 1차 테스트 — 매장 컨펌 현황</h3>
+      <p style="font-size:12px; color:#5E6C84; margin-bottom:8px;">
+        글로벌 예약 가능 매장 200개 → 후보 10개 → <strong>최종 5개 선정</strong>
+        &nbsp;·&nbsp; 매장 부담: 최대 2인 식사권 무상 제공 (인플루언서 섭외 비용은 캐치테이블 부담)
+      </p>
+      <table class="dt" style="margin-bottom:6px;">
+        <thead>
+          <tr><th>매장명</th><th>글로벌 예약비율</th><th>선정 사유</th><th>컨펌 상태</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>통의동 국빈관</strong></td><td>92.2%</td><td>글로벌 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
+          <tr><td><strong>신사꽃게당 압구정로데오점</strong></td><td>151.1%</td><td>글로벌 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
+          <tr><td><strong>부르 (Vuur)</strong></td><td>15.9%</td><td>글로벌 광고 성과 매장</td><td><span class="badge b-wip">컨펌 중</span></td></tr>
+          <tr><td><strong>스미스앤월렌스키</strong></td><td>0.8%</td><td>국내 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
+          <tr><td><strong>리파인 명동을지로</strong></td><td>1.0%</td><td>국내 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:13px; margin:16px 0 6px; color:#172B4D;">매장 메시징 핵심</h3>
+      <ul style="margin:0 0 10px 16px; font-size:12px; color:#333;">
+        <li>글로벌 노출을 통한 <strong>신규 외국인 고객 유입 가능성</strong> 강조</li>
+        <li>매장 부담: <strong>최대 2인 식사권</strong> 제공만 — 인플루언서 섭외 비용은 캐치테이블이 부담</li>
+        <li>콘텐츠 업로드 후 <strong>성과 리포트 제공</strong> (PV·예약전환·인터랙션)</li>
+        <li>(조건부) Trending Now 글로벌 배너 노출 추가 혜택</li>
+      </ul>
+
+      <span class="card-link" style="font-size:12px;">
+        <a href="../influencer-form/인플루언서_활용_기획서.html">인플루언서 기획서 →</a> &nbsp;|&nbsp;
+        <a href="../official_partnership/welcomeweek/기획서_2026환영주간_협업.html">환영주간 기획서 →</a> &nbsp;|&nbsp;
+        <a href="../explore_geo/seo-list-recommendation-spec.html">SEO 기획서 →</a> &nbsp;|&nbsp;
+        <a href="../global_recommendation/recommendation-spec.html">2차 추천 기획서 →</a>
+      </span>
+
+    </div>
+  </div>
+
+
+  <!-- 4. 오프라인 채널 -->
+  <h2 id="v2-s4">4. 오프라인 채널</h2>
+
+  <div class="channel-block">
+    <div class="channel-header offline">오프라인 채널 <span class="channel-sub">— 호텔</span></div>
+    <div class="channel-body">
+
+      <table class="kpi">
+        <thead>
+          <tr>
+            <th style="width:200px;">프로젝트</th>
+            <th>핵심 내용</th>
+            <th style="width:180px;">KPI</th>
+            <th style="width:80px;">상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 호텔 -->
+          <tr>
+            <td><strong>명동 호텔<br>오프라인 Phase 1</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅 · 26.04</span></td>
+            <td>
+              명동 2~3성급 호텔 프론트 QR 카드 비치<br>
+              명함(6만) + A4 안내물(6천), 1~2일 현장 영업<br>
+              3곳 이상 비치 시 Go / 미달 시 Pivot<br>
+              플레이북(스크립트·이메일 템플릿) 준비 완료
+            </td>
+            <td>
+              신규 MUV 기여: <span class="kpi-val">+5,000</span> (4월)<br>
+              컨택 호텔 수: <span class="kpi-val">10곳+</span><br>
+              비치 성공 (Go 기준): <span class="kpi-val">3곳+</span><br>
+              QR 스캔: <span class="kpi-val">테스트 기간 50+</span>
+            </td>
+            <td><span class="badge b-ready">기획 완료</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <span class="card-link" style="font-size:12px;">
+        <a href="../hotel_proposal/호텔제휴_오프라인마케팅_기획서.html">호텔 기획서 →</a>
+      </span>
+
+    </div>
+  </div>
+
+
+  <!-- 5. 타임라인 (v2) -->
+  <h2 id="v2-s5">5. 타임라인</h2>
+
+  <div class="month-grid">
+
+    <!-- 4월 -->
+    <div class="month-col">
+      <div class="month-head">4월</div>
+      <div class="month-item online">
+        <div class="mi-label">퍼포먼스 마케팅</div>
+        <div class="mi-action">3월 디벨롭 버전 본격 운영</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">인플루언서 플로우</div>
+        <div class="mi-action">기획서 작성 → 운영 시작</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">환영주간 준비</div>
+        <div class="mi-action">소재 제작 · 매장 모집</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">VisitKorea 셋업</div>
+        <div class="mi-action">메뉴 구성 · 소재 납품</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">SEO · 2차 추천</div>
+        <div class="mi-action">개발팀 킥오프 일정 확정</div>
+      </div>
+      <div class="month-item offline">
+        <div class="mi-label">명동 호텔</div>
+        <div class="mi-action">현장 컨택 · Go/No-Go 판단</div>
+      </div>
+    </div>
+
+    <!-- 5월 -->
+    <div class="month-col">
+      <div class="month-head">5월</div>
+      <div class="month-item online">
+        <div class="mi-label">퍼포먼스 마케팅</div>
+        <div class="mi-action">운영 지속 · 성과 최적화</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">인플루언서 플로우</div>
+        <div class="mi-action">콘텐츠 발행 · MUV +15,000</div>
+      </div>
+      <div class="month-item online highlight">
+        <div class="mi-label">환영주간 본행사</div>
+        <div class="mi-action">4.24 ~ 5.9 공항 부스 운영</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">VisitKorea</div>
+        <div class="mi-action">런칭 → 상시 운영 시작</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">SEO · 2차 추천</div>
+        <div class="mi-action">개발 진행 중 (TBD)</div>
+      </div>
+    </div>
+
+    <!-- 6월 -->
+    <div class="month-col">
+      <div class="month-head">6월</div>
+      <div class="month-item online">
+        <div class="mi-label">퍼포먼스 마케팅</div>
+        <div class="mi-action">추가 제휴처 디벨롭</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">인플루언서 플로우</div>
+        <div class="mi-action">성과 측정 · 플로우 개선</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">VisitKorea</div>
+        <div class="mi-action">상시 운영</div>
+      </div>
+      <div class="month-item online">
+        <div class="mi-label">SEO · 2차 추천</div>
+        <div class="mi-action">개발 진행 중 (TBD)</div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- 6. 체크리스트 -->
+  <h2 id="v2-s6">6. 공통 체크리스트</h2>
+
+  <h3>온라인 — 인플루언서</h3>
+  <ul class="checklist">
+    <li><span class="box"></span><span>부르 (Vuur) 매장 컨펌 완료 → 1차 테스트 5개 매장 확정</span></li>
+    <li><span class="box"></span><span>확정 매장 4곳 메시징 발송 (식사권 제공 조건 + 일정 조율)</span></li>
+    <li><span class="box"></span><span>인플루언서 매체사 섭외 착수 (매장 컨펌 완료 후)</span></li>
+    <li><span class="box"></span><span>방문 전 가이드 제작 (필수 태그·캐치테이블 예약 동선 포함)</span></li>
+  </ul>
+
+  <h3>온라인 — 기타</h3>
+  <ul class="checklist">
+    <li><span class="box"></span><span>SEO 리스트형 추천 — FE/BE 개발팀 킥오프 미팅 및 일정 확정</span></li>
+    <li><span class="box"></span><span>2차 추천 Phase 1 — 개발팀 킥오프 미팅 및 일정 확정</span></li>
+    <li><span class="box"></span><span>채널별 신규 설치·예약 전환 분리 트래킹 방식 확인</span></li>
+  </ul>
+
+  <h3>오프라인</h3>
+  <ul class="checklist">
+    <li><span class="box"></span><span>환영주간 + VisitKorea 참여 매장 모집폼 작성·배포</span></li>
+    <li><span class="box"></span><span>앱 내 롤링배너 + 기획전 랜딩 2종 개발 요청</span></li>
+    <li><span class="box"></span><span>4.2 VK 위촉장 수여식 참석</span></li>
+    <li><span class="box"></span><span>명동 호텔 현장 영업 일정 확정</span></li>
+  </ul>
+
+
+  <!-- 7. JIRA -->
+  <h2 id="v2-s7">7. 작업 링크 (JIRA)</h2>
+  <p class="empty-sec">—</p>
+
+</div><!-- /v2 panel -->
+
+
+<!-- ════════════════════════════════════════
+     V1 PANEL
+════════════════════════════════════════ -->
+<div id="v1" class="ver-panel">
+
+  <!-- TOC v1 -->
+  <div class="toc">
+    <a href="#s1">1. 2Q 목표</a>
+    <a href="#s2">2. 프로젝트 목록</a>
+    <a href="#s3">3. 타임라인</a>
+    <a href="#s4">4. 프로젝트 상세</a>
+    <a href="#s5">5. 공통 체크리스트</a>
+    <a href="#s6">6. 작업 링크 (JIRA)</a>
+    <a href="#s7">7. 회의록 (링크)</a>
+  </div>
+
+
+  <!-- 1. 2Q 목표 -->
+  <h2 id="s1">1. 2Q 목표</h2>
+  <p class="note" style="margin-top:14px;">글로벌 앱 신규 유입·전환 확대를 위한 마케팅 채널 다변화 + 앱 내 탐색 품질 개선을 동시 추진.</p>
+
+  <h3>마케팅</h3>
+  <ul>
+    <li>정부 공식 채널(방문위·한국관광공사) 2개 기관과의 기획전 랜딩 동시 런칭</li>
+    <li>명동 호텔 오프라인 채널 테스트 → Go/No-Go 판단 기준 확보</li>
+    <li>인플루언서 신청 플로우 안정화 및 콘텐츠 생성 프로세스 정립</li>
+  </ul>
+
+  <h3>개발 (기획 주도)</h3>
+  <ul>
+    <li>SEO 리스트형 매장 추천 페이지 개발 착수 → 3월 진행 중, 오가닉 유입 신규 채널 확보</li>
+    <li>2차 추천 Phase 1 (하드코딩) 개발 완료 → 매장 상세·마이다이닝 CTR 측정 시작</li>
+  </ul>
+
+
+  <!-- 2. 프로젝트 목록 -->
+  <h2 id="s2">2. 프로젝트 목록</h2>
+
+  <table class="dt">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>프로젝트명</th>
+        <th>유형</th>
+        <th>기간</th>
+        <th>상태</th>
+        <th>기획서</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>환영주간 & VisitKorea 관공서 제휴</td>
+        <td><span class="tag tag-mkt">마케팅</span></td>
+        <td>4월 준비 → 4.24~5.9 (환영주간), VK 상시</td>
+        <td><span class="badge b-ready">기획 완료</span></td>
+        <td><a href="../official_partnership/welcomeweek/기획서_2026환영주간_협업.html">바로가기 →</a></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>명동 호텔 오프라인 마케팅</td>
+        <td><span class="tag tag-mkt">마케팅</span></td>
+        <td>26.04 Phase 1 (명동)</td>
+        <td><span class="badge b-ready">기획 완료</span></td>
+        <td><a href="../hotel_proposal/호텔제휴_오프라인마케팅_기획서.html">바로가기 →</a></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>글로벌 인플루언서 콘텐츠 생성 플로우</td>
+        <td><span class="tag tag-ops">마케팅/운영</span></td>
+        <td>TBD</td>
+        <td><span class="badge b-plan">기획 예정</span></td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>SEO 리스트형 매장 추천</td>
+        <td><span class="tag tag-dev">개발</span></td>
+        <td>3월 착수</td>
+        <td><span class="badge b-wip">진행 중</span></td>
+        <td><a href="../explore_geo/seo-list-recommendation-spec.html">바로가기 →</a></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>2차 추천 (매장 상세 / 마이다이닝)</td>
+        <td><span class="tag tag-dev">개발</span></td>
+        <td>TBD (개발팀 협의 후)</td>
+        <td><span class="badge b-dev">기획 완료 / 개발 대기</span></td>
+        <td><a href="../global_recommendation/recommendation-spec.html">바로가기 →</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- 3. 타임라인 -->
+  <h2 id="s3">3. 타임라인</h2>
+  <p class="note" style="margin-top:12px;">색상: <span style="background:#FF5630;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">마케팅 실행</span> &nbsp;<span style="background:#FF8B00;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">준비/셋업</span> &nbsp;<span style="background:#0052CC;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">VisitKorea</span> &nbsp;<span style="background:#6554C0;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">개발</span> &nbsp;<span style="background:#00875A;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">운영/정기</span> &nbsp;<span style="background:#97A0AF;color:#fff;padding:1px 6px;border-radius:2px;font-size:11px;">일정 미정</span></p>
+
+  <div class="gantt-wrap">
+  <table class="gantt">
+    <thead>
+      <tr>
+        <th class="row-header">프로젝트</th>
+        <th><span class="month-label">4월</span><br><span class="week-label">1~2주</span></th>
+        <th><span class="month-label">4월</span><br><span class="week-label">3~4주<br>(4.24~)</span></th>
+        <th><span class="month-label">5월</span><br><span class="week-label">1~2주<br>(~5.9)</span></th>
+        <th><span class="month-label">5월</span><br><span class="week-label">3~4주</span></th>
+        <th><span class="month-label">6월</span><br><span class="week-label">전체</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row-header">환영주간 (방문위)<br><span class="sub">관공서 제휴 A</span></td>
+        <td><span class="bar bar-prep">준비·소재 납품</span></td>
+        <td><span class="bar bar-mkt">본행사 ▶</span></td>
+        <td><span class="bar bar-mkt">◀ 본행사 (5.9)</span></td>
+        <td><span class="bar bar-ops">성과 수집</span></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="row-header">VisitKorea 기획전<br><span class="sub">관공서 제휴 B</span></td>
+        <td><span class="bar bar-prep">소재·메뉴 셋업</span></td>
+        <td><span class="bar bar-vk">런칭</span></td>
+        <td><span class="bar bar-vk">상시 운영 ▶</span></td>
+        <td><span class="bar bar-vk">상시 운영 ▶</span></td>
+        <td><span class="bar bar-vk">상시 운영</span></td>
+      </tr>
+      <tr>
+        <td class="row-header">명동 호텔 오프라인<br><span class="sub">Phase 1</span></td>
+        <td><span class="bar bar-mkt">현장 컨택·테스트</span></td>
+        <td><span class="bar bar-ops">Go/No-Go 판단</span></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="row-header">인플루언서 콘텐츠<br><span class="sub">플로우 정립</span></td>
+        <td><span class="bar bar-tbd">기획 작성</span></td>
+        <td><span class="bar bar-tbd">TBD</span></td>
+        <td><span class="bar bar-tbd">TBD</span></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="row-header">SEO 리스트형 추천<br><span class="sub">개발 기획</span></td>
+        <td><span class="bar bar-prep">개발팀 협의</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+      </tr>
+      <tr>
+        <td class="row-header">2차 추천 Phase 1<br><span class="sub">하드코딩</span></td>
+        <td><span class="bar bar-prep">개발팀 협의</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+        <td><span class="bar bar-dev">TBD</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+
+  <!-- 4. 프로젝트 상세 -->
+  <h2 id="s4">4. 프로젝트 상세</h2>
+
+  <div class="proj-grid">
+
+    <div class="proj-card mkt">
+      <div class="card-head">
+        <span class="card-title">환영주간 & VisitKorea 관공서 제휴</span>
+        <span class="badge b-ready">기획 완료</span>
+      </div>
+      <div class="card-meta"><span class="tag tag-mkt">마케팅</span> &nbsp; 4.24~5.9 / 상시</div>
+      <ul>
+        <li>방문위: 공항·항만 부스 QR → 앱 다운로드</li>
+        <li>VisitKorea: "visitkorea's pick" 메뉴 + SNS 노출</li>
+        <li>매장 혜택 공통 모집, 앱 내 기획전 랜딩 2종</li>
+        <li>VK 위촉장 수여식 4.2</li>
+      </ul>
+      <span class="card-link"><a href="../official_partnership/welcomeweek/기획서_2026환영주간_협업.html">기획서 보기 →</a></span>
+    </div>
+
+    <div class="proj-card mkt">
+      <div class="card-head">
+        <span class="card-title">명동 호텔 오프라인 마케팅</span>
+        <span class="badge b-ready">기획 완료</span>
+      </div>
+      <div class="card-meta"><span class="tag tag-mkt">마케팅</span> &nbsp; 26.04 Phase 1</div>
+      <ul>
+        <li>명동 2~3성급 호텔 프론트 비치형 QR 카드</li>
+        <li>명함(6만원) + A4 안내물(6천원), 1~2일 현장 영업</li>
+        <li>3곳 이상 비치 시 Go, 본사 승인 필요 시 Pivot</li>
+        <li>플레이북(전화 스크립트·이메일 템플릿) 준비 완료</li>
+      </ul>
+      <span class="card-link"><a href="../hotel_proposal/호텔제휴_오프라인마케팅_기획서.html">기획서 보기 →</a></span>
+    </div>
+
+    <div class="proj-card ops">
+      <div class="card-head">
+        <span class="card-title">글로벌 인플루언서 콘텐츠 생성 플로우</span>
+        <span class="badge b-plan">기획 예정</span>
+      </div>
+      <div class="card-meta"><span class="tag tag-ops">마케팅/운영</span> &nbsp; TBD</div>
+      <ul>
+        <li>인플루언서 신청 폼 → 검토 → 콘텐츠 브리프 전달 → 발행 프로세스 정립</li>
+        <li>기존 influencer-form 웹앱(Vercel 배포) 연계</li>
+        <li>기획서 작성 필요</li>
+      </ul>
+      <span class="card-link" style="color:#97A0AF;">기획서 미작성</span>
+    </div>
+
+    <div class="proj-card dev">
+      <div class="card-head">
+        <span class="card-title">SEO 리스트형 매장 추천</span>
+        <span class="badge b-dev">개발 대기</span>
+      </div>
+      <div class="card-meta"><span class="tag tag-dev">개발</span> &nbsp; TBD (개발팀 협의 후)</div>
+      <ul>
+        <li>/best/{location}/{cuisine} 리스트형 SSR 페이지</li>
+        <li>지역 56개 × 음식 20개 조합, 유효 조합 필터</li>
+        <li>구조화 데이터 + 크롤러 대응 렌더링</li>
+        <li>FE/BE 스펙 정리 완료</li>
+      </ul>
+      <span class="card-link"><a href="../explore_geo/seo-list-recommendation-spec.html">기획서 보기 →</a></span>
+    </div>
+
+    <div class="proj-card dev">
+      <div class="card-head">
+        <span class="card-title">2차 추천 — 매장 상세 / 마이다이닝</span>
+        <span class="badge b-dev">개발 대기</span>
+      </div>
+      <div class="card-meta"><span class="tag tag-dev">개발</span> &nbsp; TBD (Phase 1)</div>
+      <ul>
+        <li>매장 상세(풀예약/인기매장) + 마이다이닝에 추천 구좌 신설</li>
+        <li>Phase 1: 하드코딩 (기획자 수동 관리)</li>
+        <li>Phase 2: 예약·웨이팅 기반 개인화 추천 로직</li>
+        <li>가중치: 음식종류 40%, 위치 25%, 가격 20%, 평점 15%</li>
+      </ul>
+      <span class="card-link"><a href="../global_recommendation/recommendation-spec.html">기획서 보기 →</a></span>
+    </div>
+
+  </div>
+
+
+  <!-- 5. 체크리스트 -->
+  <h2 id="s5">5. 공통 체크리스트</h2>
+
+  <h3>마케팅 공통</h3>
+  <ul class="checklist">
+    <li><span class="box"></span><span>환영주간 + VisitKorea 참여 매장 모집폼 작성·배포</span></li>
+    <li><span class="box"></span><span>앱 내 롤링배너 + 기획전 랜딩 2종 개발 요청</span></li>
+    <li><span class="box"></span><span>4.2 VK 위촉장 수여식 참석</span></li>
+    <li><span class="box"></span><span>명동 호텔 현장 영업 일정 확정</span></li>
+    <li><span class="box"></span><span>인플루언서 콘텐츠 플로우 기획서 작성</span></li>
+  </ul>
+
+  <h3>개발 공통</h3>
+  <ul class="checklist">
+    <li><span class="box"></span><span>SEO 리스트형 추천 — FE/BE 개발팀 킥오프 미팅 및 일정 확정</span></li>
+    <li><span class="box"></span><span>2차 추천 Phase 1 — 개발팀 킥오프 미팅 및 일정 확정</span></li>
+    <li><span class="box"></span><span>채널별 신규 설치·예약 전환 분리 트래킹 방식 확인</span></li>
+  </ul>
+
+
+  <!-- 6. JIRA -->
+  <h2 id="s6">6. 작업 링크 (JIRA)</h2>
+  <p class="empty-sec">—</p>
+
+  <!-- 7. 회의록 -->
+  <h2 id="s7">7. 회의록 (링크)</h2>
+  <p class="empty-sec">—</p>
+
+</div><!-- /v1 panel -->
+
+
+<script>
+  function switchVer(ver, btn) {
+    document.querySelectorAll('.ver-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.ver-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(ver).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

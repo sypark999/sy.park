@@ -1,0 +1,107 @@
+[
+  {
+    "shop": "evett",
+    "score": 10,
+    "reason": "음식이 이미지의 유일한 주인공이며, 선명하고 식욕을 돋우는 클로즈업 사진입니다."
+  },
+  {
+    "shop": "onlygo",
+    "score": 10,
+    "reason": "테이블 가득 다양한 음식과 음료가 선명하고 먹음직스럽게 담겨 있어 음식이 완벽한 주인공입니다."
+  },
+  {
+    "shop": "Sadelles_seoul",
+    "score": 9,
+    "reason": "다양한 음식과 음료가 테이블 위에 풍성하게 차려져 있으며, 선명하고 식욕을 돋우는 모습으로 이미지의 주요 초점을 이룹니다."
+  },
+  {
+    "shop": "standardbreadss",
+    "score": 9,
+    "reason": "신선하게 구워진 빵들이 선명하게 클로즈업되어 식욕을 돋우며 이미지의 주인공입니다."
+  },
+  {
+    "shop": "bean_brothers",
+    "score": 8,
+    "reason": "바리스타가 커피를 내리는 모습이 중앙에 있고 다양한 커피 장비와 음료가 선명하게 보여 음식(음료)이 중심이지만, 사람들과 매장 내부 공간도 함께 담겨 있습니다."
+  },
+  {
+    "shop": "acidhouseseoul",
+    "score": 5,
+    "reason": "음식이 테이블에 놓여있지만, 인물과 매장 내부, 외부 풍경이 더 강조되어 음식이 부차적인 요소로 보입니다."
+  },
+  {
+    "shop": "cheeseroom_worldmall",
+    "score": 5,
+    "reason": "이 이미지는 매장 외부와 내부를 보여주며 다양한 음식 진열대가 있지만, 개별 음식보다는 매장 전체와 판매되는 제품의 종류를 강조합니다."
+  },
+  {
+    "shop": "schedule_seongsu",
+    "score": 5,
+    "reason": "이 이미지는 카페의 밝은 실내 분위기와 공간 자체에 초점을 맞추고 있으며, 테이블 위의 음식과 음료는 부차적인 요소입니다."
+  },
+  {
+    "shop": "bills_jamsil",
+    "score": 4,
+    "reason": "음식은 전혀 보이지 않고, 매장 내부 인테리어와 'bills' 간판 등 공간 자체에 초점을 맞춘 이미지입니다."
+  },
+  {
+    "shop": "artistbakery",
+    "score": 2,
+    "reason": "이미지는 'ARTIST BAKERY'라는 텍스트 간판만을 보여주며, 실제 음식은 전혀 포함하고 있지 않습니다."
+  },
+  {
+    "shop": "pipeground",
+    "score": 2,
+    "reason": "음식이나 음료는 전혀 보이지 않으며, 인테리어 디자인과 공간 자체에 초점을 맞춘 이미지입니다."
+  },
+  {
+    "shop": "barboo",
+    "score": 1,
+    "reason": "이미지는 술집 간판을 보여주며 음식이나 음료는 전혀 포함되어 있지 않습니다."
+  },
+  {
+    "shop": "contedetulear",
+    "score": 1,
+    "reason": "이미지에 음식이 전혀 포함되어 있지 않고, 건물 외관과 간판 위주입니다."
+  },
+  {
+    "shop": "lecafe_lv",
+    "score": 1,
+    "reason": "이 이미지는 음식이나 음료가 전혀 보이지 않으며, 공간의 인테리어 디자인과 분위기에 초점을 맞추고 있습니다."
+  },
+  {
+    "shop": "london_bagel_museum_anguk",
+    "score": 1,
+    "reason": "이 이미지는 'London Bagel Museum' 로고로, 실제 음식은 전혀 포함되어 있지 않습니다."
+  },
+  {
+    "shop": "pairingroom",
+    "score": 1,
+    "reason": "이미지는 건물 외관에 초점을 맞추고 있으며 음식이나 음료가 전혀 포함되어 있지 않습니다."
+  },
+  {
+    "shop": "sanrio_lovers_club",
+    "score": 1,
+    "reason": "이미지에 음식이 전혀 포함되어 있지 않고, 캐릭터와 학교 테마 아이템이 주를 이룹니다."
+  },
+  {
+    "shop": "shilla.TheLibrary",
+    "score": 1,
+    "reason": "이미지에 음식이나 음료가 전혀 없고, 인테리어와 야경이 주를 이루고 있습니다."
+  },
+  {
+    "shop": "sinamoroll_sweet",
+    "score": 1,
+    "reason": "이 이미지는 캐릭터 조형물과 카페 인테리어 장식을 주로 보여주며, 음식이나 음료가 전혀 나타나 있지 않습니다."
+  },
+  {
+    "shop": "soigneseoul",
+    "score": 1,
+    "reason": "음식이 전혀 포함되어 있지 않고, 인물(셰프) 위주의 이미지입니다."
+  },
+  {
+    "shop": "szimpatikus_Yeouido",
+    "score": 1,
+    "reason": "음식이나 음료는 전혀 보이지 않고, 전적으로 식당 또는 카페의 인테리어와 공간을 보여주는 이미지입니다."
+  }
+]
