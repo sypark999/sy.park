@@ -80,6 +80,50 @@
     table.dt th { background: #F4F5F7; font-weight: 700; color: #5E6C84; padding: 8px 12px; border: 1px solid #DFE1E6; text-align: left; }
     table.dt td { padding: 8px 12px; border: 1px solid #DFE1E6; vertical-align: top; }
 
+    /* ── Channel list table ── */
+    table.channel-list { width:100%; border-collapse:collapse; font-size:13px; margin:12px 0 20px; }
+    table.channel-list th { padding:6px 10px; font-size:11px; font-weight:700; color:#5E6C84; border-bottom:2px solid #DFE1E6; text-align:left; }
+    table.channel-list td { padding:9px 10px; border-bottom:1px solid #F0F1F3; vertical-align:top; }
+    table.channel-list tr:last-child td { border-bottom:none; }
+    .ch-section-header td { padding:6px 10px; font-size:10px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:#97A0AF; background:#F7F8FA; border-bottom:1px solid #DFE1E6; }
+    .ch-metric { color:#5E6C84; font-size:12px; }
+    .ch-metric span { font-weight:700; color:#0052CC; }
+    .ch-desc { font-size:12px; color:#5E6C84; }
+    .ch-period { font-size:11px; font-weight:600; color:#97A0AF; white-space:nowrap; }
+
+    /* ── Channel goal cards ── */
+    .goal-channel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0 8px;
+    }
+    .goal-ch-card {
+      background: #fff;
+      border: 1px solid #DFE1E6;
+      border-radius: 5px;
+      padding: 12px 14px;
+    }
+    .goal-ch-card.offline { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; }
+    .goal-ch-top { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .goal-ch-chip {
+      font-size: 10px; font-weight: 700; padding: 1px 6px;
+      border-radius: 10px; white-space: nowrap;
+    }
+    .chip-online { background: #DEEBFF; color: #0052CC; }
+    .chip-offline { background: #FFEBE6; color: #BF2600; }
+    .chip-dev { background: #EAE6FF; color: #5243AA; }
+    .goal-ch-name { font-size: 13px; font-weight: 700; color: #172B4D; }
+    .goal-ch-metric { font-size: 20px; font-weight: 800; color: #0052CC; line-height: 1.1; }
+    .goal-ch-metric small { font-size: 11px; font-weight: 400; color: #5E6C84; }
+    .goal-ch-desc { font-size: 11px; color: #5E6C84; margin-top: 5px; line-height: 1.5; }
+
+    /* ── Cell blocks (1Q 섹션 내 서브 구간) ── */
+    .cell-block { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #F0F1F3; }
+    .cell-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .cell-label { font-size: 11px; font-weight: 700; color: #0052CC; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .cell-note { font-size: 11px; color: #97A0AF; margin-top: 5px; }
+
     /* ── Status badges ── */
     .badge {
       display: inline-block;
@@ -327,63 +371,70 @@
   <table class="dt" style="margin-top:16px;">
     <thead>
       <tr>
-        <th style="width:200px;">과제</th>
-        <th>내용</th>
-        <th style="width:160px;">결과 / 수치</th>
-        <th style="width:80px;">상태</th>
+        <th style="width:150px;">과제</th>
+        <th>진행 내용</th>
+        <th style="width:170px;">수치</th>
+        <th style="width:200px;">레슨런</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><strong>흑백요리사 기획전</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅</span></td>
+        <td>넷플릭스 '흑백요리사' 출연 셰프 매장 큐레이션 기획전 (S1·S2). 메인 배너 + 인트로 배너 + 기획전 페이지 운영 (2025.10 ~ 2026.01).</td>
         <td>
-          넷플릭스 '흑백요리사' 출연 셰프 매장을 중심으로 캐치테이블 글로벌 버전 내 기획전 진행. 외국인 관광객 대상 화제 매장 큐레이션으로 앱 유입 및 예약 전환 유도.<br>
-          <span style="font-size:11px;color:#97A0AF;">기획전 운영 기간 및 성과 수치 기입 필요</span>
+          기획전 페이지뷰: <span class="kpi-val">27.6만</span><br>
+          인트로 배너 클릭: <span class="kpi-val">6.5만+</span><br>
+          메인 배너 CTR: <span class="kpi-val">동기간 1위</span>
         </td>
+        <td style="font-size:12px; color:#172B4D;">
+          메인 배너 CTR 1.50%로 동기간 전체 1위 (미쉐린 0.65%, Trending Now 0.19~0.35% 대비 2~8배). 기획전 페이지뷰 27.6만 중 대만 29.1% · 일본 8.5% — 대만이 일본보다 3.4배 높아 향후 IP 기획전 시 대만·홍콩 우선 타겟팅 필요
+        </td>
+      </tr>
+      <tr>
+        <td><strong>새벽네시 POC 협업</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅</span></td>
+        <td>방한 외국인 틱톡 인플루언서 에이전시 새벽네시와 미식 브이로그 콘텐츠 POC 협업. 인플루언서가 캐치테이블로 예약 후 육지 방문. 비용 부담 없음.</td>
         <td>
-          기획전 운영: <span class="kpi-val">완료</span><br>
-          성과 수치: <span class="kpi-val">TBD</span>
+          콘텐츠 뷰: <span class="kpi-val">9K · 8K · 2K</span><br>
+          비용: <span class="kpi-val">0원</span>
         </td>
-        <td><span class="badge b-done">완료</span></td>
+        <td style="font-size:12px; color:#172B4D;">
+          비용 없이 건당 ~10K 뷰 콘텐츠를 지속 생산할 수 있는 구조 확인. 단건 임팩트는 작지만 누적될수록 캐치테이블 앱 자연 노출 채널로 기능 — 이 가능성을 바탕으로 인플루언서 테스트 플로우로 확장
+        </td>
       </tr>
       <tr>
         <td><strong>인플루언서 테스트 플로우</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅/운영</span></td>
+        <td>글로벌 예약 가능 매장 200개 → 5개 선정. 매장 섭외 조건(최대 2인 식사권 무상, 섭외 비용 캐치테이블 부담) 및 콘텐츠 제작 플로우 설계. 인스타그램 3건 발행.</td>
         <td>
-          글로벌 예약 가능 매장 200개 → 후보 10개 → 최종 5개 선정. 매장 섭외 조건(최대 2인 식사권 무상) 및 인플루언서 방문 콘텐츠 제작 플로우 설계 완료. 1차 테스트 매장 컨펌 및 메시징 발송.<br>
-          <span style="font-size:11px;color:#97A0AF;">통의동 국빈관 · 신사꽃게당 압구정로데오점 · 스미스앤월렌스키 · 리파인 명동을지로 확정 / 부르(Vuur) 컨펌 중</span>
+          발행: <span class="kpi-val">3건 · 조회수 5만+</span><br>
+          통의동 국빈관: <span class="kpi-val">7건(12월) → 14건(3월) +100%</span><br>
+          신사꽃게당: <span class="kpi-val">16건(12월) → 38건(3월) +137%</span>
         </td>
-        <td>
-          선정 매장: <span class="kpi-val">5개</span><br>
-          플로우 설계: <span class="kpi-val">완료</span>
+        <td style="font-size:12px; color:#172B4D;">
+          3개 매장 테스트 중 기존 일본인 예약 보유 매장만 유효 — 신사꽃게당 +137% vs 기존 예약 0인 매장 변화 미미. 비교 기간이 12월(비수기)→3월(성수기)이라 인플루언서 효과만으로 보기 어려움. 콘텐츠는 장기 투자 관점으로 접근, 2Q는 캐치테이블 예약 플로우를 매장 전반에 정착시키는 것을 목표로 마이크로 인플루언서 단독(16.5만원) 확대 운영
         </td>
-        <td><span class="badge b-done">완료</span></td>
       </tr>
       <tr>
         <td><strong>글로벌 예약 매장 확대</strong><br><span style="font-size:11px;color:#5E6C84;">운영</span></td>
+        <td>예약금 없는 매장 403개 1차 오픈 (2월). 예약금·선결제 인기 매장 443개 2차 추가 오픈 (3월).</td>
         <td>
-          글로벌 미오픈 매장을 2회에 걸쳐 정기 배치 오픈. <strong>1차(2월)</strong>: 예약금 없는 매장 403개 오픈 → 130개 매장에서 글로벌 예약 1,412건 발생(전환율 32.3%). 오픈 1주일 만에 83해치 광안리점 예약 151건으로 글로벌 랭킹 11위 진입. <strong>2차(3월)</strong>: 예약금/선결제 있는 인기 매장 443개 추가 오픈, 국내 총 예약 수 177,374건 규모의 고수요 매장군 확보 (예약금 100건↑ 매장 93개 포함).<br>
-          <span style="font-size:11px;color:#97A0AF;">1차 Top5 매장(83해치·월화식당·국보가든·지강한식당 등)이 전체 예약의 58.3% 차지. 2차 예약금 매장 글로벌 전환 데이터는 추적 중.</span>
-        </td>
-        <td>
-          1차 오픈: <span class="kpi-val">403개</span> (2월)<br>
-          2차 오픈: <span class="kpi-val">443개</span> (3월)<br>
           누적 오픈: <span class="kpi-val">846개</span><br>
-          1차 글로벌 예약: <span class="kpi-val">1,412건</span><br>
-          1차 전환 매장: <span class="kpi-val">130개 (32.3%)</span>
+          글로벌 예약: <span class="kpi-val">1,412건</span><br>
+          전환 매장: <span class="kpi-val">130개 (15.4%)</span><br>
+          <span style="font-size:11px;color:#5E6C84;">Top5 매장이 전체 예약 58.3% 독식</span>
         </td>
-        <td><span class="badge b-done">완료</span></td>
+        <td style="font-size:12px; color:#172B4D;">
+          정기 과제로 매달 1회 국내 인기 매장 위주로 글로벌 오픈 진행
+        </td>
       </tr>
       <tr>
         <td><strong>알리페이 연동</strong><br><span style="font-size:11px;color:#5E6C84;">개발</span></td>
+        <td>중국 인바운드 관광객 결제 수단 1위 알리페이 연동 완료 (3월 말). 결제 수단 추가 방식으로 전 매장 즉시 적용.</td>
         <td>
-          중국어권 유저 결제 편의 개선을 위해 알리페이(Alipay) 결제 수단 연동 완료. 중국 관광객 예약 전환율 개선 기여.<br>
-          <span style="font-size:11px;color:#97A0AF;">연동 완료 일자 및 전환율 변화 수치 기입 필요</span>
+          적용 범위: <span class="kpi-val">전 매장</span>
         </td>
-        <td>
-          연동 완료: <span class="kpi-val">TBD</span><br>
-          예약 전환 변화: <span class="kpi-val">TBD</span>
+        <td style="font-size:12px; color:#172B4D;">
+          결제 장벽 구조적 해소 완료(전 매장 적용). 런칭 직후 데이터 부족 — 전환율 영향은 4월 데이터부터 측정 가능
         </td>
-        <td><span class="badge b-done">완료</span></td>
       </tr>
     </tbody>
   </table>
@@ -417,21 +468,101 @@
     <p style="margin-top:10px;">단일 채널에 의존하면 한 레버의 성과 미달이 전체 목표를 흔들 수 있다. 이에 <strong>단기 직접 기여 채널</strong>(퍼포먼스 마케팅 · 인플루언서 · 관공서 제휴 · 오프라인 호텔)과 <strong>중장기 오가닉 자산</strong>(SEO · 2차 추천)을 병행 가동해 채널별 리스크를 분산한다. 4~5월은 유입 레버를 총동원해 MUV gap을 직접 공략하고, 6월 이후부터는 SEO 색인과 추천 구좌 전환율로 지속 가능한 성장 기반을 다지는 구조다.</p>
   </div>
 
-  <h3>온라인 채널</h3>
-  <ul>
-    <li>퍼포먼스 마케팅 → MUV <strong>+7,000</strong>/월 (4월~) — 3월 디벨롭 버전 본격 운영, CPI/ROAS 실측 후 확정</li>
-    <li>인플루언서 SNS 플로우 → 월 MUV <strong>+15,000</strong> 기여 (4~5월) — 1차 테스트 5개 매장 선정 완료, 분기 15건+ 발행 목표</li>
-    <li>관공서 제휴 (환영주간/VisitKorea) → MUV <strong>+500</strong> + 예약방문 <strong>+50</strong> (5월) — 공항 부스 QR + 앱 내 기획전 랜딩 2종</li>
-    <li>SEO 리스트형 추천 개발 착수 → 3월 착수 (진행 중)</li>
-    <li>샤오홍슈 채널 활성화 → AI 자동생성 플로우 구축, 주 3회 업로드 (2Q 본격 운영)</li>
-    <li>2차 추천 낙수구좌 런칭 → 예약방문 <strong>+500</strong>/월 (5월~), CTR 5%+ 목표</li>
-  </ul>
+  <table class="channel-list">
+    <thead>
+      <tr><th style="width:28px;"></th><th style="width:180px;">채널</th><th style="width:160px;">목표 기여</th><th>비고</th><th style="width:54px;">시기</th></tr>
+    </thead>
+    <tbody>
+      <tr class="ch-section-header"><td colspan="5">온라인</td></tr>
+      <tr>
+        <td></td>
+        <td><strong>퍼포먼스 마케팅</strong></td>
+        <td class="ch-metric">MUV <span>+7,000</span>/월</td>
+        <td class="ch-desc">3월 디벨롭 버전 본격 운영 · CPI/ROAS 실측 후 확정</td>
+        <td class="ch-period">4월~</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><strong>인플루언서 SNS 플로우</strong></td>
+        <td class="ch-metric">MUV <span>+15,000</span>/월</td>
+        <td class="ch-desc">1차 테스트 5개 매장 선정 완료 · 분기 15건+ 발행 목표</td>
+        <td class="ch-period">4~5월</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><strong>관공서 제휴</strong><br><span style="font-size:11px;color:#5E6C84;">환영주간 / VisitKorea</span></td>
+        <td class="ch-metric">MUV <span>+500</span><br>예약방문 <span>+50</span></td>
+        <td class="ch-desc">공항 부스 QR 비치 + 앱 내 기획전 랜딩 2종</td>
+        <td class="ch-period">5월</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><strong>SEO 리스트형 추천</strong></td>
+        <td class="ch-metric" style="color:#5243AA;">색인 키워드 <span style="color:#5243AA;">50개+</span></td>
+        <td class="ch-desc">/best/{location}/{cuisine} SSR · 3월 개발 착수 중</td>
+        <td class="ch-period">진행 중</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><strong>샤오홍슈 채널 활성화</strong></td>
+        <td class="ch-metric">업로드 <span>주 3회</span></td>
+        <td class="ch-desc">AI 자동생성 플로우 구축 · 분기 36건+ 목표</td>
+        <td class="ch-period">2Q~</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><strong>2차 추천 낙수구좌</strong></td>
+        <td class="ch-metric">예약방문 <span>+120</span>/월</td>
+        <td class="ch-desc">매장 상세 하단 추천 구좌 신설 · CTR 5%+ 목표</td>
+        <td class="ch-period">5월~</td>
+      </tr>
+      <tr class="ch-section-header"><td colspan="5">오프라인</td></tr>
+      <tr>
+        <td></td>
+        <td><strong>명동 호텔 오프라인 테스트</strong></td>
+        <td class="ch-metric">MUV <span>+5,000</span></td>
+        <td class="ch-desc">명함(6만) + A4(6천) 비치 · 3곳+ 달성 시 Go, 미달 시 Pivot</td>
+        <td class="ch-period">4월</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h3>오프라인 채널</h3>
-  <ul>
-    <li>명동 호텔 오프라인 채널 테스트 → MUV <strong>+5,000</strong> (4월), 3곳+ 비치 시 Go · 미달 시 Pivot</li>
-  </ul>
 
+  <div style="background:#F4F5F7; border:1px solid #DFE1E6; border-radius:4px; padding:14px 18px; margin:4px 0 28px; font-size:13px;">
+    <p style="font-weight:700; color:#172B4D; margin-bottom:10px;">채널 기여 합산 vs 자연 성장 gap</p>
+    <p style="color:#5E6C84; margin-bottom:10px;">현재 수치화된 채널 기여 합산은 4월 기준 약 <strong style="color:#172B4D;">27,000 MUV</strong>로, 목표 gap(~48K)의 약 56% 수준. 아래 추가 상방 요인의 수치화가 진행되는 시점에 gap 커버리지가 확대될 것으로 판단.</p>
+    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+      <thead>
+        <tr style="border-bottom:1px solid #DFE1E6;">
+          <th style="text-align:left; padding:5px 8px; color:#5E6C84; font-weight:700; width:220px;">추가 상방 요인</th>
+          <th style="text-align:left; padding:5px 8px; color:#5E6C84; font-weight:700;">근거</th>
+          <th style="text-align:left; padding:5px 8px; color:#5E6C84; font-weight:700; width:100px;">상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #F0F1F3;">
+          <td style="padding:7px 8px; font-weight:600;">글로벌 매장 2차 오픈 전환</td>
+          <td style="padding:7px 8px; color:#5E6C84;">443개 추가 오픈 매장의 글로벌 예약 전환 — 1차 전환율 32.3% 참고, 예약금 매장 특성상 전환율 상이할 수 있어 추적 중</td>
+          <td style="padding:7px 8px; color:#FF8B00; font-weight:600;">추적 중</td>
+        </tr>
+        <tr style="border-bottom:1px solid #F0F1F3;">
+          <td style="padding:7px 8px; font-weight:600;">알리페이 결제 전환 개선</td>
+          <td style="padding:7px 8px; color:#5E6C84;">중국어권 결제 이탈 구조 해소 → 예약 전환율 직접 기여. 4월부터 데이터 추적 시작</td>
+          <td style="padding:7px 8px; color:#FF8B00; font-weight:600;">4월~ 추적</td>
+        </tr>
+        <tr style="border-bottom:1px solid #F0F1F3;">
+          <td style="padding:7px 8px; font-weight:600;">샤오홍슈 중국어권 유입</td>
+          <td style="padding:7px 8px; color:#5E6C84;">주 3회 콘텐츠 발행 → 중국어권 앱 유입 채널 확보. 계정 성장에 따라 기여 증가</td>
+          <td style="padding:7px 8px; color:#FF8B00; font-weight:600;">수치화 예정</td>
+        </tr>
+        <tr>
+          <td style="padding:7px 8px; font-weight:600;">SEO 오가닉 누적 효과</td>
+          <td style="padding:7px 8px; color:#5E6C84;">색인 키워드 누적될수록 오가닉 유입 증가 — 6월 이후 본격 기여 예상</td>
+          <td style="padding:7px 8px; color:#5243AA; font-weight:600;">중장기</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- 2. 월별 KPI -->
   <h2 id="v2-s2">2. 월별 KPI 목표치</h2>
@@ -510,8 +641,8 @@
           <tr>
             <td><strong>글로벌 인플루언서<br>콘텐츠 플로우</strong><br><span style="font-size:11px;color:#5E6C84;">마케팅/운영</span></td>
             <td>
-              <strong>1차 테스트:</strong> 글로벌 예약 가능 매장 200개 중 선별한 5개 매장(4확정·1컨펌중)을 대상으로 인플루언서 방문 콘텐츠 제작 후 2~4주 성과 추적. 매장 부담은 최대 2인 식사권 무상 제공이며, 인플루언서 섭외 비용은 캐치테이블이 부담한다.<br>
-              <strong>2차 상품화 플로우:</strong> 1차 결과 기반으로 매장 → 캐치테이블(광고 계약) → 매체사(지급+수수료 상계) 구조로 정규화. 상품 A(인플루언서 단독) / 상품 B(인플루언서 + Trending Now 배너 패키지) 2종 운영 예정.<br>
+              <strong>1차 테스트 완료 (1Q):</strong> 5개 매장 대상 인플루언서 방문 콘텐츠 제작 · 성과 추적 완료. 기존 일본인 예약이 있던 매장은 확실한 반등 확인, 기존 예약 없던 매장은 전환 어려움 확인 (세부 결과 하단 표).<br>
+              <strong>2Q 매장 확대 방향:</strong> 1차 결과 기반으로 <strong>기존 일본인 예약 실적이 있는 매장</strong>을 대상으로 매장 → 캐치테이블 광고 계약 구조로 정규화. 콘텐츠 조회수 차이가 크지 않고 전환은 기존 인지도에 의존하므로, 2Q는 <strong>마이크로 인플루언서 단독 상품(16.5만원)</strong>으로 단순화해 모집.<br>
               <span style="font-size:11px;color:#97A0AF;">목표 근거: 분기 15건 발행 × 인플루언서 평균 팔로워 ~33K 기준 총 도달 500K+. 전환율 3% 가정 시 MUV 기여 +15,000 수준.</span>
             </td>
             <td>
@@ -570,11 +701,11 @@
             <td><strong>2차 추천 Phase 1</strong><br><span style="font-size:11px;color:#5E6C84;">개발 (하드코딩)</span></td>
             <td>
               매장 상세(풀예약·인기매장) 하단과 마이다이닝에 추천 구좌를 신설한다. Phase 1은 기획자 수동 큐레이션(하드코딩)으로 빠르게 런칭해 CTR·예약전환 데이터를 먼저 확보하고, Phase 2에서 예약·웨이팅 이력 기반 개인화 로직으로 고도화한다.<br>
-              <span style="font-size:11px;color:#97A0AF;">목표 근거: 기존 기획전 구좌 평균 CTR 벤치마크로 5%+ 설정. 5월 런칭 가정 시 구좌 노출량 × CTR × 예약 전환율 기준 +500/월 예약방문 기여 예상.</span>
+              <span style="font-size:11px;color:#97A0AF;">목표 근거: 기존 기획전 구좌 평균 CTR 벤치마크로 5%+ 설정. 5월 런칭 가정 시 구좌 노출량 × CTR × 예약 전환율 기준 +120/월 예약방문 기여 예상.</span>
             </td>
             <td>
               킥오프 일정 확정: <span class="kpi-val">4월 내</span><br>
-              예약방문 기여: <span class="kpi-val">+500/월</span> (5월~)<br>
+              예약방문 기여: <span class="kpi-val">+120/월</span> (5월~)<br>
               추천 구좌 CTR: <span class="kpi-val">5%+</span>
             </td>
             <td><span class="badge b-dev">개발 대기</span></td>
@@ -587,18 +718,88 @@
         글로벌 예약 가능 매장 200개 → 후보 10개 → <strong>최종 5개 선정</strong>
         &nbsp;·&nbsp; 매장 부담: 최대 2인 식사권 무상 제공 (인플루언서 섭외 비용은 캐치테이블 부담)
       </p>
-      <table class="dt" style="margin-bottom:6px;">
+      <table class="dt" style="margin-bottom:20px;">
         <thead>
           <tr><th>매장명</th><th>글로벌 예약비율</th><th>선정 사유</th><th>컨펌 상태</th></tr>
         </thead>
         <tbody>
           <tr><td><strong>통의동 국빈관</strong></td><td>92.2%</td><td>글로벌 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
           <tr><td><strong>신사꽃게당 압구정로데오점</strong></td><td>151.1%</td><td>글로벌 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
-          <tr><td><strong>부르 (Vuur)</strong></td><td>15.9%</td><td>글로벌 광고 성과 매장</td><td><span class="badge b-wip">컨펌 중</span></td></tr>
+          <tr><td><strong>부르 (Vuur)</strong></td><td>15.9%</td><td>글로벌 광고 성과 매장</td><td><span class="badge b-done">확정</span></td></tr>
           <tr><td><strong>스미스앤월렌스키</strong></td><td>0.8%</td><td>국내 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
           <tr><td><strong>리파인 명동을지로</strong></td><td>1.0%</td><td>국내 인기 매장</td><td><span class="badge b-done">확정</span></td></tr>
         </tbody>
       </table>
+
+      <!-- 1차 테스트 결과 -->
+      <h3 style="font-size:13px; margin:0 0 8px; color:#172B4D;">1차 테스트 결과 <span style="font-weight:400; color:#5E6C84;">(인스타그램 3건 발행 · 총 조회수 5만+)</span></h3>
+      <p style="font-size:12px; color:#5E6C84; margin-bottom:8px;">일본인 예약 기준, 2월 비수기 조정 감안</p>
+      <table class="dt" style="margin-bottom:8px;">
+        <thead>
+          <tr><th>매장명</th><th>콘텐츠 조회수</th><th>일본인 예약 (전)</th><th>일본인 예약 (후)</th><th>변화율</th><th>판정</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>통의동 국빈관</strong></td>
+            <td>1.9만</td>
+            <td>7건 (12월)</td>
+            <td>14건 (3월)</td>
+            <td><strong style="color:#00875A;">+100%</strong></td>
+            <td><span class="badge b-done">유효</span></td>
+          </tr>
+          <tr>
+            <td><strong>신사꽃게당 압구정로데오점</strong></td>
+            <td>2.1만</td>
+            <td>16건 (비수기 저점)</td>
+            <td>38건 (3월)</td>
+            <td><strong style="color:#00875A;">+137%</strong></td>
+            <td><span class="badge b-done">유효</span></td>
+          </tr>
+          <tr>
+            <td><strong>스미스앤월렌스키 / 리파인 명동을지로 / 부르</strong></td>
+            <td>1만 내외</td>
+            <td>0건</td>
+            <td>0건</td>
+            <td style="color:#97A0AF;">—</td>
+            <td><span class="badge" style="background:#FFEBE6;color:#BF2600;">전환 없음</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="background:#FFFAE6; border-left:3px solid #FF991F; padding:10px 14px; font-size:12px; color:#172B4D; margin-bottom:14px; line-height:1.7;">
+        <strong>인사이트:</strong> 기존 일본인 예약 실적이 있는 매장은 콘텐츠 유입 → 예약 전환이 유효. 반면 기존 예약이 없는 매장은 조회수와 무관하게 전환 0 — 인지도 기반이 없으면 단독 콘텐츠로 신규 유입 만들기 어려움.<br>
+        <strong>→ 2Q 방향:</strong> 일본인 예약 실적 보유 매장 대상으로만 <strong>마이크로 인플루언서 단독 상품(16.5만원)</strong> 모집. 배너 패키지 병행 없이 단순화.
+      </div>
+
+      <!-- 새벽네시 POC 협업 -->
+      <h3 style="font-size:13px; margin:20px 0 8px; color:#172B4D;">새벽네시 POC 협업 <span style="font-weight:400; color:#5E6C84;">— 글로벌 첫 외부 에이전시 콘텐츠 협업 사례 (1Q)</span></h3>
+      <p style="font-size:12px; color:#5E6C84; margin-bottom:8px;">
+        방한 외국인 틱톡 인플루언서를 섭외·운영하는 에이전시 새벽네시와 POC 진행 (캐치테이블 비용 부담 없음).
+        인플루언서가 캐치테이블로 예약 후 매장 방문하는 미식 브이로그 형태로 앱을 자연 노출.
+      </p>
+      <table class="dt" style="margin-bottom:8px;">
+        <thead>
+          <tr><th>인플루언서</th><th>플랫폼</th><th>방문 매장</th><th>콘텐츠 뷰</th><th>특이사항</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Valeska</strong><br><span style="font-size:11px;color:#5E6C84;">@_tiramishuuu</span></td>
+            <td>TikTok</td>
+            <td>육지</td>
+            <td><strong>9K</strong></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Mimi</strong><br><span style="font-size:11px;color:#5E6C84;">@hotteoklover</span></td>
+            <td>Instagram + TikTok</td>
+            <td>육지</td>
+            <td><strong>8K + 2K</strong></td>
+            <td>캐치테이블 앱 인앱 화면 자연 노출 잘 됨</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="background:#E3FCEF; border-left:3px solid #00875A; padding:10px 14px; font-size:12px; color:#172B4D; margin-bottom:16px; line-height:1.7;">
+        <strong>의의:</strong> 캐치테이블 비용·리소스 없이 외국인 인플루언서 콘텐츠 확보 성공 — 글로벌 외부 에이전시와의 첫 콘텐츠 협업 사례. 중동·동남아·미국 등 국가별 4회+ 사이클 추가 테스트 예정 (현재 POC 단계, 추후 유료화 가능성 검토).
+      </div>
 
       <h3 style="font-size:13px; margin:16px 0 6px; color:#172B4D;">매장 메시징 핵심</h3>
       <ul style="margin:0 0 10px 16px; font-size:12px; color:#333;">
