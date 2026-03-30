@@ -76,6 +76,7 @@ with open(csv_path, encoding="utf-8") as f:
 
 print(f"총 {len(rows)}개 시설 처리 시작\n")
 skipped = 0
+slug_counter = {}
 
 for row in rows:
     name = row.get("시설명", "").strip()
@@ -88,6 +89,12 @@ for row in rows:
         print(f"  ⚠️  슬러그 생성 실패: {name} — 건너뜀")
         skipped += 1
         continue
+
+    if slug in slug_counter:
+        slug_counter[slug] += 1
+        slug = f"{slug[:27]}_{slug_counter[slug]}"
+    else:
+        slug_counter[slug] = 1
 
     utm_url = f"{LANDING_URL}?utm_source=hotel&utm_medium=qr&utm_campaign={slug}"
     qr_path = make_qr(utm_url, slug)
