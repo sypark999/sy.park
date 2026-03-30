@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CATCHTABLE — Seoul Dining Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 148mm;
+      height: 210mm;
+      font-family: -apple-system, 'Noto Sans', 'Noto Sans JP', 'Noto Sans SC', sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    /* ── 1. HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #FF5630 0%, #FF8B00 100%);
+      padding: 20px 20px 18px;
+      text-align: center;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .hero-logo {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1;
+      margin-bottom: 10px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.18);
+    }
+
+    .hero-logo span {
+      display: inline-block;
+      border-bottom: 2.5px solid rgba(255,255,255,0.55);
+      padding-bottom: 6px;
+    }
+
+    .hero-tagline {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.5;
+    }
+
+    .hero-tagline .dot {
+      color: rgba(255,255,255,0.55);
+      margin: 0 4px;
+    }
+
+    .hero-tagline .lang-jp { font-family: 'Noto Sans JP', sans-serif; }
+    .hero-tagline .lang-cn { font-family: 'Noto Sans SC', sans-serif; }
+    .hero-tagline .lang-ko { font-family: 'Noto Sans', sans-serif; }
+
+    /* ── 2. TAGLINE BLOCK ── */
+    .tagline-block {
+      background: #172b4d;
+      padding: 13px 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .tagline-main {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+
+    .tagline-sub {
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.72);
+      letter-spacing: 0.5px;
+      line-height: 1.6;
+    }
+
+    .tagline-sub .lang-jp { font-family: 'Noto Sans JP', sans-serif; }
+    .tagline-sub .lang-cn { font-family: 'Noto Sans SC', sans-serif; }
+    .tagline-sub .lang-ko { font-family: 'Noto Sans', sans-serif; }
+
+    .tagline-sub .sep {
+      color: rgba(255,255,255,0.3);
+      margin: 0 6px;
+    }
+
+    /* ── 3. QR SECTION ── */
+    .qr-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 16px 20px;
+      gap: 14px;
+    }
+
+    .qr-wrapper {
+      border: 1.5px solid #e0e4ea;
+      border-radius: 10px;
+      width: 42mm;
+      height: 42mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafbfc;
+      box-shadow: 0 2px 12px rgba(23,43,77,0.07);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .qr-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .qr-instructions {
+      text-align: center;
+    }
+
+    .qr-scan-icon {
+      font-size: 18px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .qr-line {
+      font-size: 10px;
+      color: #4a5568;
+      line-height: 1.7;
+      letter-spacing: 0.2px;
+    }
+
+    .qr-line .lang-jp { font-family: 'Noto Sans JP', sans-serif; color: #5a6680; }
+    .qr-line .lang-cn { font-family: 'Noto Sans SC', sans-serif; color: #5a6680; }
+    .qr-line .lang-ko { font-family: 'Noto Sans', sans-serif; color: #5a6680; }
+    .qr-line .qr-sep { color: #b0bac8; margin: 0 5px; }
+
+    /* ── 4. LANGUAGE STRIP ── */
+    .lang-strip {
+      background: #f7f8fa;
+      border-top: 1px solid #e8edf3;
+      padding: 10px 18px;
+      flex-shrink: 0;
+    }
+
+    .lang-row {
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      line-height: 1.9;
+    }
+
+    .lang-flag {
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .lang-text {
+      font-size: 9.5px;
+      color: #3d4c63;
+      letter-spacing: 0.1px;
+    }
+
+    .lang-text .arrow {
+      color: #FF7048;
+      font-weight: 600;
+      margin: 0 3px;
+    }
+
+    .lang-row.jp .lang-text { font-family: 'Noto Sans JP', sans-serif; }
+    .lang-row.cn .lang-text { font-family: 'Noto Sans SC', sans-serif; }
+    .lang-row.ko .lang-text { font-family: 'Noto Sans', sans-serif; }
+
+    /* ── 5. FOOTER ── */
+    .footer {
+      background: linear-gradient(90deg, #FF5630 0%, #FF8B00 100%);
+      padding: 9px 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .footer-url {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 1.2px;
+      text-transform: lowercase;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+      print-color-adjust: exact;
+
+      html, body {
+        width: 148mm;
+        height: 210mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. HERO -->
+  <section class="hero">
+    <div class="hero-logo"><span>CATCHTABLE</span></div>
+    <div class="hero-tagline">
+      Seoul Dining Guide
+      <span class="dot">·</span>
+      <span class="lang-jp">ソウルグルメ</span>
+      <span class="dot">·</span>
+      <span class="lang-cn">首尔美食</span>
+      <span class="dot">·</span>
+      <span class="lang-ko">서울 맛집</span>
+    </div>
+  </section>
+
+  <!-- 2. TAGLINE BLOCK -->
+  <section class="tagline-block">
+    <div class="tagline-main">Book Seoul's Best Restaurants</div>
+    <div class="tagline-sub">
+      <span class="lang-jp">今すぐ予約</span>
+      <span class="sep">·</span>
+      <span class="lang-cn">立即预订</span>
+      <span class="sep">·</span>
+      <span class="lang-ko">지금 예약</span>
+    </div>
+  </section>
+
+  <!-- 3. QR SECTION -->
+  <section class="qr-section">
+    <div class="qr-wrapper">
+      <img src="{QR_IMAGE}" alt="QR Code">
+    </div>
+    <div class="qr-instructions">
+      <span class="qr-scan-icon">📱</span>
+      <div class="qr-line">
+        Scan to explore &amp; book
+        <span class="qr-sep">|</span>
+        <span class="lang-jp">スキャンして予約</span>
+      </div>
+      <div class="qr-line">
+        <span class="lang-cn">扫码浏览餐厅</span>
+        <span class="qr-sep">|</span>
+        <span class="lang-ko">QR 스캔 후 예약</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. LANGUAGE STRIP -->
+  <section class="lang-strip">
+    <div class="lang-row en">
+      <span class="lang-flag">🇺🇸</span>
+      <span class="lang-text">Scan QR<span class="arrow">→</span>Find restaurants<span class="arrow">→</span>Book instantly</span>
+    </div>
+    <div class="lang-row jp">
+      <span class="lang-flag">🇯🇵</span>
+      <span class="lang-text">QRをスキャン<span class="arrow">→</span>レストランを探す<span class="arrow">→</span>今すぐ予約</span>
+    </div>
+    <div class="lang-row cn">
+      <span class="lang-flag">🇨🇳</span>
+      <span class="lang-text">扫描二维码<span class="arrow">→</span>浏览餐厅<span class="arrow">→</span>立即预订</span>
+    </div>
+    <div class="lang-row ko">
+      <span class="lang-flag">🇰🇷</span>
+      <span class="lang-text">QR 스캔<span class="arrow">→</span>맛집 탐색<span class="arrow">→</span>바로 예약</span>
+    </div>
+  </section>
+
+  <!-- 5. FOOTER -->
+  <footer class="footer">
+    <span class="footer-url">catchtable.global</span>
+  </footer>
+
+</body>
+</html>
