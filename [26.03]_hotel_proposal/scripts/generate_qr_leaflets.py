@@ -76,7 +76,7 @@ with open(csv_path, encoding="utf-8") as f:
 
 print(f"총 {len(rows)}개 시설 처리 시작\n")
 skipped = 0
-slug_counter = {}
+seen_slugs = set()
 
 for row in rows:
     name = row.get("시설명", "").strip()
@@ -84,17 +84,21 @@ for row in rows:
         continue
 
     # slug: CSV에 있으면 사용, 없으면 생성
-    slug = row.get("slug", "").strip() or hotel_to_slug(name)
-    if not slug:
+    base_slug = row.get("slug", "").strip() or hotel_to_slug(name)
+    if not base_slug:
         print(f"  ⚠️  슬러그 생성 실패: {name} — 건너뜀")
         skipped += 1
         continue
 
-    if slug in slug_counter:
-        slug_counter[slug] += 1
-        slug = f"{slug[:27]}_{slug_counter[slug]}"
-    else:
-        slug_counter[slug] = 1
+    # 중복 방지: 이미 사용된 슬러그라면 숫자 suffix 붙여 유니크하게 만들기
+    slug = base_slug
+    counter = 2
+    while slug in seen_slugs:
+        slug = f"{base_slug[:27]}_{counter}"
+        counter += 1
+    seen_slugs.add(slug)
+    if slug != base_slug:
+        print(f"  ⚠️  슬러그 충돌 — '{base_slug}' → '{slug}' ({name})")
 
     utm_url = f"{LANDING_URL}?utm_source=hotel&utm_medium=qr&utm_campaign={slug}"
     qr_path = make_qr(utm_url, slug)
