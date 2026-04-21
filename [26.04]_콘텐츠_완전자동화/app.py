@@ -436,4 +436,4 @@ if __name__ == "__main__":
     print("옵션 데이터 로딩 중...")
     load_options()
     print("완료. 서버 시작: http://localhost:5050")
-    app.run(host="0.0.0.0", port=5050, debug=False, threaded=True)
+    app.run(host="0.0.0.0", port=5050, debug=False, threaded=True, use_reloader=True)
