@@ -1,0 +1,59 @@
+{
+  "name": "Restaurant Card (3-panel, xiaohongshu style)",
+  "size": [1080, 1350],
+  "description": "상단 메인 이미지(675px) + 하단 서브 2개(675px) + 경계선에 텍스트 오버레이",
+  "layers": [
+    {
+      "type": "background_color",
+      "color": "#F5F5DC",
+      "position": [0, 0],
+      "size": [1080, 1350]
+    },
+    {
+      "type": "main_image",
+      "position": [0, 0],
+      "size": [1080, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "sub_image_1",
+      "position": [0, 675],
+      "size": [540, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "sub_image_2",
+      "position": [540, 675],
+      "size": [540, 675],
+      "fit": "cover"
+    },
+    {
+      "type": "text",
+      "name": "restaurant_name",
+      "position": [540, 675],
+      "align": "center",
+      "font_size": 70,
+      "color": "#000000",
+      "stroke_color": "#FFFFFF",
+      "stroke_width": 8,
+      "max_width": 950,
+      "weight": "bold",
+      "line_spacing": 5,
+      "letter_spacing": 0
+    },
+    {
+      "type": "text",
+      "name": "address",
+      "position": [540, 775],
+      "align": "center",
+      "font_size": 42,
+      "color": "#000000",
+      "stroke_color": "#FFFFFF",
+      "stroke_width": 6,
+      "max_width": 600,
+      "weight": "normal",
+      "line_spacing": 8,
+      "letter_spacing": 0
+    }
+  ]
+}
