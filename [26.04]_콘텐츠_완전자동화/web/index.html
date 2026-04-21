@@ -3,161 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>콘텐츠 자동 생성 — CATCHTABLE</title>
+<title>CATCHTABLE GLOBAL 샤오홍슈 콘텐츠 자동 생성기</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0f0f0f;
-    color: #f0f0f0;
+    background: #f2efe9;
+    color: #1a1a1a;
     min-height: 100vh;
   }
 
   header {
-    padding: 28px 40px 20px;
-    border-bottom: 1px solid #222;
+    background: #ffffff;
+    padding: 20px 32px;
+    border-bottom: 1px solid #e5dfd5;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
   }
   header h1 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: -0.3px;
-  }
-  header span {
-    font-size: 13px;
-    color: #666;
+    color: #1a1a1a;
   }
 
   .badge {
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: #f2efe9;
+    border: 1px solid #ddd8ce;
     border-radius: 6px;
     padding: 3px 10px;
     font-size: 12px;
-    color: #888;
+    color: #888070;
   }
 
-  /* ─── 앱 레이아웃 (2-column) ─── */
-  .app-layout {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 24px;
-    max-width: 1400px;
+  /* ─── 전체 래퍼 ─── */
+  .app-wrapper {
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 40px 24px;
+    padding: 28px 24px 48px;
+  }
+
+  /* ─── 상단 행: 폼(좁게) + 진행상황(나란히) ─── */
+  .top-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
     align-items: start;
   }
 
-  @media (max-width: 900px) {
-    .app-layout { grid-template-columns: 1fr; }
-    .shop-sidebar { order: -1; }
+  /* ─── 하단 행: 매장 선택(좌) + 갤러리(우) ─── */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .top-row    { grid-template-columns: 1fr; }
+    .bottom-row { grid-template-columns: 1fr; }
   }
 
   /* ─── 입력 폼 ─── */
   .form-card {
-    background: #181818;
-    border: 1px solid #282828;
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 24px;
+    background: #ffffff;
+    border: 1px solid #e5dfd5;
+    border-radius: 14px;
+    padding: 24px 20px;
   }
 
   .form-card h2 {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
-    margin-bottom: 24px;
-    color: #ddd;
+    color: #888070;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
   }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 14px;
-    align-items: end;
+  .field {
+    margin-bottom: 12px;
   }
-
   .field label {
     display: block;
-    font-size: 12px;
-    color: #777;
-    margin-bottom: 8px;
+    font-size: 11px;
+    color: #998f82;
+    margin-bottom: 6px;
     letter-spacing: 0.3px;
     text-transform: uppercase;
   }
-
   .field input, .field select {
     width: 100%;
-    background: #111;
-    border: 1px solid #2e2e2e;
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: #f0f0f0;
-    font-size: 15px;
+    background: #faf8f4;
+    border: 1px solid #ddd7cc;
+    border-radius: 9px;
+    padding: 10px 12px;
+    color: #1a1a1a;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
   }
   .field input:focus, .field select:focus {
-    border-color: #555;
+    border-color: #b8b0a4;
+    background: #fff;
   }
-  .field input::placeholder { color: #444; }
-  .field select option { background: #1a1a1a; }
+  .field input::placeholder { color: #bbb5ac; }
+  .field select option { background: #fff; }
 
-  .hint {
-    font-size: 11px;
-    color: #555;
-    margin-top: 6px;
-  }
-
-  .limit-row {
-    margin-top: 16px;
+  .form-bottom-row {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+    margin-top: 4px;
   }
-  .limit-row label { font-size: 13px; color: #666; }
-  .limit-row select {
-    background: #111;
-    border: 1px solid #2e2e2e;
+  .form-bottom-row label {
+    font-size: 12px;
+    color: #998f82;
+    white-space: nowrap;
+  }
+  .form-bottom-row select {
+    background: #faf8f4;
+    border: 1px solid #ddd7cc;
     border-radius: 8px;
-    padding: 7px 12px;
-    color: #ccc;
-    font-size: 14px;
+    padding: 8px 10px;
+    color: #1a1a1a;
+    font-size: 13px;
     outline: none;
+    flex: 1;
   }
 
   /* 검색 버튼 */
   .btn-search {
-    background: #f0f0f0;
-    color: #000;
+    background: #1a1a1a;
+    color: #fff;
     border: none;
-    border-radius: 10px;
-    padding: 12px 28px;
-    font-size: 15px;
+    border-radius: 9px;
+    padding: 10px 0;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    white-space: nowrap;
+    width: 100%;
+    margin-top: 14px;
     transition: background 0.15s, transform 0.1s;
-    align-self: flex-end;
   }
-  .btn-search:hover { background: #fff; }
-  .btn-search:active { transform: scale(0.97); }
+  .btn-search:hover { background: #333; }
+  .btn-search:active { transform: scale(0.98); }
   .btn-search:disabled {
-    background: #333;
-    color: #666;
+    background: #ccc8c0;
+    color: #fff;
     cursor: not-allowed;
   }
 
   /* ─── 진행 상황 ─── */
   .progress-area {
-    background: #141414;
-    border: 1px solid #222;
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 24px;
+    background: #ffffff;
+    border: 1px solid #e5dfd5;
+    border-radius: 14px;
+    padding: 20px 22px;
     display: none;
+    min-height: 80px;
   }
   .progress-area.visible { display: block; }
 
@@ -165,14 +172,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
-  .progress-header span { font-size: 14px; font-weight: 600; }
+  .progress-header span { font-size: 13px; font-weight: 600; color: #444; }
 
   .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid #333;
-    border-top-color: #fff;
+    width: 15px; height: 15px;
+    border: 2px solid #ddd8ce;
+    border-top-color: #555;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     flex-shrink: 0;
@@ -183,21 +190,21 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
   .log-list li {
-    font-size: 13px;
-    color: #777;
+    font-size: 12px;
+    color: #999;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
   }
-  .log-list li.success { color: #5dcc7a; }
-  .log-list li.warn    { color: #e0a040; }
-  .log-list li.error   { color: #e05555; }
-  .log-list li::before { content: '·'; font-size: 18px; flex-shrink: 0; }
-  .log-list li.success::before { content: '✓'; font-size: 13px; }
-  .log-list li.error::before   { content: '✗'; font-size: 13px; }
+  .log-list li.success { color: #2d8f50; }
+  .log-list li.warn    { color: #c07820; }
+  .log-list li.error   { color: #c03030; }
+  .log-list li::before { content: '·'; font-size: 16px; flex-shrink: 0; }
+  .log-list li.success::before { content: '✓'; font-size: 12px; }
+  .log-list li.error::before   { content: '✗'; font-size: 12px; }
 
   /* ─── 결과 갤러리 ─── */
   .gallery-section { display: none; }
@@ -207,231 +214,208 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
     gap: 10px;
   }
-  .gallery-header h2 { font-size: 16px; font-weight: 600; }
-  .gallery-header small { font-size: 13px; color: #666; }
+  .gallery-header h2 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  .gallery-header small { font-size: 12px; color: #998f82; }
 
   .btn-download-all {
-    background: #222;
-    border: 1px solid #444;
+    background: #fff;
+    border: 1px solid #ddd7cc;
     border-radius: 8px;
-    padding: 8px 18px;
+    padding: 7px 16px;
     font-size: 13px;
-    color: #ccc;
+    color: #555;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, border-color 0.15s;
     white-space: nowrap;
   }
-  .btn-download-all:hover { background: #2e2e2e; color: #fff; }
+  .btn-download-all:hover { background: #f8f5f0; border-color: #c8c0b4; color: #1a1a1a; }
 
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
   }
 
   .card-item {
-    background: #181818;
-    border: 1px solid #282828;
+    background: #fff;
+    border: 1px solid #e5dfd5;
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.15s, border-color 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s;
     position: relative;
   }
   .card-item:hover {
-    transform: translateY(-3px);
-    border-color: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
-
-  .card-item.is-cover {
-    border-color: #555;
-  }
-  .card-item.is-cover:hover {
-    border-color: #888;
-  }
+  .card-item.is-cover { border-color: #c8c0b4; }
 
   .card-item .thumb-wrap {
     aspect-ratio: 4/5;
     overflow: hidden;
-    background: #111;
+    background: #f0ece5;
   }
   .card-item img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     display: block;
     transition: transform 0.2s;
   }
   .card-item:hover img { transform: scale(1.03); }
 
-  .card-item .card-info {
-    padding: 12px 14px;
-  }
+  .card-item .card-info { padding: 10px 12px; }
   .card-item .card-info .name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-    color: #eee;
+    color: #1a1a1a;
     margin-bottom: 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .card-item .card-info .actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+  .card-item .card-info .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
   .btn-dl {
-    background: #222;
-    border: 1px solid #333;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 12px;
-    color: #bbb;
+    background: #f2efe9;
+    border: 1px solid #ddd7cc;
+    border-radius: 5px;
+    padding: 4px 9px;
+    font-size: 11px;
+    color: #666;
     cursor: pointer;
     text-decoration: none;
     transition: background 0.15s;
   }
-  .btn-dl:hover { background: #2e2e2e; color: #fff; }
+  .btn-dl:hover { background: #e8e3da; color: #1a1a1a; }
 
   /* ─── 사용 횟수 배지 ─── */
   .usage-badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 8px; right: 8px;
     border-radius: 5px;
     padding: 3px 8px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     z-index: 10;
     pointer-events: none;
   }
-  .usage-badge.new {
-    background: rgba(34, 160, 80, 0.9);
-    color: #fff;
-  }
-  .usage-badge.used {
-    background: rgba(210, 100, 30, 0.9);
-    color: #fff;
-  }
-  .usage-badge.cover-label {
-    background: rgba(60, 120, 220, 0.9);
-    color: #fff;
-  }
+  .usage-badge.new   { background: rgba(34, 140, 80, 0.88);  color: #fff; }
+  .usage-badge.used  { background: rgba(190, 90, 20, 0.88);  color: #fff; }
+  .usage-badge.cover-label { background: rgba(60, 110, 200, 0.88); color: #fff; }
 
   /* ─── 편집 버튼 ─── */
   .btn-edit {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(0,0,0,0.65);
-    border: 1px solid rgba(255,255,255,0.2);
+    top: 8px; left: 8px;
+    background: rgba(255,255,255,0.82);
+    border: 1px solid rgba(0,0,0,0.12);
     border-radius: 6px;
     padding: 4px 10px;
-    font-size: 12px;
-    color: #ddd;
+    font-size: 11px;
+    color: #333;
     cursor: pointer;
     z-index: 10;
     transition: background 0.15s;
   }
-  .btn-edit:hover { background: rgba(0,0,0,0.9); color: #fff; }
+  .btn-edit:hover { background: rgba(255,255,255,0.96); color: #000; }
 
-  /* ─── 사이드바 ─── */
+  /* ─── 매장 선택 사이드바 ─── */
   .shop-sidebar {
-    background: #181818;
-    border: 1px solid #282828;
-    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #e5dfd5;
+    border-radius: 14px;
     overflow: hidden;
     display: none;
     flex-direction: column;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 120px);
     position: sticky;
-    top: 20px;
+    top: 16px;
   }
   .shop-sidebar.visible { display: flex; }
 
   .sidebar-header {
-    padding: 16px 18px;
-    border-bottom: 1px solid #222;
+    padding: 14px 16px;
+    border-bottom: 1px solid #ede8e0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
   }
-  .sidebar-header h3 { font-size: 14px; font-weight: 600; color: #ddd; }
+  .sidebar-header h3 { font-size: 13px; font-weight: 600; color: #1a1a1a; }
 
   .shop-count-badge {
-    background: #222;
-    border: 1px solid #333;
+    background: #f2efe9;
+    border: 1px solid #ddd7cc;
     border-radius: 20px;
     padding: 3px 10px;
     font-size: 12px;
-    color: #aaa;
+    color: #888070;
     font-weight: 600;
   }
 
   .sidebar-controls {
-    padding: 10px 18px;
+    padding: 8px 16px;
     display: flex;
-    gap: 8px;
-    border-bottom: 1px solid #222;
+    gap: 7px;
+    border-bottom: 1px solid #ede8e0;
     flex-shrink: 0;
   }
   .btn-tiny {
-    background: #222;
-    border: 1px solid #333;
+    background: #f2efe9;
+    border: 1px solid #ddd7cc;
     border-radius: 6px;
     padding: 4px 10px;
     font-size: 12px;
-    color: #aaa;
+    color: #666;
     cursor: pointer;
     transition: all 0.15s;
   }
-  .btn-tiny:hover { background: #2e2e2e; color: #fff; }
+  .btn-tiny:hover { background: #e8e3da; color: #1a1a1a; }
 
   .shop-list {
     flex: 1;
     overflow-y: auto;
-    padding: 4px 0;
+    padding: 2px 0;
   }
 
   .shop-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 10px 18px;
-    border-bottom: 1px solid #1e1e1e;
+    padding: 9px 16px;
+    border-bottom: 1px solid #f0ece5;
     cursor: pointer;
     transition: background 0.15s;
   }
-  .shop-item:hover { background: #1e1e1e; }
+  .shop-item:hover { background: #faf8f4; }
   .shop-item:last-child { border-bottom: none; }
 
   .shop-item input[type="checkbox"] {
-    width: 15px; height: 15px;
+    width: 14px; height: 14px;
     flex-shrink: 0;
     margin-top: 3px;
-    accent-color: #5dcc7a;
+    accent-color: #2d8f50;
     cursor: pointer;
   }
 
   .shop-item-info { flex: 1; min-width: 0; }
   .shop-item-name-en {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    color: #eee;
+    color: #1a1a1a;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .shop-item-name-ko {
     font-size: 11px;
-    color: #666;
+    color: #998f82;
     margin-top: 1px;
     white-space: nowrap;
     overflow: hidden;
@@ -439,15 +423,15 @@
   }
   .shop-item-meta {
     font-size: 11px;
-    color: #555;
-    margin-top: 2px;
+    color: #bbb5ac;
+    margin-top: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .shop-item-sessions {
     font-size: 10px;
-    color: #444;
+    color: #ccc8c0;
     margin-top: 1px;
     white-space: nowrap;
     overflow: hidden;
@@ -457,65 +441,64 @@
   .shop-usage-badge {
     flex-shrink: 0;
     border-radius: 4px;
-    padding: 2px 7px;
+    padding: 2px 6px;
     font-size: 10px;
     font-weight: 700;
     margin-top: 2px;
     white-space: nowrap;
   }
-  .shop-usage-badge.new { background: rgba(34,160,80,0.2); color: #5dcc7a; border: 1px solid rgba(34,160,80,0.3); }
-  .shop-usage-badge.used { background: rgba(210,100,30,0.2); color: #e0a040; border: 1px solid rgba(210,100,30,0.3); }
+  .shop-usage-badge.new  { background: rgba(34,140,80,0.12);  color: #2d8f50; border: 1px solid rgba(34,140,80,0.25); }
+  .shop-usage-badge.used { background: rgba(190,90,20,0.12);  color: #c07820; border: 1px solid rgba(190,90,20,0.25); }
 
   .sidebar-warning {
-    padding: 12px 18px;
-    background: rgba(224, 160, 64, 0.08);
-    border-top: 1px solid rgba(224, 160, 64, 0.2);
+    padding: 10px 16px;
+    background: rgba(192, 120, 32, 0.06);
+    border-top: 1px solid rgba(192, 120, 32, 0.18);
     flex-shrink: 0;
   }
   .sidebar-warning .warn-text {
-    font-size: 12px;
-    color: #e0a040;
+    font-size: 11px;
+    color: #c07820;
     line-height: 1.5;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
   }
   .btn-proceed {
-    background: rgba(224, 160, 64, 0.15);
-    border: 1px solid rgba(224, 160, 64, 0.35);
+    background: rgba(192, 120, 32, 0.1);
+    border: 1px solid rgba(192, 120, 32, 0.3);
     border-radius: 6px;
-    padding: 7px 14px;
+    padding: 6px 12px;
     font-size: 12px;
-    color: #e0a040;
+    color: #c07820;
     cursor: pointer;
     transition: all 0.15s;
     width: 100%;
     font-weight: 600;
   }
-  .btn-proceed:hover { background: rgba(224, 160, 64, 0.25); }
+  .btn-proceed:hover { background: rgba(192, 120, 32, 0.18); }
 
   .sidebar-footer {
-    padding: 14px 18px;
-    border-top: 1px solid #222;
+    padding: 12px 16px;
+    border-top: 1px solid #ede8e0;
     flex-shrink: 0;
   }
 
   .btn-generate {
-    background: #f0f0f0;
-    color: #000;
+    background: #1a1a1a;
+    color: #fff;
     border: none;
     border-radius: 10px;
-    padding: 12px 20px;
-    font-size: 15px;
+    padding: 11px 20px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s, transform 0.1s;
     width: 100%;
+    transition: background 0.15s, transform 0.1s;
   }
-  .btn-generate:hover { background: #fff; }
-  .btn-generate:active { transform: scale(0.97); }
+  .btn-generate:hover { background: #333; }
+  .btn-generate:active { transform: scale(0.98); }
   .btn-generate:disabled {
-    background: #2a2a2a;
-    color: #555;
+    background: #ddd8ce;
+    color: #fff;
     cursor: not-allowed;
   }
 
@@ -524,7 +507,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.88);
+    background: rgba(0,0,0,0.55);
     z-index: 2000;
     align-items: center;
     justify-content: center;
@@ -533,67 +516,68 @@
   .swap-overlay.open { display: flex; }
 
   .swap-panel {
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: #fff;
+    border: 1px solid #e5dfd5;
     border-radius: 16px;
     width: 100%;
-    max-width: 680px;
+    max-width: 640px;
     max-height: 90vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.14);
   }
   .swap-header {
-    padding: 18px 22px 14px;
-    border-bottom: 1px solid #2a2a2a;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #ede8e0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
   }
-  .swap-header h3 { font-size: 14px; font-weight: 600; color: #eee; }
-  .swap-close { font-size: 22px; cursor: pointer; color: #666; line-height: 1; }
-  .swap-close:hover { color: #fff; }
+  .swap-header h3 { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .swap-close { font-size: 22px; cursor: pointer; color: #bbb; line-height: 1; }
+  .swap-close:hover { color: #333; }
 
-  .swap-body { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .swap-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
 
-  .slot-tabs { display: flex; gap: 8px; }
+  .slot-tabs { display: flex; gap: 7px; }
   .slot-tab {
-    background: #222;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 7px 16px;
-    font-size: 13px;
-    color: #777;
+    background: #f2efe9;
+    border: 1px solid #ddd7cc;
+    border-radius: 7px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #888;
     cursor: pointer;
     transition: all 0.15s;
   }
-  .slot-tab.active { background: #2e2e2e; border-color: #555; color: #fff; }
+  .slot-tab.active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
 
   .slot-preview {
     display: flex;
     align-items: center;
-    gap: 14px;
-    background: #111;
+    gap: 12px;
+    background: #faf8f4;
     border-radius: 10px;
-    padding: 10px 14px;
+    padding: 10px 12px;
   }
   .slot-preview img {
-    width: 72px; height: 72px;
+    width: 68px; height: 68px;
     object-fit: cover;
     border-radius: 6px;
     flex-shrink: 0;
-    background: #222;
+    background: #ede8e0;
   }
-  .slot-preview span { font-size: 12px; color: #666; }
+  .slot-preview span { font-size: 12px; color: #888; }
 
-  .pick-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.3px; }
-  .pick-empty { font-size: 13px; color: #555; padding: 12px 0; }
+  .pick-label { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 0.3px; }
+  .pick-empty { font-size: 13px; color: #bbb; padding: 10px 0; }
 
   .img-picker {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 7px;
   }
   .pick-img {
     width: 100%; aspect-ratio: 1;
@@ -602,34 +586,34 @@
     cursor: pointer;
     border: 2px solid transparent;
     transition: border-color 0.15s, transform 0.1s;
-    background: #222;
+    background: #ede8e0;
   }
-  .pick-img:hover { transform: scale(1.04); border-color: #555; }
-  .pick-img.selected { border-color: #4a9eff; }
+  .pick-img:hover { transform: scale(1.04); border-color: #c8c0b4; }
+  .pick-img.selected { border-color: #3a7edd; }
   .pick-img.error-img { opacity: 0.3; cursor: default; }
 
   .swap-footer {
-    padding: 14px 22px 18px;
-    border-top: 1px solid #2a2a2a;
+    padding: 12px 20px 16px;
+    border-top: 1px solid #ede8e0;
     display: flex;
     justify-content: flex-end;
     flex-shrink: 0;
   }
   .btn-regen {
-    background: #f0f0f0; color: #000;
+    background: #1a1a1a; color: #fff;
     border: none; border-radius: 8px;
-    padding: 10px 26px; font-size: 14px; font-weight: 700;
+    padding: 9px 24px; font-size: 13px; font-weight: 700;
     cursor: pointer; transition: background 0.15s;
   }
-  .btn-regen:hover { background: #fff; }
-  .btn-regen:disabled { background: #333; color: #666; cursor: not-allowed; }
+  .btn-regen:hover { background: #333; }
+  .btn-regen:disabled { background: #ccc8c0; color: #fff; cursor: not-allowed; }
 
   /* ─── 라이트박스 ─── */
   .lightbox {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.92);
+    background: rgba(0,0,0,0.82);
     z-index: 1000;
     align-items: center;
     justify-content: center;
@@ -644,85 +628,80 @@
   }
   .lightbox-close {
     position: absolute;
-    top: 20px; right: 24px;
+    top: 18px; right: 22px;
     font-size: 28px;
     cursor: pointer;
-    color: #888;
+    color: #aaa;
     line-height: 1;
   }
   .lightbox-close:hover { color: #fff; }
 
-  @media (max-width: 640px) {
-    .form-row { grid-template-columns: 1fr; }
-    .app-layout { padding: 24px 16px; }
-    header { padding: 20px 16px; }
-  }
-
-  /* SNS 텍스트 */
-  .sns-section  { background: #fff; border-top: 1px solid #e8e8e8; margin-top: 48px; }
-  .sns-inner    { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
-  .sns-header   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .sns-title    { font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0; }
+  /* ─── SNS 텍스트 ─── */
+  .sns-section  { background: #fff; border-top: 1px solid #e5dfd5; margin-top: 40px; }
+  .sns-inner    { max-width: 1440px; margin: 0 auto; padding: 28px 24px; }
+  .sns-header   { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .sns-title    { font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0; }
   .btn-copy     {
-    padding: 7px 18px; border-radius: 6px; border: none;
-    background: #1a1a1a; color: #fff; font-size: 13px; cursor: pointer;
+    padding: 6px 16px; border-radius: 6px; border: 1px solid #ddd7cc;
+    background: #fff; color: #333; font-size: 12px; cursor: pointer;
+    transition: background 0.15s;
   }
-  .btn-copy:hover { background: #333; }
-  .btn-copy.copied { background: #2ecc71; }
+  .btn-copy:hover { background: #f2efe9; }
+  .btn-copy.copied { background: #2d8f50; border-color: #2d8f50; color: #fff; }
   .sns-textarea {
-    width: 100%; min-height: 220px; padding: 16px;
-    border: 1px solid #e0e0e0; border-radius: 8px;
-    font-size: 13px; line-height: 1.7; color: #333;
-    background: #fafafa; resize: vertical; box-sizing: border-box;
+    width: 100%; min-height: 220px; padding: 14px 16px;
+    border: 1px solid #ddd7cc; border-radius: 8px;
+    font-size: 14px; line-height: 1.8; color: #333;
+    background: #faf8f4; resize: vertical; box-sizing: border-box;
     font-family: inherit;
   }
 
-  /* 제작 이력 */
-  .history-section { background: #fafafa; border-top: 1px solid #e8e8e8; margin-top: 0; }
-  .history-inner   { max-width: 1400px; margin: 0 auto; padding: 32px 24px 48px; }
-  .history-title   { font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0 0 16px; }
-  .session-list    { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* ─── 제작 이력 ─── */
+  .history-section { background: #faf8f4; border-top: 1px solid #e5dfd5; }
+  .history-inner   { max-width: 1440px; margin: 0 auto; padding: 28px 24px 48px; }
+  .history-title   { font-size: 14px; font-weight: 700; color: #1a1a1a; margin: 0 0 14px; }
+  .session-list    { display: flex; flex-wrap: wrap; gap: 7px; }
   .session-chip    {
     display: flex; align-items: center; gap: 6px;
-    padding: 7px 14px; border-radius: 20px;
-    background: #fff; border: 1px solid #e0e0e0;
-    font-size: 13px; color: #333;
+    padding: 6px 13px; border-radius: 20px;
+    background: #fff; border: 1px solid #ddd7cc;
+    font-size: 12px; color: #444;
   }
-  .chip-date  { font-size: 11px; color: #aaa; }
-  .chip-count { font-size: 11px; color: #bbb; }
+  .chip-date  { font-size: 10px; color: #bbb5ac; }
+  .chip-count { font-size: 10px; color: #ccc8c0; }
+
+  @media (max-width: 640px) {
+    .app-wrapper { padding: 20px 16px 40px; }
+    header { padding: 16px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>CATCHTABLE</h1>
-  <span class="badge">콘텐츠 자동 생성</span>
+  <h1>CATCHTABLE GLOBAL</h1>
+  <span class="badge">샤오홍슈 콘텐츠 자동 생성기</span>
 </header>
 
-<div class="app-layout">
+<div class="app-wrapper">
 
-  <!-- 왼쪽 메인 컬럼 -->
-  <div class="main-column">
+  <!-- 상단 행: 폼 + 진행상황 -->
+  <div class="top-row">
 
-    <!-- 입력 폼 -->
+    <!-- 입력 폼 (좁게) -->
     <div class="form-card">
-      <h2>지역 · 음식 종류 선택</h2>
-      <div class="form-row">
-        <div class="field">
-          <label>지역</label>
-          <input id="regionInput" type="text" placeholder="예: 강남, 홍대, 성수" list="regionList" autocomplete="off">
-          <datalist id="regionList"></datalist>
-          <div class="hint">한국어/영어 모두 가능</div>
-        </div>
-        <div class="field">
-          <label>음식 종류</label>
-          <input id="foodInput" type="text" placeholder="예: 한우오마카세, Grilled Beef" list="foodList" autocomplete="off">
-          <datalist id="foodList"></datalist>
-          <div class="hint">한국어/영어 모두 가능</div>
-        </div>
-        <button class="btn-search" id="btnSearch" onclick="doSearch()">검색</button>
+      <h2>지역 · 음식 종류</h2>
+      <div class="field">
+        <label>지역</label>
+        <input id="regionInput" type="text" placeholder="예: 강남, 홍대, 성수" list="regionList" autocomplete="off">
+        <datalist id="regionList"></datalist>
       </div>
-      <div class="limit-row">
+      <div class="field">
+        <label>음식 종류</label>
+        <input id="foodInput" type="text" placeholder="예: 한우오마카세, Grilled Beef" list="foodList" autocomplete="off">
+        <datalist id="foodList"></datalist>
+      </div>
+      <div class="form-bottom-row">
         <label>매장 수</label>
         <select id="limitSelect">
           <option value="5">5개</option>
@@ -731,6 +710,7 @@
           <option value="20">20개</option>
         </select>
       </div>
+      <button class="btn-search" id="btnSearch" onclick="doSearch()">매장 검색</button>
     </div>
 
     <!-- 진행 상황 -->
@@ -740,6 +720,31 @@
         <span id="progressTitle">처리 중...</span>
       </div>
       <ul class="log-list" id="logList"></ul>
+    </div>
+
+  </div>
+
+  <!-- 하단 행: 매장 선택(좌) + 갤러리(우) -->
+  <div class="bottom-row">
+
+    <!-- 매장 선택 사이드바 -->
+    <div class="shop-sidebar" id="shopSidebar">
+      <div class="sidebar-header">
+        <h3>매장 선택</h3>
+        <span class="shop-count-badge" id="shopCountBadge">0 / 0</span>
+      </div>
+      <div class="sidebar-controls">
+        <button class="btn-tiny" onclick="selectAllShops()">전체 선택</button>
+        <button class="btn-tiny" onclick="deselectAllShops()">전체 해제</button>
+      </div>
+      <div class="shop-list" id="shopList"></div>
+      <div class="sidebar-warning" id="sidebarWarning" style="display:none">
+        <div class="warn-text" id="sidebarWarnText"></div>
+        <button class="btn-proceed" onclick="proceedWithFewer()">이 매장 수로 진행</button>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn-generate" id="btnGenerate" disabled onclick="startGenerate()">생성하기 →</button>
+      </div>
     </div>
 
     <!-- 결과 갤러리 -->
@@ -754,26 +759,6 @@
       <div class="gallery-grid" id="galleryGrid"></div>
     </div>
 
-  </div>
-
-  <!-- 오른쪽 사이드바 -->
-  <div class="shop-sidebar" id="shopSidebar">
-    <div class="sidebar-header">
-      <h3>매장 선택</h3>
-      <span class="shop-count-badge" id="shopCountBadge">0 / 0</span>
-    </div>
-    <div class="sidebar-controls">
-      <button class="btn-tiny" onclick="selectAllShops()">전체 선택</button>
-      <button class="btn-tiny" onclick="deselectAllShops()">전체 해제</button>
-    </div>
-    <div class="shop-list" id="shopList"></div>
-    <div class="sidebar-warning" id="sidebarWarning" style="display:none">
-      <div class="warn-text" id="sidebarWarnText"></div>
-      <button class="btn-proceed" onclick="proceedWithFewer()">이 매장 수로 진행</button>
-    </div>
-    <div class="sidebar-footer">
-      <button class="btn-generate" id="btnGenerate" disabled onclick="startGenerate()">생성하기 →</button>
-    </div>
   </div>
 
 </div>
@@ -832,8 +817,8 @@
 <script>
 let eventSource = null;
 let currentFolder = '';
-let allShops = [];     // 검색 결과 전체
-let searchLimit = 10;  // 요청 매장 수
+let allShops = [];
+let searchLimit = 10;
 
 // 옵션 로드
 async function loadOptions() {
@@ -905,7 +890,7 @@ async function doSearch() {
     alert('검색 실패: ' + e);
   } finally {
     btn.disabled = false;
-    btn.textContent = '검색';
+    btn.textContent = '매장 검색';
   }
 }
 
@@ -914,7 +899,7 @@ function renderShopList(shops, limit) {
   list.innerHTML = '';
 
   if (shops.length === 0) {
-    list.innerHTML = '<div style="padding:20px 18px;font-size:13px;color:#555;">검색 결과 없음</div>';
+    list.innerHTML = '<div style="padding:20px 16px;font-size:12px;color:#bbb;">검색 결과 없음</div>';
     updateCountBadge();
     document.getElementById('sidebarWarning').style.display = 'none';
     return;
@@ -949,7 +934,6 @@ function renderShopList(shops, limit) {
     list.appendChild(item);
   });
 
-  // 매장 수 부족 확인
   if (shops.length < limit) {
     const warnDiv  = document.getElementById('sidebarWarning');
     const warnText = document.getElementById('sidebarWarnText');
@@ -957,7 +941,6 @@ function renderShopList(shops, limit) {
     const food     = document.getElementById('foodInput').value.trim();
     warnText.textContent = `"${region} · ${food}" 검색 결과: ${shops.length}개\n요청하신 ${limit}개보다 적습니다.`;
     warnDiv.style.display = 'block';
-    // 생성 버튼은 "이 매장 수로 진행" 클릭 후 활성화
   } else {
     document.getElementById('sidebarWarning').style.display = 'none';
     document.getElementById('btnGenerate').disabled = false;
@@ -970,7 +953,6 @@ function onCheckboxChange() {
   updateCountBadge();
   const checked = getSelectedSlugs().length;
   if (checked > 0) {
-    // 충분한 수가 있으면 경고 숨기기, 버튼 활성화
     const total = allShops.length;
     if (total >= searchLimit) {
       document.getElementById('sidebarWarning').style.display = 'none';
@@ -1040,7 +1022,6 @@ function startGenerate() {
     return;
   }
 
-  // UI 초기화
   document.getElementById('btnGenerate').disabled = true;
   document.getElementById('btnSearch').disabled   = true;
   document.getElementById('logList').innerHTML = '';
@@ -1106,16 +1087,18 @@ async function downloadAll(e) {
     const data = await res.json();
     if (data.ok) {
       btn.textContent = `✓ 저장 완료 (${data.count}개)`;
-      btn.style.background = '#2ecc71';
+      btn.style.background = '#2d8f50';
+      btn.style.borderColor = '#2d8f50';
+      btn.style.color = '#fff';
       loadSessions();
     } else {
       btn.textContent = '오류: ' + (data.error || '알 수 없음');
-      btn.style.background = '#e74c3c';
+      btn.style.background = '#c03030';
       btn.style.pointerEvents = '';
     }
   } catch(err) {
     btn.textContent = '저장 실패';
-    btn.style.background = '#e74c3c';
+    btn.style.background = '#c03030';
     btn.style.pointerEvents = '';
   }
 }
@@ -1124,7 +1107,6 @@ async function downloadAll(e) {
 
 // 음식 종류 → 중국어 (간체)
 const _FOOD_MAP = {
-  // 한국어
   '한식': '韩国料理', '일식': '日本料理', '중식': '中国料理',
   '오마카세': '割烹', '한우': '韩牛', '이자카야': '居酒屋',
   '카페': '咖啡厅', '베이커리': '面包店', '디저트': '甜点',
@@ -1135,7 +1117,6 @@ const _FOOD_MAP = {
   '비건': '素食', '초밥': '寿司', '사시미': '刺身',
   '라멘': '拉面', '야키토리': '烧鸟', '스테이크': '牛排',
   '뷔페': '自助餐', '코스': '套餐料理',
-  // 영어
   'Korean': '韩国料理', 'Japanese': '日本料理', 'Chinese': '中国料理',
   'Italian': '意大利料理', 'French': '法国料理', 'Spanish': '西班牙料理',
   'American': '美式料理', 'Thai': '泰国料理', 'Vietnamese': '越南料理',
@@ -1157,16 +1138,16 @@ function foodToZh(food) {
   for (const [key, zh] of Object.entries(_FOOD_MAP)) {
     if (food.includes(key)) return zh;
   }
-  return food; // 매핑 없으면 그대로
+  return food;
 }
 
-// 서울 외 도시 → 중국어 도시명
+// 서울 외 도시 → 중국어
 const _CITY_MAP = {
   '제주': '济州', '부산': '釜山', '인천': '仁川', '대구': '大邱',
   '대전': '大田', '광주': '光州', '울산': '蔚山', '수원': '水原',
   '경주': '庆州', '전주': '全州', '강릉': '江陵', '춘천': '春川',
 };
-// 서울 구/동 → 중국어 지역명
+// 서울 구/동 → 중국어
 const _DISTRICT_MAP = {
   '강남': '江南', '홍대': '弘大', '성수': '城水', '이태원': '梨泰院',
   '명동': '明洞', '종로': '钟路', '마포': '麻浦', '용산': '龙山',
@@ -1188,22 +1169,37 @@ function regionToZh(region) {
   return { city: '首尔', district: null };
 }
 
+// 주소 줄바꿈: 区/구 기준, 22자 초과 시
+function breakAddress(addr) {
+  if (!addr || addr.length <= 22) return addr;
+  // 중국어: 区 뒤에서 줄바꿈
+  const zhIdx = addr.indexOf('区');
+  if (zhIdx > 0 && zhIdx < addr.length - 2) {
+    return addr.slice(0, zhIdx + 1) + '\n    ' + addr.slice(zhIdx + 1).trim();
+  }
+  // 한국어: '구 ' 뒤에서 줄바꿈
+  const koMatch = addr.match(/구\s+/);
+  if (koMatch && koMatch.index > 0) {
+    const cut = koMatch.index + koMatch[0].length;
+    return addr.slice(0, cut).trim() + '\n    ' + addr.slice(cut).trim();
+  }
+  return addr;
+}
+
 function buildSnsText(images, region, food) {
   const { city, district } = regionToZh(region);
   const foodZh = images.find(i => i.food_kind_zh)?.food_kind_zh || foodToZh(food);
   const count  = images.length;
 
-  // 타이틀: CATCHTABLE 精选：首尔 [지역] [음식] 餐厅 TOP N!
   const locationParts = [city, district].filter(Boolean).join(' ');
   const title = `CATCHTABLE 精选：${locationParts} ${foodZh} 餐厅 TOP ${count}!`;
 
   const shopLines = images.map(img => {
     const name = img.name_zh || img.name;
-    const addr = img.address || '';
+    const addr = breakAddress(img.address || '');
     return `${name} 📍${addr}`;
   }).join('\n');
 
-  // 지역별 해시태그
   const cityTag = city !== '首尔'
     ? `#${city}#${city}旅行\u200c\u200c#${city}旅游\u200c\u200c`
     : `#首尔#首尔旅行\u200c\u200c#首尔旅游\u200c\u200c`;
@@ -1244,7 +1240,7 @@ async function loadSessions() {
     const el   = document.getElementById('sessionList');
     if (!el) return;
     if (!list.length) {
-      el.innerHTML = '<span style="color:#999;font-size:13px">아직 다운로드 이력이 없습니다.</span>';
+      el.innerHTML = '<span style="color:#bbb;font-size:12px">아직 다운로드 이력이 없습니다.</span>';
       return;
     }
     el.innerHTML = list.map(s => `
@@ -1266,7 +1262,6 @@ function showGallery(images, region, food, coverPath, thumbnailPath) {
   document.getElementById('galleryTitle').textContent = `${region} · ${food}`;
   document.getElementById('galleryMeta').textContent  = `${images.length}개 매장`;
 
-  // 컬렉션 썸네일 카드 (맨 앞)
   if (thumbnailPath) {
     const thumbItem = document.createElement('div');
     thumbItem.className = 'card-item is-cover';
@@ -1459,7 +1454,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeLightbox(); closeSwap(); }
 });
 
-// Enter 키로 검색
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && (
     document.activeElement === document.getElementById('regionInput') ||

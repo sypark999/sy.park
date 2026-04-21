@@ -8,13 +8,18 @@
 """
 
 import csv
+import datetime
+import io
 import json
 import os
 import queue
+import shutil
 import sys
 import threading
 import time
+import zipfile
 from pathlib import Path
+from typing import List, Dict
 
 from flask import Flask, Response, jsonify, request, send_from_directory
 
@@ -24,11 +29,40 @@ sys.path.insert(0, str(ROOT / "pipeline"))
 from shop_search import search_shops
 from image_fetcher import fetch_shops
 from image_scorer import score_shops
-from content_generator import generate_cards
+from content_generator import generate_cards, _load_history
 
-CSV_PATH = ROOT.parent / "total_shop.csv"
+CSV_PATH       = ROOT.parent / "total_shop.csv"
+DOWNLOADS_PATH = ROOT / "downloads.json"
 
 app = Flask(__name__, static_folder=str(ROOT / "web"))
+
+# 생성 완료 후 다운로드 전까지 slug 정보 임시 보관
+_pending_downloads: Dict[str, Dict] = {}
+
+
+def get_shops_by_slugs(slugs: List[str]) -> List[Dict]:
+    """slug 순서대로 total_shop.csv에서 매장 정보 조회"""
+    slug_set = set(slugs)
+    slug_order = {s: i for i, s in enumerate(slugs)}
+    result = []
+    with open(CSV_PATH, encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            slug = row.get("catchtable_url_path", "").strip()
+            if slug in slug_set:
+                result.append({
+                    "shop_seq": row.get("shop_seq", "").strip(),
+                    "slug": slug,
+                    "name": row.get("shop_name", "").strip(),
+                    "name_en": (row.get("shop_name_en") or row.get("shop_name", "")).strip(),
+                    "food_kind": row.get("food_kind", "") or "",
+                    "food_kind_en": row.get("food_kind_en", "") or "",
+                    "land_name": row.get("land_name", "") or "",
+                    "land_name_en": row.get("land_name_en", "") or "",
+                    "address_en": row.get("shop_address_en") or row.get("shop_address", ""),
+                    "reservation_cnt": 0,
+                })
+    result.sort(key=lambda s: slug_order.get(s["slug"], 999))
+    return result
 
 
 # ─── 선택지 캐시 ─────────────────────────────────────────────
@@ -36,40 +70,28 @@ app = Flask(__name__, static_folder=str(ROOT / "web"))
 _options_cache = None
 
 # 음식 종류 고정 카테고리 (substring 검색 커버용 — 짧을수록 더 많은 매장 매칭)
-_FOOD_CATEGORIES = sorted([
-    # 한식/구이
-    "한식", "한정식", "코스요리", "파인다이닝", "뷔페", "호텔뷔페",
-    "한우", "소고기구이", "돼지고기구이", "곱창", "보쌈",
-    # 일식
-    "오마카세", "스시", "회", "이자카야", "일식",
-    "라멘", "돈가스", "야키토리", "카이세키",
-    # 기타 아시아
-    "중식", "냉면", "국수", "분식",
-    # 카페/디저트
-    "카페", "베이커리", "디저트", "브런치", "케이크",
-    # 주류
-    "와인", "칵테일", "전통주", "맥주",
-    # 해산물/기타
-    "해물", "참치", "닭요리", "장어요리", "양고기",
-    # 세계음식
-    "이탈리아음식", "프랑스음식", "스페인음식",
-    "태국음식", "베트남음식", "인도음식", "멕시코음식", "아메리칸음식",
-    # 양식
-    "스테이크", "파스타", "피자", "햄버거", "샤브샤브", "퓨전음식",
-    # English
+_FOOD_CATEGORIES = [
+    # 한국어 (자주 검색되는 핵심만)
+    "한식", "일식", "중식",
+    "오마카세", "한우", "이자카야", "카페",
+    # 세계 요리
     "Korean", "Japanese", "Chinese",
-    "Italian", "French", "Spanish", "American", "European",
+    "Italian", "French", "Spanish", "American",
     "Thai", "Vietnamese", "Indian", "Mexican",
-    "Omakase", "Sushi", "Sashimi", "Kaiseki",
-    "Grilled Beef", "Grilled Pork", "BBQ", "Hanwoo",
-    "Fine Dining", "Buffet", "Course",
+    # 파인다이닝 / 형식
+    "Omakase", "Fine Dining", "Kaiseki", "Buffet", "Course",
+    # 구이 / 육류
+    "Korean BBQ", "Grilled Beef", "Grilled Pork", "Hanwoo", "Steak",
+    # 일식 세부
+    "Sushi", "Sashimi", "Ramen", "Izakaya", "Yakitori",
+    # 카페 / 디저트
     "Cafe", "Bakery", "Dessert", "Brunch",
-    "Wine", "Cocktail", "Beer", "Bar", "Izakaya", "Pub",
-    "Ramen", "Noodles",
-    "Steak", "Pizza", "Pasta", "Hamburger",
-    "Shabu-Shabu", "Seafood", "Chicken", "Eel",
-    "Vegan", "Yakitori", "Teppanyaki", "Fusion",
-])
+    # 주류
+    "Wine", "Beer", "Cocktail", "Bar",
+    # 기타 요리
+    "Seafood", "Pasta", "Pizza", "Burger", "Noodles",
+    "Shabu-Shabu", "Chicken", "BBQ", "Fusion", "Vegan",
+]
 
 
 def _dedup_regions(region_counts, min_count=20):
@@ -120,17 +142,155 @@ def serve_output(filename):
     return send_from_directory(str(ROOT / "output"), filename)
 
 
+@app.route("/cache/<path:filepath>")
+def serve_cache(filepath):
+    parts = filepath.split("/", 1)
+    if len(parts) != 2:
+        return "not found", 404
+    slug, fname = parts
+    return send_from_directory(str(ROOT / "cache" / slug), fname)
+
+
+@app.route("/api/regenerate", methods=["POST"])
+def api_regenerate():
+    from PIL import Image as PILImage
+    data = request.json
+
+    def url_to_path(url):
+        return ROOT / url.lstrip("/")
+
+    main_img   = url_to_path(data["main"])
+    sub1_img   = url_to_path(data["sub1"])
+    sub2_img   = url_to_path(data["sub2"])
+    card_path  = ROOT / "output" / data["card"]
+
+    from generate_image import ImageGenerator
+    gen = ImageGenerator(str(ROOT / "config.json"))
+    gen.generate(
+        template_path=str(ROOT / "templates" / "restaurant_card.json"),
+        texts={"restaurant_name": data["name"], "address": data["address"]},
+        images={
+            "main_image":  str(main_img),
+            "sub_image_1": str(sub1_img),
+            "sub_image_2": str(sub2_img),
+        },
+        output_path=str(card_path),
+    )
+
+    return jsonify({"ok": True, "ts": int(time.time())})
+
+
+@app.route("/api/search")
+def api_search():
+    region = request.args.get("region", "").strip()
+    food   = request.args.get("food", "").strip()
+    limit  = int(request.args.get("limit", 10))
+    if not region or not food:
+        return jsonify({"error": "region, food 필수"}), 400
+
+    try:
+        all_shops = search_shops(region, food, limit=min(limit * 5, 100))
+        history = _load_history()
+
+        result = []
+        for shop in all_shops:
+            hist = history.get(shop["slug"], {})
+            result.append({
+                **shop,
+                "used_count": hist.get("count", 0),
+                "sessions":   hist.get("sessions", []),
+            })
+        result.sort(key=lambda s: s["used_count"])  # 미사용 우선
+
+        return jsonify({"shops": result, "total": len(result), "limit": limit})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/api/options")
 def api_options():
     return jsonify(load_options())
 
 
+def _record_session(region: str, food: str, folder: str, count: int, date: str):
+    """downloads.json에 다운로드 이력 추가"""
+    records = []
+    if DOWNLOADS_PATH.exists():
+        try:
+            records = json.loads(DOWNLOADS_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    records.append({"date": date, "region": region, "food": food,
+                    "folder": folder, "count": count})
+    DOWNLOADS_PATH.write_text(
+        json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+
+def _safe_name(text: str) -> str:
+    return "".join(c if c.isalnum() or c in "-_ " else "_" for c in text).strip().replace(" ", "_")
+
+
+@app.route("/api/download", methods=["POST"])
+def api_download():
+    data   = request.json or {}
+    folder = data.get("folder", "").strip()
+    if not folder:
+        return jsonify({"error": "folder 필요"}), 400
+
+    out_dir = ROOT / "output" / folder
+    if not out_dir.exists():
+        return jsonify({"error": "not found"}), 404
+
+    pending = _pending_downloads.get(folder, {})
+    region  = pending.get("region", folder)
+    food    = pending.get("food", "")
+    slugs   = pending.get("slugs", [])
+    date    = pending.get("date", datetime.date.today().strftime("%Y%m%d"))
+
+    # 로컬 날짜_지역_음식 폴더에 복사
+    dest_name = f"{date}_{_safe_name(region)}_{_safe_name(food)}"
+    dest_dir  = ROOT / dest_name
+    dest_dir.mkdir(exist_ok=True)
+    copied = 0
+    for f in sorted(out_dir.glob("*.jpg")):
+        shutil.copy2(f, dest_dir / f.name)
+        copied += 1
+
+    # history.json 카운트 저장 (다운로드 시점)
+    from content_generator import _load_history, _save_history
+    if slugs:
+        session_label = f"{_safe_name(region)}_{_safe_name(food)}_{date}"
+        history = _load_history()
+        _save_history(history, slugs, session_label)
+        _pending_downloads.pop(folder, None)
+
+    # downloads.json 이력 기록
+    _record_session(region, food, dest_name, len(slugs) or copied, date)
+
+    return jsonify({"ok": True, "saved_to": dest_name, "count": len(slugs) or copied})
+
+
+@app.route("/api/sessions")
+def api_sessions():
+    if not DOWNLOADS_PATH.exists():
+        return jsonify([])
+    try:
+        records = json.loads(DOWNLOADS_PATH.read_text(encoding="utf-8"))
+        return jsonify(list(reversed(records)))
+    except Exception:
+        return jsonify([])
+
+
 @app.route("/api/generate")
 def api_generate():
     """SSE 스트림으로 진행상황 전달 + 완료시 이미지 경로 반환"""
-    region = request.args.get("region", "").strip()
-    food = request.args.get("food", "").strip()
-    limit = int(request.args.get("limit", 10))
+    region      = request.args.get("region", "").strip()
+    food        = request.args.get("food",   "").strip()
+    limit       = int(request.args.get("limit", 10))
+    slugs_param = request.args.get("slugs", "").strip()
 
     if not region or not food:
         return jsonify({"error": "region, food 필수"}), 400
@@ -142,54 +302,115 @@ def api_generate():
             q.put({"type": type_, "message": msg})
 
         try:
-            emit(f"매장 검색 중: {region} + {food}...")
-            shops = search_shops(region, food, limit=limit)
-            if not shops:
-                emit(f"매장 없음: '{region}' + '{food}' 조건에 해당하는 글로벌 매장이 없습니다.", "error")
-                q.put(None)
-                return
-            emit(f"{len(shops)}개 매장 발견", "success")
+            if slugs_param:
+                slug_list = [s.strip() for s in slugs_param.split(",") if s.strip()]
+                shops = get_shops_by_slugs(slug_list)
+                if not shops:
+                    emit("선택된 매장을 찾을 수 없습니다.", "error")
+                    q.put(None)
+                    return
+                emit(f"{len(shops)}개 매장 로드", "success")
+            else:
+                emit(f"매장 검색 중: {region} + {food}...")
+                shops = search_shops(region, food, limit=limit * 3)
+                if not shops:
+                    emit(f"매장 없음: '{region}' + '{food}' 조건에 해당하는 글로벌 매장이 없습니다.", "error")
+                    q.put(None)
+                    return
+                history = _load_history()
+                shops.sort(key=lambda s: history.get(s["slug"], {}).get("count", 0))
+                shops = shops[:limit]
+                emit(f"{len(shops)}개 매장 발견 (미사용 우선 정렬)", "success")
 
             emit("리뷰 이미지 다운로드 중...")
             shops = fetch_shops(shops)
+            no_img = [s.get("name_en") or s["slug"] for s in shops if not s.get("local_images")]
+            shops = [s for s in shops if s.get("local_images")]
+            if no_img:
+                emit(f"이미지 없음 자동 제외: {', '.join(no_img)}", "warn")
+            if not shops:
+                emit("이미지가 있는 매장이 없습니다.", "error")
+                q.put(None)
+                return
             total_imgs = sum(len(s.get("local_images", [])) for s in shops)
-            emit(f"이미지 {total_imgs}장 다운로드 완료", "success")
+            emit(f"이미지 {total_imgs}장 다운로드 완료 ({len(shops)}개 매장)", "success")
 
             emit("Gemini로 이미지 스코어링 중...")
             try:
                 shops = score_shops(shops)
                 emit("스코어링 완료", "success")
             except ValueError as e:
-                emit(f"GEMINI_API_KEY 없음 — 순서대로 이미지 사용", "warn")
+                emit("GEMINI_API_KEY 없음 — 순서대로 이미지 사용", "warn")
                 for s in shops:
                     s["top_images"] = s.get("local_images", [])[:3]
 
             emit("콘텐츠 카드 생성 중...")
-            out_dir = generate_cards(shops, region, food)
+            out_dir, cards_data, cover_path, thumbnail_path, slugs_used = generate_cards(shops, region, food)
             emit("생성 완료!", "success")
 
-            # 생성된 이미지 목록
-            out_path = Path(out_dir)
-            cards = sorted([
-                f for f in out_path.iterdir()
-                if f.suffix == ".jpg" and "_thumb" not in f.name
-            ])
-            thumbs = sorted([
-                f for f in out_path.iterdir()
-                if f.suffix == ".jpg" and "_thumb" in f.name
-            ])
+            # 다운로드 시점에 history 저장하기 위해 pending에 보관
+            folder_name_tmp = Path(out_dir).name
+            _pending_downloads[folder_name_tmp] = {
+                "region": region,
+                "food":   food,
+                "slugs":  slugs_used,
+                "date":   datetime.date.today().strftime("%Y%m%d"),
+            }
+
+            # 절대경로 → 웹 URL 변환
+            cache_root = ROOT / "cache"
+            def to_web(abs_path):
+                try:
+                    rel = Path(abs_path).relative_to(cache_root)
+                    return f"/cache/{rel.as_posix()}"
+                except ValueError:
+                    return None
 
             images = []
-            for card, thumb in zip(cards, thumbs):
-                rel_card = card.relative_to(ROOT / "output")
-                rel_thumb = thumb.relative_to(ROOT / "output")
+            for d in cards_data:
+                rel_card  = Path(d["card"]).relative_to(ROOT / "output")
+                current_imgs = [to_web(p) or p for p in d["current_images"]]
+                local_imgs   = [u for u in (to_web(p) for p in d["local_images"]) if u]
                 images.append({
-                    "card": str(rel_card),
-                    "thumb": str(rel_thumb),
-                    "name": card.stem.split("_", 1)[-1].replace("_", " "),
+                    "card":           str(rel_card),
+                    "name":           d["name_en"],
+                    "name_zh":        d.get("name_zh", ""),
+                    "food_kind_zh":   d.get("food_kind_zh", ""),
+                    "slug":           d["slug"],
+                    "address":        d["address"],
+                    "used_count":     d.get("used_count", 0),
+                    "current_images": current_imgs,
+                    "local_images":   local_imgs,
                 })
 
-            q.put({"type": "done", "images": images})
+            # 커버 경로 변환
+            cover_url = None
+            if cover_path:
+                try:
+                    rel_cover = Path(cover_path).relative_to(ROOT / "output")
+                    cover_url = str(rel_cover)
+                except ValueError:
+                    pass
+
+            # 컬렉션 썸네일 경로 변환
+            thumbnail_url = None
+            if thumbnail_path:
+                try:
+                    rel_thumb = Path(thumbnail_path).relative_to(ROOT / "output")
+                    thumbnail_url = str(rel_thumb)
+                except ValueError:
+                    pass
+
+            # 폴더명 (다운로드용)
+            folder_name = Path(out_dir).name
+
+            q.put({
+                "type":      "done",
+                "images":    images,
+                "cover":     cover_url,
+                "thumbnail": thumbnail_url,
+                "folder":    folder_name,
+            })
 
         except Exception as e:
             q.put({"type": "error", "message": str(e)})

@@ -67,10 +67,14 @@ async def fetch_shop_detail(session: aiohttp.ClientSession, sem: asyncio.Semapho
                     if url:
                         review_urls.append(url)
 
-            # 샵 공식 이미지 (최종 폴백)
+            # 샵 공식 이미지 + 메뉴 이미지 (최종 폴백)
             shop_image_urls = []
-            for img in d.get("images", []):
+            for img in (d.get("images") or []):
                 url = img.get("imgUrl") or img.get("thumbUrl")
+                if url:
+                    shop_image_urls.append(url)
+            for img in (d.get("shopMenuImgList") or []):
+                url = img.get("img_url") or img.get("thumb_url")
                 if url:
                     shop_image_urls.append(url)
 
